@@ -840,9 +840,9 @@ public class DashboardServiceImpl implements DashboardService {
 		
 		int min = 8 * (page - 1) + 1;
 		int max = 8 * (page);
-		if (total_cnt < max) {
-			max = total_cnt;
-		}
+//		if (total_cnt < max) {
+//			max = total_cnt;
+//		}
 		
 		List<ScheduleListViewDTO> schedule = dao.backoffice_schedule_list(backoffice_no, not_sdate, not_edate, not_stime,
 				not_etime, off_type, min, max);
@@ -869,14 +869,14 @@ public class DashboardServiceImpl implements DashboardService {
 			String not_edate, String not_stime, String not_etime, String off_type, Integer page) {
 		Map<String, Object> map = new HashMap<String, Object>();
 
-		int total_cnt = dao.backoffice_room_cnt(backoffice_no,not_sdate, not_edate, not_stime,
-				not_etime, off_type);
+//		int total_cnt = dao.backoffice_room_cnt(backoffice_no,not_sdate, not_edate, not_stime,
+//				not_etime, off_type);
 		
 		int min = 8 * (page - 1) + 1;
 		int max = 8 * (page);
-		if (total_cnt < max) { // 여기부터 검토
-			max = total_cnt;
-		}
+//		if (total_cnt < max) { // 여기부터 검토
+//			max = total_cnt;
+//		}
 		
 		List<ScheduleListViewDTO> schedule = dao.backoffice_schedule_list(backoffice_no, not_sdate, not_edate, not_stime,
 				not_etime, off_type, min, max);
