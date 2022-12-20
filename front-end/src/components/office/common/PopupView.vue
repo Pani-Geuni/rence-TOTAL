@@ -396,6 +396,7 @@ export default {
           console.log(res);
           // 로그인 성공
           if (res.data.result === '1') {
+            this.$store.commit('office_setLogin_true');
             window.location.reload();
           } else {
           // 로딩 화면 닫기
@@ -462,6 +463,7 @@ export default {
 
           // 로그아웃 성공
           if (res.data.result === '1') {
+            this.$store.commit('office_setLogin_false');
             const port = window.location.href.split('localhost:')[1].split('/#')[0];
             window.location.href = `http://localhost:${port}/#/`;
           }

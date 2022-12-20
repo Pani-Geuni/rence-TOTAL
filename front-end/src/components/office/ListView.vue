@@ -113,11 +113,11 @@ export default {
       .then((res) => {
         // 로그인 되어 있음
         if (res.data.result === '1') {
-          this.$is_officeLogin = 'true';
+          this.$store.commit('office_setLogin_true');
         }
         // 로그인 되어 있지 않음(or 세션 만료)
         else {
-          this.$is_officeLogin = 'false';
+          this.$store.commit('office_setLogin_false');
         }
       })
       .catch(() => {

@@ -71,6 +71,7 @@
                 </section>
             </router-link>
         </div>
+        {{ this.$store.state.is_officeLogin }}
     </div>
 </div>
 </template>
@@ -89,13 +90,14 @@ export default {
     // 로그인 여부 체크 -> 헤더를 위해
     axios.get('http://localhost:8800/loginCheck')
       .then((res) => {
+        console.log(res.data);
         // 로그인 되어 있음
         if (res.data.result === '1') {
-          this.$is_officeLogin = 'true';
+          this.$store.commit('office_setLogin_true');
         }
         // 로그인 되어 있지 않음(or 세션 만료)
         else {
-          this.$is_officeLogin = 'false';
+          this.$store.commit('office_setLogin_false');
         }
       })
       .catch(() => {

@@ -54,7 +54,7 @@
     </div>
     <div class="userMenu-section ">
         <!-- 로그인 전 유저 메뉴 -->
-        <section :class="{'' : this.$is_officeLogin === 'false', 'blind' : this.$is_officeLogin === 'true'}" id="before_login" >
+        <section :class="{'' : this.$store.state.is_officeLogin === 'false', 'blind' : this.$store.state.is_officeLogin === 'true'}" id="before_login" >
             <div id = "before_userMenu" class ="userMenu" @click="user_menu_select('before_login')">
                 <img src="@/assets/IMG/header/user_menu.svg" alt="user_menu_img" class="user_menu_img"/>
                 <img src="@/assets/IMG/header/bx_user-circle.png" alt="user_profile_img" class="user_profile_img"/>
@@ -72,7 +72,7 @@
             </div>
         </section>
 
-        <section id="after_login" :class="{'blind' : this.$is_officeLogin === 'false', '' : this.$is_officeLogin === 'true'}">
+        <section id="after_login" :class="{'blind' : this.$store.state.is_officeLogin === 'false', '' : this.$store.state.is_officeLogin === 'true'}">
             <div id = "after_userMenu" class ="userMenu" @click="user_menu_select('after_login')">
               <img src="@/assets/IMG/header/user_menu.svg" alt="user_menu_img" class="user_menu_img"/>
               <img alt="user_profile_img" class="user_profile_img"/>

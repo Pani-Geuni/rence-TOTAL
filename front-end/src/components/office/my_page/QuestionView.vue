@@ -115,7 +115,7 @@ export default {
       .then((response) => {
         // 로그인 되어 있음
         if (response.data.result === '1') {
-          this.$is_officeLogin = 'true';
+          this.$store.commit('office_setLogin_true');
 
           /** ********** *** */
           /** * GET DATA *** */
@@ -157,7 +157,7 @@ export default {
         }
         // 로그인 되어 있지 않음(or 세션 만료)
         else {
-          this.$is_officeLogin = 'false';
+          this.$store.commit('office_setLogin_false');
           $('.popup-background:eq(0)').removeClass('blind');
           $('#disconnect-session-popup').removeClass('blind');
         }
@@ -185,7 +185,7 @@ export default {
 
             // 로그인 되어 있음
             if (response.data.result === '1') {
-              this.$is_officeLogin = 'true';
+              this.$store.commit('office_setLogin_true');
 
               // 팝업창 SHOW
               const idx = $(param).attr('idx');
@@ -195,7 +195,7 @@ export default {
             }
             // 로그인 되어 있지 않음(or 세션 만료)
             else {
-              this.$is_officeLogin = 'false';
+              this.$store.commit('office_setLogin_false');
               $('.popup-background:eq(0)').removeClass('blind');
               $('#disconnect-session-popup').removeClass('blind');
             }
@@ -312,7 +312,7 @@ export default {
 
             // 로그인 되어 있음
             if (response.data.result === '1') {
-              this.$is_officeLogin = 'true';
+              this.$store.commit('office_setLogin_true');
 
               // 로딩 화면
               $('.popup-background:eq(1)').removeClass('blind');
@@ -348,7 +348,7 @@ export default {
             }
             // 로그인 되어 있지 않음(or 세션 만료)
             else {
-              this.$is_officeLogin = 'false';
+              this.$store.commit('office_setLogin_false');
               $('.popup-background:eq(0)').removeClass('blind');
               $('#disconnect-session-popup').removeClass('blind');
             }
