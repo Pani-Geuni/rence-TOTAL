@@ -17,7 +17,7 @@
         <div class="profile">
 
           <div class="profile-img-wrap">
-            <img v-bind:src="list.user_image" alt="profile-img" class="profile-img" /> 
+            <img :src="this.image" alt="profile-img" class="profile-img" /> 
             <span class="img-update-txt" @click="show_modify_img_popup">프로필 사진 수정</span>
           </div>
 
@@ -116,6 +116,7 @@ export default {
       list: '',
       load: false,
       axiosFlag: true,
+      image: window.atob(this.$cookies.get('user_image')),
     };
   },
   mounted() {
