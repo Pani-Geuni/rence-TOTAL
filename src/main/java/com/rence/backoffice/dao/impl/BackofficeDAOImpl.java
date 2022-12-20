@@ -52,23 +52,11 @@ public class BackofficeDAOImpl implements BackOfficeDAO {
 	 */
 	@Override
 	public BackOfficeDTO backoffice_insertOK(BackOfficeDTO vo) {
-//		vo.setBackoffice_state("W");
-//		vo.setApply_date(new Date());
-//
-//		BackOfficeVO bvo2 = new BackOfficeVO();
-//
-//		int flag = repository.insert_backoffice(vo, vo.getApply_date());
-//
-//		if (flag == 1) {
-//			bvo2 = repository.select_backoffice_no(vo.getBackoffice_email());
-//		}
-//		return bvo2;
 
 		vo.setBackoffice_state("W");
 		vo.setApply_date(new Date());
 		vo.setHost_image("img_host_001.jpg");
 
-//		ModelMapper modelMapper = new ModelMapper();
 		BackOfficeEntity bvo = new BackOfficeEntity();
 		BackOfficeDTO bvo2 = new BackOfficeDTO();
 

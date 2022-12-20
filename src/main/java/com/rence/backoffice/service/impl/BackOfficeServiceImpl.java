@@ -7,10 +7,11 @@ package com.rence.backoffice.service.impl;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Base64;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Base64.Decoder;
 import java.util.Base64.Encoder;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -20,7 +21,6 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.util.WebUtils;
 
 import com.rence.backoffice.common.BackOfficeSendEmail;
 import com.rence.backoffice.dao.BackOfficeDAO;
@@ -41,20 +41,17 @@ public class BackOfficeServiceImpl implements BackOfficeService {
 	@Autowired
 	BackOfficeSendEmail authSendEmail;
 
-//	@Autowired
-//	HttpSession session;
-	
 	@Override
 	public Map<String, Object> login_check(HttpSession session) {
-		
+
 		Map<String, Object> map = new HashMap<String, Object>();
-		
+
 		if (session.getAttribute("backoffice_id") != null) {
 			map.put("result", "1");
-		}else {
+		} else {
 			map.put("result", "0");
 		}
-		
+
 		return map;
 	}
 
@@ -154,31 +151,33 @@ public class BackOfficeServiceImpl implements BackOfficeService {
 
 	/**
 	 * 로그인 성공 처리
-	 * @throws UnsupportedEncodingException 
+	 * 
+	 * @throws UnsupportedEncodingException
 	 */
 	@Override
-	public Map<String, String> backoffice_loginOK(String username, HttpSession session, HttpServletResponse response) throws UnsupportedEncodingException {
+	public Map<String, String> backoffice_loginOK(String username, HttpSession session, HttpServletResponse response)
+			throws UnsupportedEncodingException {
 
 		BackOfficeDTO bvo = dao.backoffice_login_info(username);
 
 		Map<String, String> map = new HashMap<String, String>();
-		
+
 		/* base64 encoding */
 		Encoder encoder = Base64.getEncoder(); // 쿠키 정보 암호화
 
-        String backoffice_no = encoder.encodeToString(bvo.getBackoffice_no().getBytes("UTF-8"));
-        String host_image = encoder.encodeToString(bvo.getHost_image().getBytes("UTF-8"));
-        
+		String backoffice_no = encoder.encodeToString(bvo.getBackoffice_no().getBytes("UTF-8"));
+		String host_image = encoder.encodeToString(bvo.getHost_image().getBytes("UTF-8"));
+
 		session.setAttribute("backoffice_id", bvo.getBackoffice_id());
-		
-		log.info("backoffice_no : {}",backoffice_no);
-		log.info("host_image : {}",host_image);
-		
+
+		log.info("backoffice_no : {}", backoffice_no);
+		log.info("host_image : {}", host_image);
+
 		Cookie cookie_no = new Cookie("backoffice_no", backoffice_no);
-		cookie_no.setMaxAge(-1);
+//		cookie_no.setMaxAge(-1);
 		cookie_no.setPath("/");
 		Cookie cookie_profile = new Cookie("host_image", host_image);
-		cookie_profile.setMaxAge(-1);
+//		cookie_profile.setMaxAge(-1);
 		cookie_profile.setPath("/");
 		response.addCookie(cookie_no);
 		response.addCookie(cookie_profile);
@@ -193,11 +192,12 @@ public class BackOfficeServiceImpl implements BackOfficeService {
 	 * 로그아웃 성공 처리
 	 */
 	@Override
-	public Map<String, String> backoffice_logoutOK(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
+	public Map<String, String> backoffice_logoutOK(HttpServletRequest request, HttpServletResponse response,
+			HttpSession session) {
 
 		Map<String, String> map = new HashMap<String, String>();
 
-		session.removeAttribute("backoffice_id"); 
+		session.removeAttribute("backoffice_id");
 		
 		Cookie[] cookies = request.getCookies();
 		if (cookies != null) {
@@ -250,13 +250,14 @@ public class BackOfficeServiceImpl implements BackOfficeService {
 
 	/**
 	 * 비밀번호 초기화 완료
-	 * @throws UnsupportedEncodingException 
+	 * 
+	 * @throws UnsupportedEncodingException
 	 */
 	@Override
 	public Map<String, String> backoffice_settingOK_pw(BackOfficeDTO bvo, HttpServletRequest request,
 			HttpServletResponse response, HttpSession session) throws UnsupportedEncodingException {
-		
-        /* base64 decoding */
+
+		/* base64 decoding */
 		Decoder decoder = Base64.getDecoder();
 
 		Cookie[] cookies = request.getCookies();
@@ -266,7 +267,7 @@ public class BackOfficeServiceImpl implements BackOfficeService {
 				if (cookie.getName().equals("backoffice_no")) {
 					backoffice_no = cookie.getValue();
 					backoffice_no = new String(decoder.decode(backoffice_no.getBytes("UTF-8")));
-					log.info("backoffice_no :: {}",backoffice_no);
+					log.info("backoffice_no :: {}", backoffice_no);
 				}
 			}
 		}
@@ -278,11 +279,11 @@ public class BackOfficeServiceImpl implements BackOfficeService {
 
 		if (result == 1) {
 			if (session.getAttribute("backoffice_id") != null) {
-			if (backoffice_no.equals(bvo.getBackoffice_no())) {
-				// HOST 로그인 session이 존재할 때
-				// Host 환경설정 > 비밀번호 수정
-				log.info("succeed...setting");
-				map.put("result", "1");
+				if (backoffice_no.equals(bvo.getBackoffice_no())) {
+					// HOST 로그인 session이 존재할 때
+					// Host 환경설정 > 비밀번호 수정
+					log.info("succeed...setting");
+					map.put("result", "1");
 				}
 			} else {
 				// 가입 신청이 완료되어
@@ -307,6 +308,5 @@ public class BackOfficeServiceImpl implements BackOfficeService {
 	public void auth_auto_delete(String user_email) {
 		dao.auth_auto_delete(user_email);
 	}
-
 
 }
