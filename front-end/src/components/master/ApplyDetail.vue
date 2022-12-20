@@ -1,3 +1,4 @@
+<!-- eslint-disable vuejs-accessibility/click-events-have-key-events -->
 <!-- eslint-disable max-len -->
 <!-- eslint-disable vuejs-accessibility/label-has-for -->
 <template>
@@ -26,21 +27,27 @@
           </div>
         </section>
 
-        <section class="space-imgs-section">
-          <div class="window">
-            <ul class="container">
-              <li class="img" v-for="backoffice_img in backoffice_image" :key="backoffice_img">
-                <img :src='`https://rence.s3.ap-northeast-2.amazonaws.com/space/${backoffice_img}`' alt=""
-                  class="company-img" />
-              </li>
-            </ul>
+        <div class="space-imgs-section-wrap">
+          <section class="space-imgs-section">
+            <div class="window">
+              <ul class="container">
+                <li class="img" v-for="backoffice_img in backoffice_image" :key="backoffice_img">
+                  <img :src='`https://rence.s3.ap-northeast-2.amazonaws.com/space/${backoffice_img}`' alt=""
+                    class="company-img" />
+                </li>
+              </ul>
 
-            <div class="button-container">
-              <span class="prev button-size">&lt;</span>
-              <span class="next button-size">></span>
+              <div class="button-container">
+                <span class="prev button-size">&lt;</span>
+                <span class="next button-size">></span>
+                <!-- <span class="prev button-size hide" @click="set_prev_image">&lt;</span>
+              <span
+                :class="{ 'next button-size': backoffice_image.length > 1, 'next button-size hide': backoffice_image.length <= 1 }"
+                @click="set_next_image">></span> -->
+              </div>
             </div>
-          </div>
-        </section>
+          </section>
+        </div>
         <!-- END space-imgs-section -->
 
         <section class="map-wrap ">
@@ -157,6 +164,8 @@ export default {
       backoffice_around: [],
       backoffice_image: [],
       vo: {},
+
+      test: 1,
     };
   },
 
@@ -210,6 +219,35 @@ export default {
           this.map.setCenter(coords);
         }
       });
+    },
+
+    set_next_image() {
+      if (this.test < $('.img').length) {
+        this.position += 960;
+        $('.container').css('transform', `translateX(-${this.position}px)`);
+        this.test += 1;
+
+        if (this.test === $('.img').length) {
+          $('.next').addClass('hide');
+        }
+        if (this.test === 2) {
+          $('.prev').removeClass('hide');
+        }
+      }
+    },
+    set_prev_image() {
+      if (this.test !== 1) {
+        this.position -= 960;
+        $('.container').css('transform', `translateX(-${this.position}px)`);
+        this.test -= 1;
+
+        if (this.test === $('.img').length - 1) {
+          $('.next').removeClass('hide');
+        }
+        if (this.test === 1) {
+          $('.prev').addClass('hide');
+        }
+      }
     },
 
     getApplyDetailInfo() {
