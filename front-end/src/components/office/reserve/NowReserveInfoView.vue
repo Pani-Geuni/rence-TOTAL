@@ -228,8 +228,9 @@ export default {
 
           this.reserveNo = this.$route.params.parameters.split('reserve_no=')[1];
 
-          axios.get(`http://localhost:8800/rence/reserve_info?reserve_no=${reserveNo}`)
+          axios.get(`http://localhost:8800/rence/reserve_info?reserve_no=${this.reserveNo}`)
             .then((res) => {
+              console.log(res.data);
               this.list = res.data;
               this.load = true;
 

@@ -195,15 +195,15 @@
 					</div>
 			</section>
 			<section class="modify-popup-btn-section">
-					<div id="modify-btn" class="modify-btn">수정</div>
+					<div id="modify-btn" class="modify-btn" @click="do_modify_pw_popup">수정</div>
 					<div id="modify-close-btn" class="modify-btn" @click="close_modify_pw_popup">닫기</div>
 			</section>
 		</div>
 		<!-- END MODIFY-PW SECTION -->
 
 		<!-- START MODIFY PROFILE IMAGE -->
-		<form action="/rence/user_img_updateOK" method="post" enctype="multipart/form-data">
-			<div id="modify-img-section" class="confirm-popup blind">
+    <form action="/rence/user_img_updateOK" method="post" enctype="multipart/form-data">
+      <div id="modify-img-section" class="confirm-popup blind">
 				<section class="review-upload-section">
 					<input type="text" class="review-upload-value" value="" readonly />
 					<span class="review-upload-btn" @click="show_upload_file"> 이미지 등록 </span> 
@@ -213,8 +213,8 @@
 					<input type="submit" @submit="before_submit_modify_user_img" id="modify-img-modifyBtn" class="confirm-yesBtn" value="수정">
 					<div id="modify-img-closeBtn" @click="close_modify_img_popup" class="confirm-noBtn" >닫기</div>
 				</section>
-			</div>
-		</form>
+      </div>
+    </form>
 		<!-- END MODIFY PROFILE IMAGE -->
 	
 		<!-- START USER_DELETE CUSTOM CONFIRM POPUP -->
@@ -1224,6 +1224,76 @@ export default {
           });
       }
     },
+    /** 비밀번호 수정 처리 함수 */
+    do_modify_pw_popup() {
+      if ($('#modify-pw-now').val().trim().length > 0 && $('#modify-pw-new').val().trim().length > 0 && $('#modify-pw-renew').val().trim().length > 0) {
+        if ($('.modify-error-txt:eq(0)').hasClass('blind')
+                && $('.modify-error-txt:eq(1)').hasClass('blind')
+                && $('.modify-error-txt:eq(2)').hasClass('blind')
+                && !$('.modify-popup-input-short').hasClass('null-input-border')
+                && !$('.modify-popup-input:eq(0)').hasClass('null-input-border')
+                && !$('.modify-popup-input:eq(1)').hasClass('null-input-border')) {
+          // 로딩 화면
+          $('.popup-background:eq(1)').removeClass('blind');
+          $('#spinner-section').removeClass('blind');
+
+          const params = new URLSearchParams();
+          params.append('user_no', window.atob(this.$cookies.get('user_no')));
+          params.append('user_pw', $('#modify-pw-renew').val().trim());
+
+          axios.post('http://localhost:8800/rence/user_pw_updateOK', params)
+            .then((res) => {
+              this.user_delete_flag = true;
+
+              // 로딩 화면 닫기
+              $('.popup-background:eq(1)').addClass('blind');
+              $('#spinner-section').addClass('blind');
+
+              // 비밀번호 변경 성공
+              if (res.data.result == 1) {
+                // INPUT 초기화
+                $('.modify-popup-input').val('');
+                $('.modify-popup-input-short').val('');
+
+                // 경고 테두리 초기화
+                $('.modify-popup-input-short').removeClass('null-input-border');
+                $('.modify-popup-input').removeClass('null-input-border');
+
+                // 성공 알림창
+                $('.popup-background:eq(1)').removeClass('blind');
+                $('#common-alert-popup').removeClass('blind');
+                $('.common-alert-txt').text('비밀번호가 변경되었습니다.');
+                $('#common-alert-btn').attr('is_reload', true);
+              } else {
+                $('.popup-background:eq(1)').removeClass('blind');
+                $('#common-alert-popup').removeClass('blind');
+                $('.common-alert-txt').text('예상치못한 오류로 비밀번호 변경에 실패하였습니다.');
+              }
+            })
+            .catch(() => {
+              this.find_id_flag = true;
+
+              // 로딩 화면 닫기
+              $('.popup-background:eq(1)').addClass('blind');
+              $('#spinner-section').addClass('blind');
+
+              $('.popup-background:eq(1)').removeClass('blind');
+              $('#common-alert-popup').removeClass('blind');
+              $('.common-alert-txt').text('오류 발생으로 인해 처리에 실패하였습니다.');
+            });
+        }
+      } else {
+        if ($('#modify-pw-now').val().trim().length == 0) {
+          $('#modify-pw-now').addClass('null-input-border');
+        }
+        if ($('#modify-pw-new').val().trim().length == 0) {
+          $('#modify-pw-new').addClass('null-input-border');
+        }
+        if ($('#modify-pw-renew').val().trim().length == 0) {
+          $('#modify-pw-renew').addClass('null-input-border');
+        }
+      }
+    },
     /** 비밀번호 팝업 닫기 처리 함수 */
     close_modify_pw_popup() {
       // INPUT 초기화
@@ -1241,7 +1311,7 @@ export default {
       $('#modify-pw-section').addClass('blind');
       $('.popup-background:eq(0)').addClass('blind');
     },
-    /** 비밀번호 수정 팝업 닫기 * */
+    /** 프로필 이미지 수정 팝업 닫기 * */
     close_modify_img_popup() {
       $('.review-upload-value').removeClass('null-input-border');
       $('.review-upload-value').val('');
