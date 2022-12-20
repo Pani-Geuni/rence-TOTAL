@@ -1,0 +1,67 @@
+/* ************ */
+/* @author 전판근 */
+/* ************ */
+
+.sales-state:not(:last-child) {
+  margin-bottom: 20px;
+
+  border-bottom: 1px solid #e4e4e4;
+}
+
+.sales-item {
+  margin-bottom: 12px;
+}
+
+.sales-item span:first-child::after {
+  content: '';
+}
+
+.sales-price::after {
+  content: ' 원';
+}
+
+.sales-ct {
+  min-height: 321px;
+}
+
+/**************************/
+/**** PAGING SECTION ******/
+/**************************/
+.paging-section {
+  width: 100%;
+  height: 10%;
+
+  display: flex;
+  justify-content: center;
+}
+
+.paging-wrap {
+  width: auto;
+  height: auto;
+  display: flex;
+}
+
+.paging-box {
+  width: 11px;
+  height: 10px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  border: 1.5px solid #D8D8D8;
+  background-color: #ffffff;
+  color: #B2B2B2;
+  font-size: 9px;
+
+  padding: 2px 2px 2px 1px;
+  cursor: pointer;
+}
+
+.choice {
+  color: #000000;
+}
+
+.un-choice {
+  color: #808080;
+}

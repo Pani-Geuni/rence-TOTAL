@@ -20,10 +20,8 @@ public interface officeDAO {
 
 	OfficeInfo_ViewDto select_one_office_info(String backoffice_no);
 
-	//backoffice 운영 시간
 	OfficeOperatingTimeDto_date select_one_operating_time(String backoffice_no);
 
-	// backoffice 운영 공간(Room)
 	List<OfficeRoomDto> select_all_room(String backoffice_no);
 
 	long total_rowCount_question_all(String backoffice_no);
@@ -68,4 +66,4 @@ public interface officeDAO {
 
 	List<ListViewDto> search_list(String type, String location, String searchWord, String condition, int i, int j);
 
-}
+}// end class

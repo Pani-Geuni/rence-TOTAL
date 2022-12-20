@@ -21,7 +21,6 @@ import org.springframework.stereotype.Service;
 import com.google.gson.Gson;
 import com.rence.backoffice.common.CustomDateFormatter;
 import com.rence.backoffice.model.BackOfficeDTO;
-import com.rence.common.OptionEngToKorMap;
 import com.rence.office.common.OfficeInfoMap;
 import com.rence.office.dao.officeDAO;
 import com.rence.office.model.Comment_Dto;
@@ -85,10 +84,8 @@ public class OfficeServiceImpl implements OfficeService {
 			tag_list.add("태그 없음");
 		}
 
-		log.info("--------odto.getBackoffice_image()---------- {}",odto.getBackoffice_image());
 		img_list = info_map.splitImage(odto.getBackoffice_image());
-		log.info("--------img_list---------- {}",img_list);
-		
+
 		if (odto.getBackoffice_option() != null) {
 			option_list = info_map.splitOption(odto.getBackoffice_option());
 		} else {
@@ -101,10 +98,7 @@ public class OfficeServiceImpl implements OfficeService {
 			around_option_list.add("주변 시설 없음");
 		}
 
-		
 		String short_roadname_address = info_map.makeShortAddress(odto.getRoadname_address());
-		
-		
 
 		// ******************
 		// backoffice 운영 시간
@@ -154,7 +148,6 @@ public class OfficeServiceImpl implements OfficeService {
 			}
 		}
 
-
 		map.put("totalPageCnt", totalPageCnt);
 		map.put("nowPage", nowPage);
 		map.put("maxPage", maxPage);
@@ -185,7 +178,7 @@ public class OfficeServiceImpl implements OfficeService {
 							vo.setComment_state("Y");
 						} else {
 							vo.setAnswer_content("x");
-		                     vo.setAnswer_date("x");
+							vo.setAnswer_date("x");
 						}
 					}
 				} else {
@@ -210,7 +203,7 @@ public class OfficeServiceImpl implements OfficeService {
 				String maskingName = firstName + maskingMidName + lastName;
 
 				vo.setUser_name(maskingName);
-				vo.setUser_image("https://rence.s3.ap-northeast-2.amazonaws.com/user/"+vo.getUser_image());
+				vo.setUser_image("https://rence.s3.ap-northeast-2.amazonaws.com/user/" + vo.getUser_image());
 			}
 		}
 
@@ -274,7 +267,7 @@ public class OfficeServiceImpl implements OfficeService {
 			String maskingName = firstName + maskingMidName + lastName;
 
 			dto.setUser_name(maskingName);
-			dto.setUser_image("https://rence.s3.ap-northeast-2.amazonaws.com/user/"+dto.getUser_image());
+			dto.setUser_image("https://rence.s3.ap-northeast-2.amazonaws.com/user/" + dto.getUser_image());
 		}
 
 		Map<String, Object> res = new HashMap<String, Object>();
@@ -406,7 +399,7 @@ public class OfficeServiceImpl implements OfficeService {
 				String maskingName = firstName + maskingMidName + lastName;
 
 				dto.setUser_name(maskingName);
-				dto.setUser_image("https://rence.s3.ap-northeast-2.amazonaws.com/user/"+dto.getUser_image());
+				dto.setUser_image("https://rence.s3.ap-northeast-2.amazonaws.com/user/" + dto.getUser_image());
 			}
 		}
 
@@ -480,7 +473,7 @@ public class OfficeServiceImpl implements OfficeService {
 			String maskingName = firstName + maskingMidName + lastName;
 
 			dto.setUser_name(maskingName);
-			dto.setUser_image("https://rence.s3.ap-northeast-2.amazonaws.com/user/"+dto.getUser_image());
+			dto.setUser_image("https://rence.s3.ap-northeast-2.amazonaws.com/user/" + dto.getUser_image());
 		}
 
 		map.put("redtos", redtos);
@@ -681,7 +674,6 @@ public class OfficeServiceImpl implements OfficeService {
 		Map<String, Object> map = new HashMap<String, Object>();
 
 		OptionEngToKorMap_office info_map = new OptionEngToKorMap_office();
-		
 
 		String backoffice_no = bdto.getBackoffice_no();
 
@@ -806,8 +798,7 @@ public class OfficeServiceImpl implements OfficeService {
 							dto.setAnswer_date("x");
 						}
 					}
-				}
-				else {
+				} else {
 					dto.setComment_state("N");
 					dto.setAnswer_content("x");
 					dto.setAnswer_date("x");
@@ -828,7 +819,7 @@ public class OfficeServiceImpl implements OfficeService {
 				String maskingName = firstName + maskingMidName + lastName;
 
 				dto.setUser_name(maskingName);
-				dto.setUser_image("https://rence.s3.ap-northeast-2.amazonaws.com/user/"+dto.getUser_image());
+				dto.setUser_image("https://rence.s3.ap-northeast-2.amazonaws.com/user/" + dto.getUser_image());
 			}
 		}
 
@@ -891,8 +882,7 @@ public class OfficeServiceImpl implements OfficeService {
 			String maskingName = firstName + maskingMidName + lastName;
 
 			dto.setUser_name(maskingName);
-			
-			dto.setUser_image("https://rence.s3.ap-northeast-2.amazonaws.com/user/"+dto.getUser_image());
+			dto.setUser_image("https://rence.s3.ap-northeast-2.amazonaws.com/user/" + dto.getUser_image());
 		}
 
 		// backoffice 기본 정보
