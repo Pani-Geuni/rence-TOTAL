@@ -20,6 +20,7 @@ public class UserUserDetailsService implements UserDetailsService {
 
 	@Override
 	public UserDetails loadUserByUsername(String user_id) throws UsernameNotFoundException {
+		log.info("user_id: {}",user_id);
 		UserEntity user = repository.findByUser_email(user_id);
 		log.info("user:{}", user);
 

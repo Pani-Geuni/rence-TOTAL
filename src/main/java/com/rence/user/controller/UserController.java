@@ -88,13 +88,9 @@ public class UserController {
 		log.info("user_find_id ()...");
 		log.info("result: {}", udto);
 
-		Map<String, String> map = new HashMap<String, String>();
-
-		String findId_res = service.user_find_Id(udto, evo);
-
-		map.put("result", findId_res);
+		Map<String, String> map = service.user_find_Id(udto, evo);
+	
 		String jsonObject = gson.toJson(map);
-
 		return jsonObject;
 	}
 
@@ -108,13 +104,10 @@ public class UserController {
 		log.info("user_find_pw ()...");
 		log.info("udto{}", udto); // 넘어오는 값 출력
 
-		Map<String, String> map = new HashMap<String, String>();
+		Map<String, String> map = service.user_find_pw(udto, evo);
 
-		String findPw_res = service.user_find_pw(udto, evo);
-
-		map.put("result", findPw_res);
+	
 		String jsonObject = gson.toJson(map);
-
 		return jsonObject;
 	}
 

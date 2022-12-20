@@ -183,7 +183,6 @@ public class UserDAOImpl implements UserDAO {
 		log.info("user_id_email_select()....");
 		log.info("udto: {}", udto);
 		
-		
 		UserEntity userEntity = repository.user_id_email_select(udto.getUser_id(), udto.getUser_email());
 
 		UserDto udto2 = null;
