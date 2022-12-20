@@ -44,6 +44,7 @@ public class LoginCheckController {
 		} else {
 			map.put("result", "0");
 		}
+		log.info("map: {}",map);
 		String jsonObject = gson.toJson(map);
 
 		return jsonObject;

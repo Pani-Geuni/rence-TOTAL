@@ -3,6 +3,7 @@ package com.rence.user.service;
 
 
 import java.text.DecimalFormat;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -55,6 +56,10 @@ public class UserMypageSeriviceImpl implements UserMypageSerivice {
 				user_no = c.getValue();
 			}
 		}
+		//Base64 디코더 작업으로 suerNo정보 가져오기
+		byte[] decodedBytes = Base64.getDecoder().decode(user_no);
+		user_no = new String(decodedBytes);
+		
 
 		UserMypageDto umdto = dao.user_mypage_select(user_no);
 

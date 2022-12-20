@@ -61,8 +61,11 @@ public class UserMypageDAOImpl implements UserMypageDAO {
 		log.info("user_no: {}", user_no);
 
 		UserMypageEntity entity = repository.user_mypage_select(user_no);
-
-		UserMypageDto mypagedto = modelmapper.map(entity, UserMypageDto.class);
+		
+		UserMypageDto mypagedto = null;
+		if(entity != null) {
+			 mypagedto = modelmapper.map(entity, UserMypageDto.class);
+		}
 
 		return mypagedto;
 	}
