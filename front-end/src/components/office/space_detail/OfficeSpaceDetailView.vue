@@ -537,11 +537,11 @@ export default {
       .then((res) => {
         // 로그인 되어 있음
         if (res.data.result === '1') {
-          this.$is_officeLogin = 'true';
+          this.$store.commit('office_setLogin_true');
         }
         // 로그인 되어 있지 않음(or 세션 만료)
         else {
-          this.$is_officeLogin = 'false';
+          this.$store.commit('office_setLogin_false');
         }
       })
       .catch(() => {
@@ -779,7 +779,7 @@ export default {
 
             // 로그인 되어 있음
             if (response.data.result === '1') {
-              this.$is_officeLogin = 'true';
+              this.$store.commit('office_setLogin_true');
 
               if ($('#question-select-choice').attr('choice') === 'true' && $('#question-write').val().trim().length > 0) {
                 if (this.question_flag) {
@@ -859,7 +859,7 @@ export default {
             }
             // 로그인 되어 있지 않음(or 세션 만료)
             else {
-              this.$is_officeLogin = 'false';
+              this.$store.commit('office_setLogin_false');
               $('.popup-background:eq(0)').removeClass('blind');
               $('#disconnect-session-popup').removeClass('blind');
             }
@@ -1034,7 +1034,7 @@ export default {
 
             // 로그인 되어 있음
             if (response.data.result === '1') {
-              this.$is_officeLogin = 'true';
+              this.$store.commit('office_setLogin_true');
 
               const user_no = window.atob(this.$cookies.get('user_no'));
               const backoffice_no = this.$route.params.parameters.split('backoffice_no=')[1];
@@ -1092,7 +1092,7 @@ export default {
             }
             // 로그인 되어 있지 않음(or 세션 만료)
             else {
-              this.$is_officeLogin = 'false';
+              this.$store.commit('office_setLogin_false');
               $('.popup-background:eq(0)').removeClass('blind');
               $('#disconnect-session-popup').removeClass('blind');
             }
@@ -1298,7 +1298,7 @@ export default {
 
             // 로그인 되어 있음
             if (response.data.result === '1') {
-              this.$is_officeLogin = 'true';
+              this.$store.commit('office_setLogin_true');
 
               $('.review-paging').find('.paging-box.paging-num').removeClass('choice');
               $('.review-paging').find('.paging-box.paging-num').addClass('un-choice');
@@ -1331,7 +1331,7 @@ export default {
             }
             // 로그인 되어 있지 않음(or 세션 만료)
             else {
-              this.$is_officeLogin = 'false';
+              this.$store.commit('office_setLogin_false');
               $('.popup-background:eq(0)').removeClass('blind');
               $('#disconnect-session-popup').removeClass('blind');
             }
