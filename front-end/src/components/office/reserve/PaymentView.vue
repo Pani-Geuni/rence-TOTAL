@@ -555,7 +555,12 @@ export default {
                       if (res.data.result === 1) {
                         alert('결제 성공');
                         const port = window.location.href.split('localhost:')[1].split('/static')[0];
-                        window.location.href = `http://localhost:${port}/reserve_list`;
+
+                        if (port === '8800') {
+                          window.location.href = 'http://localhost:8800/static/index.html#/reserve_list';
+                        } else {
+                          window.location.href = `http://localhost:${port}/reserve_list`;
+                        }
                       } else {
                         alert(`결제에 실패했습니다. 에러 내용 : ${rsp.error_msg}`);
                       }

@@ -182,7 +182,13 @@ export default {
         }
 
         const port = window.location.href.split('localhost:')[1].split('/static')[0];
-        window.location.href = `http://localhost:${port}/list/search_list/type=${this.type}&location=${this.location}&searchWord=${$('#input_searchBar').val().trim()}&condition=date&page=1`;
+
+        if (port === '8800') {
+          window.location.href = `http://localhost:8800/static/index.html#/list/search_list/type=${this.type}&location=${this.location}&searchWord=${$('#input_searchBar').val().trim()}&condition=date&page=1`;
+        } else {
+          window.location.href = `http://localhost:${port}/list/search_list/type=${this.type}&location=${this.location}&searchWord=${$('#input_searchBar').val().trim()}&condition=date&page=1`;
+        }
+        console.log(port);
       } else {
         $('.popup-background:eq(1)').removeClass('blind');
         $('#common-alert-popup').removeClass('blind');

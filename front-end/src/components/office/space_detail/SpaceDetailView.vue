@@ -842,7 +842,7 @@ export default {
                       $('.popup-background:eq(1)').addClass('blind');
                       $('#spinner-section').addClass('blind');
 
-                      if (res.data.result === 1) {
+                      if (res.data.result === '1') {
                         $('.qna-length').text('0');
                         $('#question-write').val('');
 
@@ -1165,20 +1165,6 @@ export default {
       $('.question-paging').find('.paging-box.paging-num').addClass('un-choice');
 
       $($('.question-paging').find('.paging-box.paging-num')[0]).click();
-
-      // const sample = $($('.question-paging').find('.paging-box.paging-num')[0]).clone();
-      // $('.question-paging').find('.paging-num-wrap').empty();
-
-      // for (let i = start; i <= last; i++) {
-      //   const sampleSpan = sample.clone();
-
-      //   sampleSpan.text(i);
-      //   sampleSpan.attr('idx', i);
-      //   sampleSpan.removeClass('choice');
-      //   sampleSpan.addClass('un-choice');
-
-      //   $('.question-paging').find('.paging-num-wrap').append(sampleSpan);
-      // }
     },
     /** 문의 탭 - 다음 페이지 리스트로 이동 */
     q_next_page() {
@@ -1207,20 +1193,6 @@ export default {
       $('.question-paging').find('.paging-box.paging-num').addClass('un-choice');
 
       $($('.question-paging').find('.paging-box.paging-num')[0]).click();
-
-      // const sample = $('.question-paging').find('.paging-num-wrap>.paging-box.paging-num:eq(0)').clone();
-      // $('.question-paging').find('.paging-num-wrap').empty();
-
-      // for (let i = start; i <= last; i++) {
-      //   const sampleSpan = sample.clone();
-
-      //   sampleSpan.text(i);
-      //   sampleSpan.attr('idx', i);
-      //   sampleSpan.removeClass('choice');
-      //   sampleSpan.addClass('un-choice');
-
-      //   $('.question-paging').find('.paging-num-wrap').append(sampleSpan);
-      // }
     },
     /** 후기 탭 - 이전 페이지 리스트로 이동 */
     r_prev_page() {
@@ -1251,20 +1223,6 @@ export default {
       $('.review-paging').find('.paging-box.paging-num').addClass('un-choice');
 
       $($('.review-paging').find('.paging-box.paging-num')[0]).click();
-
-      // const sample = $('.review-paging').find('.paging-num-wrap>.paging-box.paging-num:eq(0)').clone();
-      // $('.review-paging').find('.paging-num-wrap').empty();
-
-      // for (let i = start; i <= last; i++) {
-      //   const sampleSpan = sample.clone();
-
-      //   sampleSpan.text(i);
-      //   sampleSpan.attr('idx', i);
-      //   sampleSpan.removeClass('choice');
-      //   sampleSpan.addClass('un-choice');
-
-      //   $('.review-paging').find('.paging-num-wrap').append(sampleSpan);
-      // }
     },
     /** 후기 탭 - 다음 페이지 리스트로 이동 */
     r_next_page() {
@@ -1293,79 +1251,65 @@ export default {
       $('.review-paging').find('.paging-box.paging-num').addClass('un-choice');
 
       $($('.review-paging').find('.paging-box.paging-num')[0]).click();
-
-      // const sample = $('.review-paging').find('.paging-num-wrap>.paging-box.paging-num:eq(0)').clone();
-      // $('.review-paging').find('.paging-num-wrap').empty();
-
-      // for (let i = start; i <= last; i++) {
-      //   const sampleSpan = sample.clone();
-
-      //   sampleSpan.text(i);
-      //   sampleSpan.attr('idx', i);
-      //   sampleSpan.removeClass('choice');
-      //   sampleSpan.addClass('un-choice');
-
-      //   $('.review-paging').find('.paging-num-wrap').append(sampleSpan);
-      // }
     },
-    space_detail_q_paging() {},
+    space_detail_q_paging(param) {
+      $('.question-paging').find('.paging-box.paging-num').removeClass('choice');
+      $('.question-paging').find('.paging-box.paging-num').addClass('un-choice');
+
+      $(this).addClass('choice');
+      $(this).removeClass('un-choice');
+
+      // 로딩 화면
+      $('.popup-background:eq(1)').removeClass('blind');
+      $('#spinner-section').removeClass('blind');
+
+      axios.get(`http://localhost:8800/office/introduce_q_paging?backoffice_no=${this.$route.params.parameters.split('backoffice_no=')[1]}&page=${Number($(param).text())}`)
+        .then((res) => {
+          console.log(res.data);
+          // 로딩 화면 닫기
+          $('.popup-background:eq(1)').addClass('blind');
+          $('#spinner-section').addClass('blind');
+
+          this.list.cvdto = res.data.cvdto;
+        })
+        .catch(() => {
+          // 로딩 화면 닫기
+          $('.popup-background:eq(1)').addClass('blind');
+          $('#spinner-section').addClass('blind');
+
+          $('.popup-background:eq(1)').removeClass('blind');
+          $('#common-alert-popup').removeClass('blind');
+          $('.common-alert-txt').text('오류 발생으로 인해 문의를 불러오는데에 실패하였습니다.');
+        });
+    },
     space_detail_r_paging(param) {
-      if (this.axiosFlag) {
-        this.axiosFlag = false;
+      $('.review-paging').find('.paging-box.paging-num').removeClass('choice');
+      $('.review-paging').find('.paging-box.paging-num').addClass('un-choice');
 
-        // 로그인 여부 체크 -> 헤더를 위해
-        axios.get('http://localhost:8800/loginCheck')
-          .then((response) => {
-            this.axiosFlag = true;
+      $(param).addClass('choice');
+      $(param).removeClass('un-choice');
 
-            // 로그인 되어 있음
-            if (response.data.result === '1') {
-              this.$store.commit('office_setLogin_true');
+      // 로딩 화면
+      $('.popup-background:eq(1)').removeClass('blind');
+      $('#spinner-section').removeClass('blind');
 
-              $('.review-paging').find('.paging-box.paging-num').removeClass('choice');
-              $('.review-paging').find('.paging-box.paging-num').addClass('un-choice');
+      axios.get(`http://localhost:8800/office/introduce_r_paging?backoffice_no=${this.$route.params.parameters.split('backoffice_no=')[1]}&page=${Number($(param).text())}`)
+        .then((res) => {
+          // 로딩 화면 닫기
+          $('.popup-background:eq(1)').addClass('blind');
+          $('#spinner-section').addClass('blind');
 
-              $(param).addClass('choice');
-              $(param).removeClass('un-choice');
+          this.list.revos = res.data.redtos;
+        })
+        .catch(() => {
+          // 로딩 화면 닫기
+          $('.popup-background:eq(1)').addClass('blind');
+          $('#spinner-section').addClass('blind');
 
-              // 로딩 화면
-              $('.popup-background:eq(1)').removeClass('blind');
-              $('#spinner-section').removeClass('blind');
-
-              axios.get(`http://localhost:8800/office/introduce_r_paging?backoffice_no=${this.$route.params.parameters.split('backoffice_no=')[1]}&page=${Number($(param).text())}`)
-                .then((res) => {
-                  // 로딩 화면 닫기
-                  $('.popup-background:eq(1)').addClass('blind');
-                  $('#spinner-section').addClass('blind');
-
-                  this.list.revos = res.data.redtos;
-                })
-                .catch(() => {
-                  // 로딩 화면 닫기
-                  $('.popup-background:eq(1)').addClass('blind');
-                  $('#spinner-section').addClass('blind');
-
-                  $('.popup-background:eq(1)').removeClass('blind');
-                  $('#common-alert-popup').removeClass('blind');
-                  $('.common-alert-txt').text('오류 발생으로 인해 후기를 불러오는데에 실패하였습니다.');
-                });
-            }
-            // 로그인 되어 있지 않음(or 세션 만료)
-            else {
-              this.$store.commit('office_setLogin_false');
-
-              $('.popup-background:eq(0)').removeClass('blind');
-              $('#disconnect-session-popup').removeClass('blind');
-            }
-          })
-          .catch(() => {
-            this.axiosFlag = true;
-
-            $('.popup-background:eq(1)').removeClass('blind');
-            $('#common-alert-popup').removeClass('blind');
-            $('.common-alert-txt').text('오류 발생으로 인해 로그인 여부를 불러오는데에 실패하였습니다.');
-          });
-      }
+          $('.popup-background:eq(1)').removeClass('blind');
+          $('#common-alert-popup').removeClass('blind');
+          $('.common-alert-txt').text('오류 발생으로 인해 후기를 불러오는데에 실패하였습니다.');
+        });
     },
   }, // END methods()
 };

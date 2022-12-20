@@ -457,6 +457,9 @@ export default {
 
       axios.get('/rence/user_logoutOK')
         .then((res) => {
+          $('.popup-background:eq(0)').addClass('blind');
+          $('#logout-popup').addClass('blind');
+
           // 로딩 화면 닫기
           $('.popup-background:eq(1)').addClass('blind');
           $('#spinner-section').addClass('blind');
@@ -464,14 +467,22 @@ export default {
           // 로그아웃 성공 시
           if (res.data.result === '1') {
             this.$store.commit('office_setLogin_false');
+
             const port = window.location.href.split('localhost:')[1].split('/static')[0];
-            window.location.href = `http://localhost:${port}/static/index.html#/`;
+            if (port === '8800') {
+              window.location.href = 'http://localhost:8800/static/index.html#/';
+            } else {
+              window.location.href = `http://localhost:${port}/list/search_list/type=${this.type}&location=${this.location}&searchWord=${$('#input_searchBar').val().trim()}&condition=date&page=1`;
+            }
           }
           // 로그아웃 실패
           else {
             // 로딩 화면 닫기
             $('.popup-background:eq(1)').addClass('blind');
             $('#spinner-section').addClass('blind');
+
+            $('.popup-background:eq(0)').addClass('blind');
+            $('#logout-popup').addClass('blind');
 
             $('.popup-background:eq(1)').removeClass('blind');
             $('#common-alert-popup').removeClass('blind');
@@ -1427,34 +1438,21 @@ export default {
         this.refund_flag = false;
         const reserve_no = window.location.href.split('reserve_no=')[1];
         const user_no = window.atob(this.$cookies.get('user_no'));
-        const actual_payment = parseInt($('#actual_payment').attr('actual_payment').replace(',', ''));
 
         // 로딩 페이지 오픈
         $('.popup-background:eq(1)').removeClass('blind');
         $('#spinner-section').removeClass('blind');
 
-        const params = new URLSearchParams();
-        params.append('reserve_no', reserve_no);
-        params.append('user_no', user_no);
-
-        axios.get('http://localhost:8800/rence/reserve_cancel', params)
+        axios.get(`http://localhost:8800/rence/reserve_cancel?reserve_no=${reserve_no}&user_no=${user_no}`)
           .then((res) => {
             if (res.data.result === '1') {
               const reserve_no = location.href.split('reserve_no=')[1].split('&')[0];
               const cancel_amount = parseInt($('#actual_payment').attr('actual_payment').replace(',', ''));
 
-              // const params = new URLSearchParams();
-              // params.append('reserve_no', reserve_no);
-              // params.append('cancel_amount', cancel_amount);
-              // params.append('reason', '예약 취소로 인한 결제 환불');
-
-              axios.get('http://localhost:8800/rence/payment_cancel', {
-                reserve_no,
-                cancel_amount,
-                reason: '예약 취소로 인한 결제 환불',
-              })
+              axios.get(`http://localhost:8800/rence/payment_cancel?reserve_no=${reserve_no}&cancel_amount=${cancel_amount}&reason=예약 취소로 인한 결제 환불`)
                 .then((response) => {
                   this.refund_flag = true;
+
                   // 로딩 화면 닫기
                   $('.popup-background:eq(1)').addClass('blind');
                   $('#spinner-section').addClass('blind');
@@ -1465,7 +1463,11 @@ export default {
 
                     const port = window.location.href.split('localhost:')[1].split('/#')[0];
 
-                    window.location.href = `http://localhost:${port}/reserve_list`;
+                    if (port === '8800') {
+                      window.location.href = 'http://localhost:8800/static/index.html#/reserve_list';
+                    } else {
+                      window.location.href = `http://localhost:${port}/reserve_list`;
+                    }
                   }
                 })
                 .catch(() => {
