@@ -97,30 +97,62 @@ export default {
     };
   },
   mounted() {
-    axios.get(`http://localhost:8800/rence/review_list?user_no=${this.$cookies.get('user_no')}&page=1`)
-      .then((res) => {
-        this.list = res.data.list;
-        this.maxPage = res.data.maxPage;
-        this.nowPage = res.data.nowPage;
-        this.totalPageCnt = res.data.totalPageCnt;
-        this.start = Math.ceil(res.data.nowPage / 5.0);
-        this.start = 5 * (this.start - 1) + 1;
+    // 로그인 여부 체크 -> 헤더를 위해
+    axios.get('http://localhost:8800/loginCheck')
+      .then((response) => {
+        // 로그인 되어 있음
+        if (response.data.result === '1') {
+          this.$is_officeLogin = 'true';
 
-        this.forRange = [];
-        for (let i = this.start; i <= this.maxPage; i++) {
-          this.forRange.push(i);
+          /** ********** *** */
+          /** * GET DATA *** */
+          /** ********** *** */
+
+          // 로딩 화면
+          $('.popup-background:eq(1)').removeClass('blind');
+          $('#spinner-section').removeClass('blind');
+
+          axios.get(`http://localhost:8800/rence/review_list?user_no=${this.$cookies.get('user_no')}&page=1`)
+            .then((res) => {
+              this.list = res.data.list;
+              this.maxPage = res.data.maxPage;
+              this.nowPage = res.data.nowPage;
+              this.totalPageCnt = res.data.totalPageCnt;
+              this.start = Math.ceil(res.data.nowPage / 5.0);
+              this.start = 5 * (this.start - 1) + 1;
+
+              this.forRange = [];
+              for (let i = this.start; i <= this.maxPage; i++) {
+                this.forRange.push(i);
+              }
+
+              this.load = true;
+
+              // 로딩 화면
+              $('.popup-background:eq(1)').addClass('blind');
+              $('#spinner-section').addClass('blind');
+            })
+            .catch(() => {
+              // 로딩 화면
+              $('.popup-background:eq(1)').addClass('blind');
+              $('#spinner-section').addClass('blind');
+
+              $('.popup-background:eq(1)').removeClass('blind');
+              $('#common-alert-popup').removeClass('blind');
+              $('.common-alert-txt').text('오류 발생으로 인해 처리에 실패하였습니다.');
+            });
         }
-
-        this.load = true;
-
-        // 로딩 화면
-        $('.popup-background:eq(1)').addClass('blind');
-        $('#spinner-section').addClass('blind');
+        // 로그인 되어 있지 않음(or 세션 만료)
+        else {
+          this.$is_officeLogin = 'false';
+          $('.popup-background:eq(0)').removeClass('blind');
+          $('#disconnect-session-popup').removeClass('blind');
+        }
       })
       .catch(() => {
         $('.popup-background:eq(1)').removeClass('blind');
         $('#common-alert-popup').removeClass('blind');
-        $('.common-alert-txt').text('오류 발생으로 인해 처리에 실패하였습니다.');
+        $('.common-alert-txt').text('오류 발생으로 인해 로그인 여부를 불러오는데에 실패하였습니다.');
       });
   },
   methods: {

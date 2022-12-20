@@ -45,7 +45,7 @@
       </section>
 
       <section class="my-page-menu-section">
-        <router-link to="#/reserve_list">
+        <router-link to="/reserve_list">
           <div id="reserve-menu" class="menu-box left-menu menu-top">
             <section class="menu-box-img-section">
               <img src="@/assets/IMG/my-page/calendar.svg" alt="menu-box-img" class="menu-box-img" />
@@ -57,7 +57,7 @@
           </div>
         </router-link>
 
-        <router-link to="#/mileage">
+        <router-link to="/mileage">
           <div id="mileage-menu" class="menu-box menu-top">
               <section class="menu-box-img-section">
                   <img src="@/assets/IMG/my-page/bi_coin.svg" alt="menu-box-img" class="menu-box-img" />
@@ -72,7 +72,7 @@
           </div>
         </router-link>
 
-        <router-link to="#/review">
+        <router-link to="/review">
           <div id="review-menu" class="menu-box left-menu">
             <section class="menu-box-img-section">
               <img src="@/assets/IMG/my-page/review.svg" alt="menu-box-img" class="menu-box-img" />
@@ -84,7 +84,7 @@
           </div>
         </router-link>
 
-        <router-link to="#/question">
+        <router-link to="/question">
           <div id="question-menu" class="menu-box">
             <section class="menu-box-img-section">
               <img src="@/assets/IMG/my-page/letter.svg" alt="menu-box-img" class="menu-box-img" />
@@ -118,27 +118,51 @@ export default {
     };
   },
   mounted() {
-    // 로딩 화면
-    $('.popup-background:eq(1)').removeClass('blind');
-    $('#spinner-section').removeClass('blind');
+    // 로그인 여부 체크 -> 헤더를 위해
+    axios.get('http://localhost:8800/loginCheck')
+      .then((response) => {
+        // 로그인 되어 있음
+        if (response.data.result === '1') {
+          this.$is_officeLogin = 'true';
 
-    axios.get('http://localhost:8800/rence/go_my_page')
-      .then((res) => {
-        this.list = res.data.list;
-        this.load = true;
+          /** ********** *** */
+          /** * GET DATA *** */
+          /** ********** *** */
 
-        // 로딩 화면
-        $('.popup-background:eq(1)').addClass('blind');
-        $('#spinner-section').addClass('blind');
+          // 로딩 화면
+          $('.popup-background:eq(1)').removeClass('blind');
+          $('#spinner-section').removeClass('blind');
+
+          axios.get('http://localhost:8800/rence/go_my_page')
+            .then((res) => {
+              this.list = res.data.list;
+              this.load = true;
+
+              // 로딩 화면
+              $('.popup-background:eq(1)').addClass('blind');
+              $('#spinner-section').addClass('blind');
+            })
+            .catch(() => {
+              // 로딩 화면
+              $('.popup-background:eq(1)').addClass('blind');
+              $('#spinner-section').addClass('blind');
+
+              $('.popup-background:eq(1)').removeClass('blind');
+              $('#common-alert-popup').removeClass('blind');
+              $('.common-alert-txt').text('오류 발생으로 인해 처리에 실패하였습니다.');
+            });
+        }
+        // 로그인 되어 있지 않음(or 세션 만료)
+        else {
+          this.$is_officeLogin = 'false';
+          $('.popup-background:eq(0)').removeClass('blind');
+          $('#disconnect-session-popup').removeClass('blind');
+        }
       })
       .catch(() => {
-        // 로딩 화면
-        $('.popup-background:eq(1)').addClass('blind');
-        $('#spinner-section').addClass('blind');
-
         $('.popup-background:eq(1)').removeClass('blind');
         $('#common-alert-popup').removeClass('blind');
-        $('.common-alert-txt').text('오류 발생으로 인해 처리에 실패하였습니다.');
+        $('.common-alert-txt').text('오류 발생으로 인해 로그인 여부를 불러오는데에 실패하였습니다.');
       });
   },
   methods: {

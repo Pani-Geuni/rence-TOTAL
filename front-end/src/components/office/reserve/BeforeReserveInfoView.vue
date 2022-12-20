@@ -11,7 +11,7 @@
 -->
 
 <template>
-  <div class="space-detail-wrap" th:fragment="content">
+  <div class="space-detail-wrap" v-if="load === true">
     <section class="page-title-section">
         <span class="page-title">과거에 예약한 공간 정보를 보여드려요</span>
     </section>
@@ -252,15 +252,45 @@ export default {
       list: '',
       review_flag: true,
       reserveNo: '',
+      load: false,
     };
   },
   mounted() {
     // 로그인 여부 체크 -> 헤더를 위해
     axios.get('http://localhost:8800/loginCheck')
-      .then((res) => {
+      .then((response) => {
         // 로그인 되어 있음
-        if (res.data.result === '1') {
+        if (response.data.result === '1') {
           this.$is_officeLogin = 'true';
+
+          /** ********** *** */
+          /** * GET DATA *** */
+          /** ********** *** */
+
+          // 로딩 화면
+          $('.popup-background:eq(1)').removeClass('blind');
+          $('#spinner-section').removeClass('blind');
+
+          this.reserveNo = decodeURI(window.location.href).split('reserve_no=')[1];
+
+          axios.get(`http://localhost:8800/rence/reserved_info?reserve_no=${reserveNo}`)
+            .then((res) => {
+              this.list = res.data;
+              this.load = true;
+
+              // 로딩 화면
+              $('.popup-background:eq(1)').addClass('blind');
+              $('#spinner-section').addClass('blind');
+            })
+            .catch(() => {
+              // 로딩 화면
+              $('.popup-background:eq(1)').addClass('blind');
+              $('#spinner-section').addClass('blind');
+
+              $('.popup-background:eq(1)').removeClass('blind');
+              $('#common-alert-popup').removeClass('blind');
+              $('.common-alert-txt').text('오류 발생으로 인해 처리에 실패하였습니다.');
+            });
         }
         // 로그인 되어 있지 않음(or 세션 만료)
         else {
@@ -273,19 +303,6 @@ export default {
         $('.popup-background:eq(1)').removeClass('blind');
         $('#common-alert-popup').removeClass('blind');
         $('.common-alert-txt').text('오류 발생으로 인해 로그인 여부를 불러오는데에 실패하였습니다.');
-      });
-
-    // eslint-disable-next-line prefer-destructuring
-    this.reserveNo = decodeURI(window.location.href).split('reserve_no=')[1];
-
-    axios.get(`http://localhost:8800/rence/reserved_info?reserve_no=${reserveNo}`)
-      .then((res) => {
-        this.list = res.data;
-      })
-      .catch(() => {
-        $('.popup-background:eq(1)').removeClass('blind');
-        $('#common-alert-popup').removeClass('blind');
-        $('.common-alert-txt').text('오류 발생으로 인해 처리에 실패하였습니다.');
       });
   },
   methods: {

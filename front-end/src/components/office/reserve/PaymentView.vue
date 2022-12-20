@@ -258,16 +258,86 @@ export default {
     };
   },
   mounted() {
-    // 로딩 화면
-    $('.popup-background:eq(1)').removeClass('blind');
-    $('#spinner-section').removeClass('blind');
-
     // 로그인 여부 체크 -> 헤더를 위해
     axios.get('http://localhost:8800/loginCheck')
-      .then((res) => {
+      .then((response) => {
         // 로그인 되어 있음
-        if (res.data.result === '1') {
+        if (response.data.result === '1') {
           this.$is_officeLogin = 'true';
+
+          /** ********** *** */
+          /** * GET DATA *** */
+          /** ********** *** */
+
+          // 로딩 화면
+          $('.popup-background:eq(1)').removeClass('blind');
+          $('#spinner-section').removeClass('blind');
+
+          this.IMP.init('imp26554321');
+
+          this.reserveNo = decodeURI(window.location.href.split('reserve_no=')[1]);
+          axios.get(`http://localhost:8800/office/payment?reserve_no=${this.reserve_no}`)
+            .then((res) => {
+              this.list = res.data;
+              this.timer();
+
+              $('.room_price').each(function (index, value) {
+                const price = $(value).text();
+                $(this).text(price.replace(/\B(?=(\d{3})+(?!\d))/g, ','));
+              });
+
+              $('#payment_all').text(
+                $('#payment_all')
+                  .text()
+                  .replace(/\B(?=(\d{3})+(?!\d))/g, ','),
+              );
+
+              $('#earned_mileage').text(
+                $('#earned_mileage')
+                  .text()
+                  .replace(/\B(?=(\d{3})+(?!\d))/g, ','),
+              );
+
+              $('#my-mileage').text(
+                $('#my-mileage')
+                  .text()
+                  .replace(/\B(?=(\d{3})+(?!\d))/g, ','),
+              );
+
+              $('#max-use-mileage').text(
+                $('#max-use-mileage')
+                  .text()
+                  .replace(/\B(?=(\d{3})+(?!\d))/g, ','),
+              );
+
+              this.payment_all = parseInt($('#payment_all').attr('payment_all'));
+              this.earned_mileage = parseInt($('#earned_mileage').attr('earned_mileage'));
+              this.actual_payment = payment_all;
+
+              this.max_use_mileage = parseInt($('#my-mileage').attr('my-mileage'));
+              this.deposit = payment_all * 0.2;
+
+              if ((this.payment_all * 0.8) <= this.max_use_mileage) {
+                this.max_use_mileage = payment_all * 0.8;
+                $('#max-use-mileage').attr('max-use-mileage', this.max_use_mileage);
+                $('#max-use-mileage').text(this.max_use_mileage);
+              }
+
+              this.load = true;
+
+              // 로딩 화면
+              $('.popup-background:eq(1)').addClass('blind');
+              $('#spinner-section').addClass('blind');
+            })
+            .catch(() => {
+              // 로딩 화면
+              $('.popup-background:eq(1)').addClass('blind');
+              $('#spinner-section').addClass('blind');
+
+              $('.popup-background:eq(1)').removeClass('blind');
+              $('#common-alert-popup').removeClass('blind');
+              $('.common-alert-txt').text('오류 발생으로 인해 처리에 실패하였습니다.');
+            });
         }
         // 로그인 되어 있지 않음(or 세션 만료)
         else {
@@ -280,73 +350,6 @@ export default {
         $('.popup-background:eq(1)').removeClass('blind');
         $('#common-alert-popup').removeClass('blind');
         $('.common-alert-txt').text('오류 발생으로 인해 로그인 여부를 불러오는데에 실패하였습니다.');
-      });
-
-    this.IMP.init('imp26554321');
-
-    this.reserveNo = decodeURI(window.location.href.split('reserve_no=')[1]);
-
-    axios.get(`http://localhost:8800/office/payment?reserve_no=${this.reserve_no}`)
-      .then((res) => {
-        this.list = res.data;
-        this.timer();
-
-        $('.room_price').each(function (index, value) {
-          const price = $(value).text();
-          $(this).text(price.replace(/\B(?=(\d{3})+(?!\d))/g, ','));
-        });
-
-        $('#payment_all').text(
-          $('#payment_all')
-            .text()
-            .replace(/\B(?=(\d{3})+(?!\d))/g, ','),
-        );
-
-        $('#earned_mileage').text(
-          $('#earned_mileage')
-            .text()
-            .replace(/\B(?=(\d{3})+(?!\d))/g, ','),
-        );
-
-        $('#my-mileage').text(
-          $('#my-mileage')
-            .text()
-            .replace(/\B(?=(\d{3})+(?!\d))/g, ','),
-        );
-
-        $('#max-use-mileage').text(
-          $('#max-use-mileage')
-            .text()
-            .replace(/\B(?=(\d{3})+(?!\d))/g, ','),
-        );
-
-        this.payment_all = parseInt($('#payment_all').attr('payment_all'));
-        this.earned_mileage = parseInt($('#earned_mileage').attr('earned_mileage'));
-        this.actual_payment = payment_all;
-
-        this.max_use_mileage = parseInt($('#my-mileage').attr('my-mileage'));
-        this.deposit = payment_all * 0.2;
-
-        if ((this.payment_all * 0.8) <= this.max_use_mileage) {
-          this.max_use_mileage = payment_all * 0.8;
-          $('#max-use-mileage').attr('max-use-mileage', this.max_use_mileage);
-          $('#max-use-mileage').text(this.max_use_mileage);
-        }
-
-        this.load = true;
-
-        // 로딩 화면
-        $('.popup-background:eq(1)').addClass('blind');
-        $('#spinner-section').addClass('blind');
-      })
-      .catch(() => {
-        // 로딩 화면
-        $('.popup-background:eq(1)').addClass('blind');
-        $('#spinner-section').addClass('blind');
-
-        $('.popup-background:eq(1)').removeClass('blind');
-        $('#common-alert-popup').removeClass('blind');
-        $('.common-alert-txt').text('오류 발생으로 인해 처리에 실패하였습니다.');
       });
   },
   methods: {
