@@ -125,8 +125,11 @@ public class officeDAOImpl implements officeDAO {
 
 		List<OfficeRoomEntity> entity_list = room_repository.select_all_room_info(backoffice_no);
 
-		List<OfficeRoomDto> dtos = entity_list.stream().map(source -> modelmapper.map(source, OfficeRoomDto.class))
-				.collect(Collectors.toList());
+		List<OfficeRoomDto> dtos = null;
+		if(entity_list != null) {
+			dtos = entity_list.stream().map(source -> modelmapper.map(source, OfficeRoomDto.class))
+					.collect(Collectors.toList());
+		}
 
 		return dtos;
 	}
