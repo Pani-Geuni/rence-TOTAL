@@ -103,6 +103,7 @@ export default {
       forRange: '',
       searchFlag: false,
       load: false,
+      axiosFlag: true,
     };
   },
   mounted() {
@@ -121,7 +122,7 @@ export default {
           $('.popup-background:eq(1)').removeClass('blind');
           $('#spinner-section').removeClass('blind');
 
-          axios.get(`http://localhost:8800/rence/mileage?user_no=${this.$cookies.get('user_no')}&page=1`)
+          axios.get(`http://localhost:8800/rence/mileage?user_no=${window.atob(this.$cookies.get('user_no'))}&page=1`)
             .then((res) => {
               this.mileage_total = res.data.mileage_total;
               this.searchKey = res.data.searchKey;
@@ -166,60 +167,73 @@ export default {
       });
   },
   methods: {
-    show_user_delete_popup() {
-      $('.popup-background:eq(0)').removeClass('blind');
-      $('#user-delete-confirm-popup').removeClass('blind');
-    },
-    show_modify_img_popup() {
-      $('.popup-background:eq(0)').removeClass('blind');
-      $('#modify-img-section').removeClass('blind');
-    },
-    show_modify_pw_popup() {
-      $('.popup-background:eq(0)').removeClass('blind');
-      $('#modify-pw-section').removeClass('blind');
-    },
     /** 마일리지 세부 메뉴 선택 클릭 이벤트 */
     choice_menu(param) {
-      $('.menus').removeClass('choice');
-      $('.menus').addClass('un-choice');
+      if (this.axiosFlag) {
+        this.axiosFlag = false;
 
-      $(param).removeClass('un-choice');
-      $(param).addClass('choice');
+        // 로그인 여부 체크 -> 헤더를 위해
+        axios.get('http://localhost:8800/loginCheck')
+          .then((response) => {
+            this.axiosFlag = true;
 
-      // 로딩 화면
-      $('.popup-background:eq(1)').removeClass('blind');
-      $('#spinner-section').removeClass('blind');
+            // 로그인 되어 있음
+            if (response.data.result === '1') {
+              this.$is_officeLogin = 'true';
+              $('.menus').removeClass('choice');
+              $('.menus').addClass('un-choice');
 
-      axios.get(`http://localhost:8800/rence/mileage_search_list?searchKey=${$(this).attr('id')}&user_no=${this.$cookies.get('user_no')}&page=1`)
-        .then((res) => {
-          // 로딩 화면 닫기
-          $('.popup-background:eq(1)').addClass('blind');
-          $('#spinner-section').addClass('blind');
+              $(param).removeClass('un-choice');
+              $(param).addClass('choice');
 
-          // this.mileage_total = res.data.mileage_total;
-          // this.searchKey = res.data.searchKey;
-          this.list = res.data.list;
-          // this.maxPage = res.data.maxPage;
-          // this.nowPage = res.data.nowPage;
-          // this.totalPageCnt = res.data.totalPageCnt;
-          // this.start = Math.ceil(res.data.nowPage / 5.0);
-          // this.start = 5 * (this.start - 1) + 1;
-          // this.searchFlag = true;
+              // 로딩 화면
+              $('.popup-background:eq(1)').removeClass('blind');
+              $('#spinner-section').removeClass('blind');
 
-          // this.forRange = [];
-          // for (let i = this.start; i <= this.maxPage; i++) {
-          //   this.forRange.push(i);
-          // }
-        })
-        .catch(() => {
-          // 로딩 화면 닫기
-          $('.popup-background:eq(1)').addClass('blind');
-          $('#spinner-section').addClass('blind');
+              axios.get(`http://localhost:8800/rence/mileage_search_list?searchKey=${$(this).attr('id')}&user_no=${window.atob(this.$cookies.get('user_no'))}&page=1`)
+                .then((res) => {
+                // 로딩 화면 닫기
+                  $('.popup-background:eq(1)').addClass('blind');
+                  $('#spinner-section').addClass('blind');
 
-          $('.popup-background:eq(1)').removeClass('blind');
-          $('#common-alert-popup').removeClass('blind');
-          $('.common-alert-txt').text('오류 발생으로 인해 처리에 실패하였습니다.');
-        });
+                  // this.mileage_total = res.data.mileage_total;
+                  // this.searchKey = res.data.searchKey;
+                  this.list = res.data.list;
+                  // this.maxPage = res.data.maxPage;
+                  // this.nowPage = res.data.nowPage;
+                  // this.totalPageCnt = res.data.totalPageCnt;
+                  // this.start = Math.ceil(res.data.nowPage / 5.0);
+                  // this.start = 5 * (this.start - 1) + 1;
+                  // this.searchFlag = true;
+
+                // this.forRange = [];
+                // for (let i = this.start; i <= this.maxPage; i++) {
+                //   this.forRange.push(i);
+                // }
+                })
+                .catch(() => {
+                // 로딩 화면 닫기
+                  $('.popup-background:eq(1)').addClass('blind');
+                  $('#spinner-section').addClass('blind');
+
+                  $('.popup-background:eq(1)').removeClass('blind');
+                  $('#common-alert-popup').removeClass('blind');
+                  $('.common-alert-txt').text('오류 발생으로 인해 처리에 실패하였습니다.');
+                });
+            }
+            // 로그인 되어 있지 않음(or 세션 만료)
+            else {
+              this.$is_officeLogin = 'false';
+            }
+          })
+          .catch(() => {
+            this.axiosFlag = true;
+
+            $('.popup-background:eq(1)').removeClass('blind');
+            $('#common-alert-popup').removeClass('blind');
+            $('.common-alert-txt').text('오류 발생으로 인해 로그인 여부를 불러오는데에 실패하였습니다.');
+          });
+      }
     },
     /** 이전 페이지 리스트로 이동 */
     prev_page() {
@@ -284,7 +298,7 @@ export default {
       this.nowPage = start;
 
       this.forRange = [];
-      for (let i = s; i <= end; i++) {
+      for (let i = start; i <= last; i++) {
         this.forRange.push(i);
       }
 
@@ -309,41 +323,69 @@ export default {
     },
     /** 페이지 번호에 맞는 데이터 불러오기 */
     do_select_page(param) {
-      // 로딩 화면
-      $('.popup-background:eq(1)').removeClass('blind');
-      $('#spinner-section').removeClass('blind');
+      if (this.axiosFlag) {
+        this.axiosFlag = false;
 
-      const URL = '';
-      if (this.searchFlag) {
-        URL = `http://localhost:8800/rence/mileage_search_list?searchKey=${this.searchKey}&user_no=${this.$cookies.get('user_no')}&page=${$(param).attr('idx')}`;
-      } else {
-        URL = `http://localhost:8800/rence/mileage?user_no=${this.$cookies.get('user_no')}&page=${$(param).attr('idx')}`;
+        // 로그인 여부 체크 -> 헤더를 위해
+        axios.get('http://localhost:8800/loginCheck')
+          .then((response) => {
+            this.axiosFlag = true;
+
+            // 로그인 되어 있음
+            if (response.data.result === '1') {
+              this.$is_officeLogin = 'true';
+
+              // 로딩 화면
+              $('.popup-background:eq(1)').removeClass('blind');
+              $('#spinner-section').removeClass('blind');
+
+              const URL = '';
+              if (this.searchFlag) {
+                URL = `http://localhost:8800/rence/mileage_search_list?searchKey=${this.searchKey}&user_no=${window.atob(this.$cookies.get('user_no'))}&page=${$(param).attr('idx')}`;
+              } else {
+                URL = `http://localhost:8800/rence/mileage?user_no=${window.atob(this.$cookies.get('user_no'))}&page=${$(param).attr('idx')}`;
+              }
+
+              axios.get(URL)
+                .then((res) => {
+                // 로딩 화면 닫기
+                  $('.popup-background:eq(1)').addClass('blind');
+                  $('#spinner-section').addClass('blind');
+
+                  // this.mileage_total = res.data.mileage_total;
+                  // this.searchKey = res.data.searchKey;
+                  this.list = res.data.list;
+                // this.maxPage = res.data.maxPage;
+                // this.nowPage = res.data.nowPage;
+                // this.totalPageCnt = res.data.totalPageCnt;
+                // this.start = Math.ceil(res.data.nowPage / 5.0);
+                // this.start = 5 * (this.start - 1) + 1;
+                })
+                .catch(() => {
+                // 로딩 화면 닫기
+                  $('.popup-background:eq(1)').addClass('blind');
+                  $('#spinner-section').addClass('blind');
+
+                  $('.popup-background:eq(1)').removeClass('blind');
+                  $('#common-alert-popup').removeClass('blind');
+                  $('.common-alert-txt').text('오류 발생으로 인해 처리에 실패하였습니다.');
+                });
+            }
+            // 로그인 되어 있지 않음(or 세션 만료)
+            else {
+              this.$is_officeLogin = 'false';
+              $('.popup-background:eq(0)').removeClass('blind');
+              $('#disconnect-session-popup').removeClass('blind');
+            }
+          })
+          .catch(() => {
+            this.axiosFlag = true;
+
+            $('.popup-background:eq(1)').removeClass('blind');
+            $('#common-alert-popup').removeClass('blind');
+            $('.common-alert-txt').text('오류 발생으로 인해 로그인 여부를 불러오는데에 실패하였습니다.');
+          });
       }
-
-      axios.get(URL)
-        .then((res) => {
-          // 로딩 화면 닫기
-          $('.popup-background:eq(1)').addClass('blind');
-          $('#spinner-section').addClass('blind');
-
-          // this.mileage_total = res.data.mileage_total;
-          // this.searchKey = res.data.searchKey;
-          this.list = res.data.list;
-          // this.maxPage = res.data.maxPage;
-          // this.nowPage = res.data.nowPage;
-          // this.totalPageCnt = res.data.totalPageCnt;
-          // this.start = Math.ceil(res.data.nowPage / 5.0);
-          // this.start = 5 * (this.start - 1) + 1;
-        })
-        .catch(() => {
-          // 로딩 화면 닫기
-          $('.popup-background:eq(1)').addClass('blind');
-          $('#spinner-section').addClass('blind');
-
-          $('.popup-background:eq(1)').removeClass('blind');
-          $('#common-alert-popup').removeClass('blind');
-          $('.common-alert-txt').text('오류 발생으로 인해 처리에 실패하였습니다.');
-        });
     },
   }, // END methods()
 };

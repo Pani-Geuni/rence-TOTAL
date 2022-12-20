@@ -255,6 +255,7 @@ export default {
       max_use_mileage: '',
       deposit: '',
       load: false,
+      axiosFlag: true,
     };
   },
   mounted() {
@@ -275,7 +276,7 @@ export default {
 
           this.IMP.init('imp26554321');
 
-          this.reserveNo = decodeURI(window.location.href.split('reserve_no=')[1]);
+          this.reserveNo = this.$route.params.parameters.split('reserve_no=')[1];
           axios.get(`http://localhost:8800/office/payment?reserve_no=${this.reserve_no}`)
             .then((res) => {
               this.list = res.data;
@@ -361,10 +362,12 @@ export default {
           $('#common-alert-popup').removeClass('blind');
           $('.common-alert-txt').html('결제 시간을 초과했습니다.<br>다시 시도해주세요.');
 
+          const url = window.location.href.split('/payment')[0];
+
           if ($('#info-room-type').attr('room_type') === '오피스') {
-            window.location.href = `http://localhost:8081/space_office?backoffice_no=${$('.info-company-name').attr('backoffice_no')}`;
+            window.location.href = `${url}/space_office?backoffice_no=${$('.info-company-name').attr('backoffice_no')}`;
           } else {
-            window.location.href = `http://localhost:8081/space?backoffice_no=${$('.info-company-name').attr('backoffice_no')}`;
+            window.location.href = `${url}/space?backoffice_no=${$('.info-company-name').attr('backoffice_no')}`;
           }
           clearInterval(this.time);
         }
@@ -508,53 +511,82 @@ export default {
     },
     /** 결제 로직 */
     payment() {
-      this.IMP.request_pay({ // param
-        pg: 'kakaopay',
-        pay_method: 'card',
-        name: '주문명 : 결제 테스트',
-        amount: $('#payment_all').attr('payment_all'),
-      }, (rsp) => {
-        if (rsp.success) {
-          const { imp_uid } = rsp;
+      if (this.axiosFlag) {
+        this.axiosFlag = false;
 
-          // 로딩 화면
-          $('.popup-background:eq(1)').removeClass('blind');
-          $('#spinner-section').removeClass('blind');
+        // 로그인 여부 체크 -> 헤더를 위해
+        axios.get('http://localhost:8800/loginCheck')
+          .then((response) => {
+            this.axiosFlag = true;
 
-          const params = new URLSearchParams();
-          params.append('imp_uid', imp_uid);
-          params.append('payment_total', $('#payment_all').attr('payment_all'));
-          params.append('use_mileage', $('#use-mileage').val() || 0);
-          params.append('actual_payment', $('#payment_all').attr('payment_all'));
-          params.append('payment_state', this.payment_state);
-          params.append('user_no', this.$cookies.get('user_no'));
-          params.append('reserve_no', this.reserveNo);
-          params.append('payment_method', 'kakaopay');
+            // 로그인 되어 있음
+            if (response.data.result === '1') {
+              this.$is_officeLogin = 'true';
 
-          axios.post('http://localhost:8800/office/paymentOK', params)
-            .then((res) => {
-              // 로딩 화면 닫기
-              $('.popup-background:eq(1)').addClass('blind');
-              $('#spinner-section').addClass('blind');
+              this.IMP.request_pay({ // param
+                pg: 'kakaopay',
+                pay_method: 'card',
+                name: '주문명 : 결제 테스트',
+                amount: $('#payment_all').attr('payment_all'),
+              }, (rsp) => {
+                if (rsp.success) {
+                  const { imp_uid } = rsp;
 
-              if (res.data.result === 1) {
-                alert('결제 성공');
-                window.location.href = 'http://localhost:8081/reserve_list';
-              } else {
-                alert(`결제에 실패했습니다. 에러 내용 : ${rsp.error_msg}`);
-              }
-            })
-            .catch(() => {
-              // 로딩 화면 닫기
-              $('.popup-background:eq(1)').addClass('blind');
-              $('#spinner-section').addClass('blind');
+                  // 로딩 화면
+                  $('.popup-background:eq(1)').removeClass('blind');
+                  $('#spinner-section').removeClass('blind');
 
-              alert(`결제에 실패했습니다. 에러 내용 : ${rsp.error_msg}`);
-            });
-        } else {
-          alert(`결제에 실패했습니다. 에러 내용 : ${rsp.error_msg}`);
-        }
-      });
+                  const params = new URLSearchParams();
+                  params.append('imp_uid', imp_uid);
+                  params.append('payment_total', $('#payment_all').attr('payment_all'));
+                  params.append('use_mileage', $('#use-mileage').val() || 0);
+                  params.append('actual_payment', $('#payment_all').attr('payment_all'));
+                  params.append('payment_state', this.payment_state);
+                  params.append('user_no', window.atob(this.$cookies.get('user_no')));
+                  params.append('reserve_no', this.reserveNo);
+                  params.append('payment_method', 'kakaopay');
+
+                  axios.post('http://localhost:8800/office/paymentOK', params)
+                    .then((res) => {
+                      // 로딩 화면 닫기
+                      $('.popup-background:eq(1)').addClass('blind');
+                      $('#spinner-section').addClass('blind');
+
+                      if (res.data.result === 1) {
+                        alert('결제 성공');
+                        const port = window.location.href.split('localhost:')[1].split('/#')[0];
+                        window.location.href = `http://localhost:${port}/reserve_list`;
+                      } else {
+                        alert(`결제에 실패했습니다. 에러 내용 : ${rsp.error_msg}`);
+                      }
+                    })
+                    .catch(() => {
+                      // 로딩 화면 닫기
+                      $('.popup-background:eq(1)').addClass('blind');
+                      $('#spinner-section').addClass('blind');
+
+                      alert(`결제에 실패했습니다. 에러 내용 : ${rsp.error_msg}`);
+                    });
+                } else {
+                  alert(`결제에 실패했습니다. 에러 내용 : ${rsp.error_msg}`);
+                }
+              });
+            }
+            // 로그인 되어 있지 않음(or 세션 만료)
+            else {
+              this.$is_officeLogin = 'false';
+              $('.popup-background:eq(0)').removeClass('blind');
+              $('#disconnect-session-popup').removeClass('blind');
+            }
+          })
+          .catch(() => {
+            this.axiosFlag = true;
+
+            $('.popup-background:eq(1)').removeClass('blind');
+            $('#common-alert-popup').removeClass('blind');
+            $('.common-alert-txt').text('오류 발생으로 인해 로그인 여부를 불러오는데에 실패하였습니다.');
+          });
+      }
     },
   },
 };

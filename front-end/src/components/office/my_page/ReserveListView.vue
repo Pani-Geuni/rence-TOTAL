@@ -115,6 +115,7 @@ export default {
       start: '',
       forRange: '',
       load: false,
+      axiosFlag: true,
     };
   },
   mounted() {
@@ -133,7 +134,7 @@ export default {
           $('.popup-background:eq(1)').removeClass('blind');
           $('#spinner-section').removeClass('blind');
 
-          axios.get(`http://localhost:8800/rence/reserve_list?time_point=now&user_no=${this.$cookies.get('user_no')}&page=1`)
+          axios.get(`http://localhost:8800/rence/reserve_list?time_point=now&user_no=${window.atob(this.$cookies.get('user_no'))}&page=1`)
             .then((res) => {
               this.type = res.data.type;
               this.cnt = res.data.cnt;
@@ -185,52 +186,80 @@ export default {
     },
     /** 현재 / 과거에 따른 예약 리스트 불러오는 함수 */
     set_timePoint(param) {
-      $('.timePoint-value').text($(param).text());
-      $('.timePoint-custom-select-wrap').addClass('blind');
+      if (this.axiosFlag) {
+        this.axiosFlag = false;
 
-      const URL = '';
-      if ($(param).attr('id') === 'timePoint-now') {
-        $('.timePoint-value').attr('time-point', 'now');
-        URL = `http://localhost:8081/rence/reserve_list?time_point=now&user_no=${this.$cookies.get('user_no')}&page=1`;
-      } else if ($(param).attr('id') === 'timePoint-before') {
-        $('.timePoint-value').attr('time-point', 'before');
-        URL = `http://localhost:8081/rence/reserve_list?time_point=before&user_no=${this.$cookies.get('user_no')}&page=1`;
+        // 로그인 여부 체크 -> 헤더를 위해
+        axios.get('http://localhost:8800/loginCheck')
+          .then((response) => {
+            this.axiosFlag = true;
+
+            // 로그인 되어 있음
+            if (response.data.result === '1') {
+              this.$is_officeLogin = 'true';
+
+              $('.timePoint-value').text($(param).text());
+              $('.timePoint-custom-select-wrap').addClass('blind');
+
+              let URL = '';
+              if ($(param).attr('id') === 'timePoint-now') {
+                $('.timePoint-value').attr('time-point', 'now');
+                URL = `http://localhost:8800/rence/reserve_list?time_point=now&user_no=${window.atob(this.$cookies.get('user_no'))}&page=1`;
+              } else if ($(param).attr('id') === 'timePoint-before') {
+                $('.timePoint-value').attr('time-point', 'before');
+                URL = `http://localhost:8800/rence/reserve_list?time_point=before&user_no=${window.atob(this.$cookies.get('user_no'))}&page=1`;
+              }
+
+              // 로딩 화면
+              $('.popup-background:eq(1)').removeClass('blind');
+              $('#spinner-section').removeClass('blind');
+
+              axios.get(URL)
+                .then((res) => {
+                  // 로딩 화면 닫기
+                  $('.popup-background:eq(1)').addClass('blind');
+                  $('#spinner-section').addClass('blind');
+
+                  this.type = res.data.type;
+                  this.cnt = res.data.cnt;
+
+                  this.list = res.data.list;
+                  this.maxPage = res.data.maxPage;
+                  this.nowPage = res.data.nowPage;
+                  this.totalPageCnt = res.data.totalPageCnt;
+                  this.start = Math.ceil(res.data.nowPage / 5.0);
+                  this.start = 5 * (this.start - 1) + 1;
+
+                  this.forRange = [];
+                  for (let i = this.start; i <= this.maxPage; i++) {
+                    this.forRange.push(i);
+                  }
+                })
+                .catch(() => {
+                  // 로딩 화면 닫기
+                  $('.popup-background:eq(1)').addClass('blind');
+                  $('#spinner-section').addClass('blind');
+
+                  $('.popup-background:eq(1)').removeClass('blind');
+                  $('#common-alert-popup').removeClass('blind');
+                  $('.common-alert-txt').text('오류 발생으로 인해 처리에 실패하였습니다.');
+                });
+            }
+            // 로그인 되어 있지 않음(or 세션 만료)
+            else {
+              this.$is_officeLogin = 'false';
+              $('.popup-background:eq(0)').removeClass('blind');
+              $('#disconnect-session-popup').removeClass('blind');
+            }
+          })
+          .catch(() => {
+            this.axiosFlag = true;
+
+            $('.popup-background:eq(1)').removeClass('blind');
+            $('#common-alert-popup').removeClass('blind');
+            $('.common-alert-txt').text('오류 발생으로 인해 로그인 여부를 불러오는데에 실패하였습니다.');
+          });
       }
-
-      // 로딩 화면
-      $('.popup-background:eq(1)').removeClass('blind');
-      $('#spinner-section').removeClass('blind');
-
-      axios.get(URL)
-        .then((res) => {
-          // 로딩 화면 닫기
-          $('.popup-background:eq(1)').addClass('blind');
-          $('#spinner-section').addClass('blind');
-
-          this.type = res.data.type;
-          this.cnt = res.data.cnt;
-
-          this.list = res.data.list;
-          this.maxPage = res.data.maxPage;
-          this.nowPage = res.data.nowPage;
-          this.totalPageCnt = res.data.totalPageCnt;
-          this.start = Math.ceil(res.data.nowPage / 5.0);
-          this.start = 5 * (this.start - 1) + 1;
-
-          this.forRange = [];
-          for (let i = this.start; i <= this.maxPage; i++) {
-            this.forRange.push(i);
-          }
-        })
-        .catch(() => {
-          // 로딩 화면 닫기
-          $('.popup-background:eq(1)').addClass('blind');
-          $('#spinner-section').addClass('blind');
-
-          $('.popup-background:eq(1)').removeClass('blind');
-          $('#common-alert-popup').removeClass('blind');
-          $('.common-alert-txt').text('오류 발생으로 인해 처리에 실패하였습니다.');
-        });
     },
     /** 이전 페이지 리스트로 이동 */
     prev_page() {
@@ -295,7 +324,7 @@ export default {
       this.nowPage = start;
 
       this.forRange = [];
-      for (let i = s; i <= end; i++) {
+      for (let i = start; i <= last; i++) {
         this.forRange.push(i);
       }
 
@@ -320,46 +349,104 @@ export default {
     },
     /** 페이지 번호에 맞는 데이터 불러오기 */
     do_select_page(param) {
-      // 로딩 화면
-      $('.popup-background:eq(1)').removeClass('blind');
-      $('#spinner-section').removeClass('blind');
+      if (this.axiosFlag) {
+        this.axiosFlag = false;
 
-      axios.get(`http://localhost:8800/rence/reserve_list?time_point=${this.type}&user_no=${this.$cookies.get('user_no')}&page=${$(param).attr('idx')}`)
-        .then((res) => {
-          // 로딩 화면 닫기
-          $('.popup-background:eq(1)').addClass('blind');
-          $('#spinner-section').addClass('blind');
+        // 로그인 여부 체크 -> 헤더를 위해
+        axios.get('http://localhost:8800/loginCheck')
+          .then((response) => {
+            this.axiosFlag = true;
 
-          // this.type = res.data.type;
-          // this.cnt = res.data.cnt;
+            // 로그인 되어 있음
+            if (response.data.result === '1') {
+              this.$is_officeLogin = 'true';
 
-          this.list = res.data.list;
-          // this.maxPage = res.data.maxPage;
-          // this.nowPage = res.data.nowPage;
-          // this.totalPageCnt = res.data.totalPageCnt;
-          // this.start = Math.ceil(res.data.nowPage / 5.0);
-          // this.start = 5 * (this.start - 1) + 1;
+              // 로딩 화면
+              $('.popup-background:eq(1)').removeClass('blind');
+              $('#spinner-section').removeClass('blind');
 
-          // this.forRange = [];
-          // for (let i = this.start; i <= this.maxPage; i++) {
-          //   this.forRange.push(i);
-          // }
-        })
-        .catch(() => {
-          // 로딩 화면 닫기
-          $('.popup-background:eq(1)').addClass('blind');
-          $('#spinner-section').addClass('blind');
+              axios.get(`http://localhost:8800/rence/reserve_list?time_point=${this.type}&user_no=${window.atob(this.$cookies.get('user_no'))}&page=${$(param).attr('idx')}`)
+                .then((res) => {
+                  // 로딩 화면 닫기
+                  $('.popup-background:eq(1)').addClass('blind');
+                  $('#spinner-section').addClass('blind');
 
-          $('.popup-background:eq(1)').removeClass('blind');
-          $('#common-alert-popup').removeClass('blind');
-          $('.common-alert-txt').text('오류 발생으로 인해 처리에 실패하였습니다.');
-        });
+                  // this.type = res.data.type;
+                  // this.cnt = res.data.cnt;
+
+                  this.list = res.data.list;
+                  // this.maxPage = res.data.maxPage;
+                  // this.nowPage = res.data.nowPage;
+                  // this.totalPageCnt = res.data.totalPageCnt;
+                  // this.start = Math.ceil(res.data.nowPage / 5.0);
+                  // this.start = 5 * (this.start - 1) + 1;
+
+                  // this.forRange = [];
+                  // for (let i = this.start; i <= this.maxPage; i++) {
+                  //   this.forRange.push(i);
+                  // }
+                })
+                .catch(() => {
+                  // 로딩 화면 닫기
+                  $('.popup-background:eq(1)').addClass('blind');
+                  $('#spinner-section').addClass('blind');
+
+                  $('.popup-background:eq(1)').removeClass('blind');
+                  $('#common-alert-popup').removeClass('blind');
+                  $('.common-alert-txt').text('오류 발생으로 인해 처리에 실패하였습니다.');
+                });
+            }
+            // 로그인 되어 있지 않음(or 세션 만료)
+            else {
+              this.$is_officeLogin = 'false';
+              $('.popup-background:eq(0)').removeClass('blind');
+              $('#disconnect-session-popup').removeClass('blind');
+            }
+          })
+          .catch(() => {
+            this.axiosFlag = true;
+
+            $('.popup-background:eq(1)').removeClass('blind');
+            $('#common-alert-popup').removeClass('blind');
+            $('.common-alert-txt').text('오류 발생으로 인해 로그인 여부를 불러오는데에 실패하였습니다.');
+          });
+      }
     },
     go_reserve_info(param) {
-      if (this.type === 'before') {
-        window.location.href = `http://localhost:8081/reserved_info?reserve_no=${$(param).attr('idx')}`;
-      } else if (this.type === 'now') {
-        window.location.href = `http://localhost:8081/reserve_info?reserve_no=${$(param).attr('idx')}`;
+      if (this.axiosFlag) {
+        this.axiosFlag = false;
+
+        // 로그인 여부 체크 -> 헤더를 위해
+        axios.get('http://localhost:8800/loginCheck')
+          .then((response) => {
+            this.axiosFlag = true;
+
+            // 로그인 되어 있음
+            if (response.data.result === '1') {
+              this.$is_officeLogin = 'true';
+
+              const url = window.location.href.split('/reserve_list')[0];
+
+              if (this.type === 'before') {
+                window.location.href = `${url}/reserved_info/reserve_no=${$(param).attr('idx')}`;
+              } else if (this.type === 'now') {
+                window.location.href = `${url}/reserve_info/reserve_no=${$(param).attr('idx')}`;
+              }
+            }
+            // 로그인 되어 있지 않음(or 세션 만료)
+            else {
+              this.$is_officeLogin = 'false';
+              $('.popup-background:eq(0)').removeClass('blind');
+              $('#disconnect-session-popup').removeClass('blind');
+            }
+          })
+          .catch(() => {
+            this.axiosFlag = true;
+
+            $('.popup-background:eq(1)').removeClass('blind');
+            $('#common-alert-popup').removeClass('blind');
+            $('.common-alert-txt').text('오류 발생으로 인해 로그인 여부를 불러오는데에 실패하였습니다.');
+          });
       }
     },
   }, // END methods()

@@ -115,6 +115,7 @@ export default {
     return {
       list: '',
       load: false,
+      axiosFlag: true,
     };
   },
   mounted() {
@@ -167,16 +168,100 @@ export default {
   },
   methods: {
     show_user_delete_popup() {
-      $('.popup-background:eq(0)').removeClass('blind');
-      $('#user-delete-confirm-popup').removeClass('blind');
+      if (this.axiosFlag) {
+        this.axiosFlag = false;
+
+        // 로그인 여부 체크
+        axios.get('http://localhost:8800/loginCheck')
+          .then((response) => {
+            this.axiosFlag = true;
+
+            // 로그인 되어 있음
+            if (response.data.result === '1') {
+              this.$is_officeLogin = 'true';
+
+              $('.popup-background:eq(0)').removeClass('blind');
+              $('#user-delete-confirm-popup').removeClass('blind');
+            }
+            // 로그인 되어 있지 않음(or 세션 만료)
+            else {
+              this.$is_officeLogin = 'false';
+              $('.popup-background:eq(0)').removeClass('blind');
+              $('#disconnect-session-popup').removeClass('blind');
+            }
+          })
+          .catch(() => {
+            this.axiosFlag = true;
+
+            $('.popup-background:eq(1)').removeClass('blind');
+            $('#common-alert-popup').removeClass('blind');
+            $('.common-alert-txt').text('오류 발생으로 인해 로그인 여부를 불러오는데에 실패하였습니다.');
+          });
+      }
     },
     show_modify_img_popup() {
-      $('.popup-background:eq(0)').removeClass('blind');
-      $('#modify-img-section').removeClass('blind');
+      if (this.axiosFlag) {
+        this.axiosFlag = false;
+
+        // 로그인 여부 체크 -> 헤더를 위해
+        axios.get('http://localhost:8800/loginCheck')
+          .then((response) => {
+            this.axiosFlag = true;
+
+            // 로그인 되어 있음
+            if (response.data.result === '1') {
+              this.$is_officeLogin = 'true';
+
+              $('.popup-background:eq(0)').removeClass('blind');
+              $('#modify-img-section').removeClass('blind');
+            }
+            // 로그인 되어 있지 않음(or 세션 만료)
+            else {
+              this.$is_officeLogin = 'false';
+              $('.popup-background:eq(0)').removeClass('blind');
+              $('#disconnect-session-popup').removeClass('blind');
+            }
+          })
+          .catch(() => {
+            this.axiosFlag = true;
+
+            $('.popup-background:eq(1)').removeClass('blind');
+            $('#common-alert-popup').removeClass('blind');
+            $('.common-alert-txt').text('오류 발생으로 인해 로그인 여부를 불러오는데에 실패하였습니다.');
+          });
+      }
     },
     show_modify_pw_popup() {
-      $('.popup-background:eq(0)').removeClass('blind');
-      $('#modify-pw-section').removeClass('blind');
+      if (this.axiosFlag) {
+        this.axiosFlag = false;
+
+        // 로그인 여부 체크 -> 헤더를 위해
+        axios.get('http://localhost:8800/loginCheck')
+          .then((response) => {
+            this.axiosFlag = true;
+
+            // 로그인 되어 있음
+            if (response.data.result === '1') {
+              this.$is_officeLogin = 'true';
+
+              $('.popup-background:eq(0)').removeClass('blind');
+              $('#modify-pw-section').removeClass('blind');
+            }
+            // 로그인 되어 있지 않음(or 세션 만료)
+            else {
+              this.$is_officeLogin = 'false';
+              $('.popup-background:eq(0)').removeClass('blind');
+              $('#disconnect-session-popup').removeClass('blind');
+            }
+          })
+          .catch(() => {
+            this.axiosFlag = true;
+
+            $('.popup-background:eq(1)').removeClass('blind');
+            $('#common-alert-popup').removeClass('blind');
+            $('.common-alert-txt').text('오류 발생으로 인해 로그인 여부를 불러오는데에 실패하였습니다.');
+          });
+      }
     },
   }, // END methods()
 };
