@@ -12,8 +12,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpSession;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -47,7 +45,7 @@ public class DashboardServiceImpl implements DashboardService {
 
 	@Autowired
 	DashboardDAO dao;
-	
+
 	/**
 	 * 대쉬보드 메인
 	 */
@@ -132,7 +130,6 @@ public class DashboardServiceImpl implements DashboardService {
 		map.put("unit", unit);
 
 		map.put("page", "room");
-//		map.put("res", map);
 
 		return map;
 	}
@@ -144,16 +141,14 @@ public class DashboardServiceImpl implements DashboardService {
 	public Map<String, Object> backoffice_insert_room(String backoffice_no) {
 		Map<String, Object> map = new HashMap<String, Object>();
 
-		log.info("backoffice_no::{}",backoffice_no);
+		log.info("backoffice_no::{}", backoffice_no);
 		BackOfficeDTO bvo = dao.select_one_backoffice_info(backoffice_no);
 		log.info("bvo : {}", bvo);
 
 		RoomDTO rmvo = new RoomDTO();
 
 		String type = bvo.getBackoffice_type();
-//		if (type.contains("meeting_room")) {
-			type = bvo.getBackoffice_type().replace("meeting_room", "meeting_04,meeting_06,meeting_10");
-//		}
+		type = bvo.getBackoffice_type().replace("meeting_room", "meeting_04,meeting_06,meeting_10");
 		rmvo.setRoom_type(type);
 
 		List<String> type_list = new ArrayList<String>();
@@ -273,8 +268,8 @@ public class DashboardServiceImpl implements DashboardService {
 		}
 
 		if (result == 1) {
-			dao.backoffice_qna_insert(backoffice_no,room_no);
-			
+			dao.backoffice_qna_insert(backoffice_no, room_no);
+
 			log.info("successed...");
 			map.put("result", "1");
 		}
@@ -334,7 +329,6 @@ public class DashboardServiceImpl implements DashboardService {
 		map.put("cnt", qvos.size());
 
 		map.put("page", "qna");
-//		map.put("res", map);
 
 		return map;
 	}
@@ -357,11 +351,10 @@ public class DashboardServiceImpl implements DashboardService {
 	 * 공간관리 - 답변 작성
 	 */
 	@Override
-	public Map<String, String> backoffice_insertOK_comment(String backoffice_no, CommentDTO cvo,
-			String comment_no) {
+	public Map<String, String> backoffice_insertOK_comment(String backoffice_no, CommentDTO cvo, String comment_no) {
 		Map<String, String> map = new HashMap<String, String>();
 
-		int result = dao.backoffice_insertOK_comment(cvo,backoffice_no,comment_no);
+		int result = dao.backoffice_insertOK_comment(cvo, backoffice_no, comment_no);
 
 		if (result == 1) {
 			// 부모 no state T 변경
@@ -454,7 +447,6 @@ public class DashboardServiceImpl implements DashboardService {
 		map.put("cnt", rvvos.size());
 
 		map.put("page", "review");
-//		map.put("res", map);
 		return map;
 	}
 
@@ -469,8 +461,8 @@ public class DashboardServiceImpl implements DashboardService {
 		// 리스트 수
 		int total_cnt = dao.backoffice_reserve_selectAll_cnt(backoffice_no, reserve_state);
 
-		List<ReserveListViewDTO> rvos = dao.backoffice_reserve_selectAll(backoffice_no, reserve_state, 9 * (page - 1) + 1,
-				9 * (page));
+		List<ReserveListViewDTO> rvos = dao.backoffice_reserve_selectAll(backoffice_no, reserve_state,
+				9 * (page - 1) + 1, 9 * (page));
 		if (rvos == null) {
 			map.put("cnt", 0);
 		} else {
@@ -516,7 +508,6 @@ public class DashboardServiceImpl implements DashboardService {
 		map.put("nowPage", nowPage);
 		map.put("maxPage", maxPage);
 
-//		map.put("res", map);
 		////////////////////////////////////////////////////////////////////
 
 		map.put("r_vos", rvos);
@@ -582,7 +573,6 @@ public class DashboardServiceImpl implements DashboardService {
 		map.put("nowPage", nowPage);
 		map.put("maxPage", maxPage);
 
-//		map.put("res", map);
 		//////////////////////////////////////////////////////////////////////
 
 		map.put("r_vos", rvos);
@@ -643,7 +633,6 @@ public class DashboardServiceImpl implements DashboardService {
 		} else if (sales_date.equals("month")) {
 			map.put("page", "sales_month");
 		}
-//		map.put("res", map);
 
 		List<SalesSettlementViewDTO> svos = dao.backoffice_sales_selectAll(backoffice_no, page);
 		map.put("s_vos", svos);
@@ -833,20 +822,15 @@ public class DashboardServiceImpl implements DashboardService {
 			String not_stime, String not_etime, String off_type, Integer page) {
 		Map<String, Object> map = new HashMap<String, Object>();
 
-		int total_cnt = dao.backoffice_room_cnt(backoffice_no,not_sdate, not_edate, not_stime,
-				not_etime, off_type);
-		
+		int total_cnt = dao.backoffice_room_cnt(backoffice_no, not_sdate, not_edate, not_stime, not_etime, off_type);
+
 		map.put("maxCnt", total_cnt);
-		
+
 		int min = 8 * (page - 1) + 1;
 		int max = 8 * (page);
-//		if (total_cnt < max) {
-//			max = total_cnt;
-//		}
-		
-		List<ScheduleListViewDTO> schedule = dao.backoffice_schedule_list(backoffice_no, not_sdate, not_edate, not_stime,
-				not_etime, off_type, min, max);
 
+		List<ScheduleListViewDTO> schedule = dao.backoffice_schedule_list(backoffice_no, not_sdate, not_edate,
+				not_stime, not_etime, off_type, min, max);
 
 		map.put("sc_vos", schedule);
 		if (schedule == null) {
@@ -869,17 +853,11 @@ public class DashboardServiceImpl implements DashboardService {
 			String not_edate, String not_stime, String not_etime, String off_type, Integer page) {
 		Map<String, Object> map = new HashMap<String, Object>();
 
-//		int total_cnt = dao.backoffice_room_cnt(backoffice_no,not_sdate, not_edate, not_stime,
-//				not_etime, off_type);
-		
 		int min = 8 * (page - 1) + 1;
 		int max = 8 * (page);
-//		if (total_cnt < max) { // 여기부터 검토
-//			max = total_cnt;
-//		}
-		
-		List<ScheduleListViewDTO> schedule = dao.backoffice_schedule_list(backoffice_no, not_sdate, not_edate, not_stime,
-				not_etime, off_type, min, max);
+
+		List<ScheduleListViewDTO> schedule = dao.backoffice_schedule_list(backoffice_no, not_sdate, not_edate,
+				not_stime, not_etime, off_type, min, max);
 
 		map.put("sc_vos", schedule);
 		if (schedule == null) {
@@ -970,13 +948,6 @@ public class DashboardServiceImpl implements DashboardService {
 		map.put("nowCnt", 1);
 		map.put("maxCnt", total_cnt);
 
-//		if (total_cnt > 0) {
-//			map.put("maxCnt", total_cnt);
-//		} else {
-//			map.put("maxCnt", 0);
-//		}
-
-//		map.put("res", map);
 		map.put("reserve_stime", reserve_stime);
 		map.put("reserve_etime", reserve_etime);
 		map.put("rv_vos", rv_vos);
@@ -985,7 +956,7 @@ public class DashboardServiceImpl implements DashboardService {
 	}
 
 	/**
-	 *  일정 관리 - 해당 날짜, 시간에 예약자 리스트 *************스크롤 페이징*****************
+	 * 일정 관리 - 해당 날짜, 시간에 예약자 리스트 *************스크롤 페이징*****************
 	 */
 	@Override
 	public Map<String, Object> backoffice_reservation_paging(String backoffice_no, String room_no, String not_sdate,
@@ -1034,22 +1005,22 @@ public class DashboardServiceImpl implements DashboardService {
 		Map<String, Object> map = new HashMap<String, Object>();
 
 		List<ScheduleDTO> vos = dao.backoffice_schedule_calendar(backoffice_no);
-		
+
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		String sdate ="";
-		String edate ="";
+		String sdate = "";
+		String edate = "";
 		for (ScheduleDTO vo : vos) {
 			sdate = sdf.format(vo.getNot_stime());
 			edate = sdf.format(vo.getNot_etime());
 			String[] st = sdate.split(" ");
 			String[] et = edate.split(" ");
-			if (st[0].equals(et[0])){
-				// 브레이크 타임 
+			if (st[0].equals(et[0])) {
+				// 브레이크 타임
 				vo.setSdate(st[0]);
 				vo.setStime(st[1]);
 				vo.setEtime(et[1]);
 				vo.setSchedule_type("breaktime");
-			}else {
+			} else {
 				// 휴무
 				vo.setSdate(st[0]);
 				vo.setEdate(et[0]);
@@ -1060,12 +1031,12 @@ public class DashboardServiceImpl implements DashboardService {
 		}
 		// 현재 달(월)
 		LocalDateTime now = LocalDateTime.now();
-		int month = now.getMonthValue();  
+		int month = now.getMonthValue();
 
 		map.put("vos", vos);
 		map.put("month", month);
 		map.put("cnt", vos.size());
-		
+
 		return map;
 	}
 
@@ -1078,24 +1049,24 @@ public class DashboardServiceImpl implements DashboardService {
 		Map<String, Object> map = new HashMap<String, Object>();
 
 		int flag = dao.backoffice_schedule_cancel(backoffice_no, schedule_no);
-		
+
 		List<ScheduleDTO> vos = dao.backoffice_schedule_calendar(backoffice_no);
-		
+
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		String sdate ="";
-		String edate ="";
+		String sdate = "";
+		String edate = "";
 		for (ScheduleDTO vo : vos) {
 			sdate = sdf.format(vo.getNot_stime());
 			edate = sdf.format(vo.getNot_etime());
 			String[] st = sdate.split(" ");
 			String[] et = edate.split(" ");
-			if (st[0].equals(et[0])){
-				// 브레이크 타임 
+			if (st[0].equals(et[0])) {
+				// 브레이크 타임
 				vo.setSdate(st[0]);
 				vo.setStime(st[1]);
 				vo.setEtime(et[1]);
 				vo.setSchedule_type("breaktime");
-			}else {
+			} else {
 				// 휴무
 				vo.setSdate(st[0]);
 				vo.setEdate(et[0]);
@@ -1119,11 +1090,9 @@ public class DashboardServiceImpl implements DashboardService {
 		return map;
 	}
 
-	
 	/**
 	 * 
-	 * AOP ... 
-	 * 예약 상태 업데이트
+	 * AOP ... 예약 상태 업데이트
 	 * 
 	 */
 	@Override
@@ -1133,19 +1102,17 @@ public class DashboardServiceImpl implements DashboardService {
 
 	/**
 	 * 
-	 * AOP ... 
-	 * 예약 상태 false 삭제 - reserve_no
+	 * AOP ... 예약 상태 false 삭제 - reserve_no
 	 * 
 	 */
 	@Override
 	public ReserveUpdateDTO select_one_false_reserve(String reserve_stime, String reserve_etime, String room_no) {
-		return dao.select_one_false_reserve(reserve_stime,reserve_etime,room_no);
+		return dao.select_one_false_reserve(reserve_stime, reserve_etime, room_no);
 	}
 
 	/**
 	 * 
-	 * AOP ... 
-	 * 예약 상태 false 삭제
+	 * AOP ... 예약 상태 false 삭제
 	 * 
 	 */
 	@Override
@@ -1153,5 +1120,4 @@ public class DashboardServiceImpl implements DashboardService {
 		dao.reserve_auto_delete(reserve_no);
 	}
 
-	
 }

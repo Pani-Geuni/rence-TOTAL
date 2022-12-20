@@ -36,12 +36,6 @@ public class MasterSendEmail {
 	/////////////////////////////////////////////////
 	public BackOfficeDTO settingPw(BackOfficeDTO bvo, EmailVO evo) throws UnsupportedEncodingException {
 
-//		String originText = bvo.getBackoffice_no();
-//
-//		String encText = aes.encryptAES("0123456789abcdefghij0123456789ab", originText, false);
-//        System.out.println("encText (encodeBase64) : " + encText);
-
-        
         String target = bvo.getBackoffice_no();
         byte[] targetBytes = target.getBytes("UTF-8");
         

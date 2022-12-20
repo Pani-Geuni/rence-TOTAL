@@ -53,7 +53,4 @@ public interface ReserveAutoUpdateRepository extends JpaRepository<ReserveUpdate
 	public void reserve_auto_delete(String reserve_no);
 
 
-
-
-
 }

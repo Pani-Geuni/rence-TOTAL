@@ -86,7 +86,7 @@ public interface ReserveRepository extends JpaRepository<ReserveListViewEntity, 
 
 //****[RESERVE_LIST_B_VIEW] view code****
 //*
-//select rv.reserve_no, TO_CHAR(reserve_sdate, 'YYYY-MM-DD HH24:MI:SS') as reserve_sdate, TO_CHAR(reserve_edate, 'YYYY-MM-DD HH24:MI:SS') as reserve_edate, room_name, rv.user_no, user_name, user_tel, user_email, TO_CHAR(actual_payment) as actual_payment, payment_state, reserve_state, rv.backoffice_no
+//select rownum as rnum, rv.reserve_no, TO_CHAR(reserve_sdate, 'YYYY-MM-DD HH24:MI:SS') as reserve_sdate, TO_CHAR(reserve_edate, 'YYYY-MM-DD HH24:MI:SS') as reserve_edate, room_name, rv.user_no, user_name, user_tel, user_email, TO_CHAR(actual_payment) as actual_payment, payment_state, reserve_state, rv.backoffice_no
 //from reserveinfo rv, roominfo rm, paymentinfo p, userinfo u where rv.room_no=rm.room_no and rv.reserve_no=p.reserve_no and rv.user_no=u.user_no order by reserve_stime desc ;
 //*
 //***************************************

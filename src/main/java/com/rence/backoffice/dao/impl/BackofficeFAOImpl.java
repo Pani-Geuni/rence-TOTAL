@@ -56,8 +56,8 @@ public class BackofficeFAOImpl implements BackOfficeFAO {
 
 				img_list.add(originFileName); // vo에 저장
 
-				System.out.println("originFileName : " + originFileName);
-				System.out.println("fileSize : " + fileSize);
+				log.info("originFileName : {}", originFileName);
+				log.info("fileSize : {}", fileSize);
 
 				ObjectMetadata objectMetaData = new ObjectMetadata();
 				objectMetaData.setContentType(mf.getContentType());

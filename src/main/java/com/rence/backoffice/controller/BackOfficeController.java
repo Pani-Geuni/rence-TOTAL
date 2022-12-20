@@ -10,7 +10,6 @@ import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -76,9 +75,7 @@ public class BackOfficeController {
 	 */
 	@ApiOperation(value = "호스트 신청 처리", notes = "호스트 신청 처리입니다.")
 	@PostMapping("/insertOK")
-	public String backoffice_insertOK(BackOfficeDTO vo, BackOfficeOperatingTimeDTO ovo,
-			MultipartHttpServletRequest mtfRequest,
-			@RequestParam(value = "multipartFile_room" , required = false) MultipartFile multipartFile_room) throws ParseException {
+	public String backoffice_insertOK(BackOfficeDTO vo, BackOfficeOperatingTimeDTO ovo, MultipartHttpServletRequest mtfRequest, @RequestParam(value = "multipartFile_room" , required = false) MultipartFile multipartFile_room) throws ParseException {
 
 		vo = fileService.backoffice_image_upload(vo, mtfRequest, multipartFile_room);
 
