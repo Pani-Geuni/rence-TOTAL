@@ -16,36 +16,36 @@ import com.rence.dashboard.model.ReserveListViewEntity;
 public interface ReserveRepository extends JpaRepository<ReserveListViewEntity, Object> {
 
 	// 예약 관리 - 리스트(전체)
-	@Query(nativeQuery = true, value="select reserve_no,reserve_sdate,reserve_edate,reserve_state,user_no,backoffice_no,room_name,user_name,user_email,user_tel,actual_payment,payment_state from reserve_list_b_view where backoffice_no=?1 and reserve_state !='false' and rnum between ?2 and ?3")
+	@Query(nativeQuery = true, value="select reserve_no,reserve_sdate,reserve_edate,reserve_state,user_no,backoffice_no,room_name,user_name,user_email,user_tel,actual_payment,payment_state from reserve_list_b_view where backoffice_no=?1 and reserve_state !='false' and rownum between ?2 and ?3")
 	public List<ReserveListViewEntity> backoffice_reserve_selectAll(String backoffice_no, Integer start_row, Integer end_row);
 	
 	// 예약 관리 - 리스트(이용중) in_use
-	@Query(nativeQuery = true, value="select reserve_no,reserve_sdate,reserve_edate,reserve_state,user_no,backoffice_no,room_name,user_name,user_email,user_tel,actual_payment,payment_state from reserve_list_b_view where backoffice_no=?1 and reserve_state in ('begin', 'in_use') and rnum between ?2 and ?3")
+	@Query(nativeQuery = true, value="select reserve_no,reserve_sdate,reserve_edate,reserve_state,user_no,backoffice_no,room_name,user_name,user_email,user_tel,actual_payment,payment_state from reserve_list_b_view where backoffice_no=?1 and reserve_state in ('begin', 'in_use') and rownum between ?2 and ?3")
 	public List<ReserveListViewEntity> backoffice_reserve_selectAll_inuse(String backoffice_no, Integer start_row, Integer end_row);
 	
 	// 예약 관리 - 리스트(종료) end
-	@Query(nativeQuery = true, value="select reserve_no,reserve_sdate,reserve_edate,reserve_state,user_no,backoffice_no,room_name,user_name,user_email,user_tel,actual_payment,payment_state from reserve_list_b_view where backoffice_no=?1 and reserve_state = 'end' and rnum between ?2 and ?3")
+	@Query(nativeQuery = true, value="select reserve_no,reserve_sdate,reserve_edate,reserve_state,user_no,backoffice_no,room_name,user_name,user_email,user_tel,actual_payment,payment_state from reserve_list_b_view where backoffice_no=?1 and reserve_state = 'end' and rownum between ?2 and ?3")
 	public List<ReserveListViewEntity> backoffice_reserve_selectAll_end(String backoffice_no, Integer start_row, Integer end_row);
 	
 	// 예약 관리 - 리스트(취소) cancel
-	@Query(nativeQuery = true, value="select reserve_no,reserve_sdate,reserve_edate,reserve_state,user_no,backoffice_no,room_name,user_name,user_email,user_tel,actual_payment,payment_state from reserve_list_b_view where backoffice_no=?1 and reserve_state = 'cancel' and rnum between ?2 and ?3")
+	@Query(nativeQuery = true, value="select reserve_no,reserve_sdate,reserve_edate,reserve_state,user_no,backoffice_no,room_name,user_name,user_email,user_tel,actual_payment,payment_state from reserve_list_b_view where backoffice_no=?1 and reserve_state = 'cancel' and rownum between ?2 and ?3")
 	public List<ReserveListViewEntity> backoffice_reserve_selectAll_cancel(String backoffice_no, Integer start_row, Integer end_row);
 
 	// 예약 관리 - 리스트(전체 검색) 
-	@Query(nativeQuery = true, value="select reserve_no,reserve_sdate,reserve_edate,reserve_state,user_no,backoffice_no,room_name,user_name,user_email,user_tel,actual_payment,payment_state from reserve_list_b_view where backoffice_no=?1 and reserve_state !='false' and user_name like ?4 and rnum between ?2 and ?3")
+	@Query(nativeQuery = true, value="select reserve_no,reserve_sdate,reserve_edate,reserve_state,user_no,backoffice_no,room_name,user_name,user_email,user_tel,actual_payment,payment_state from reserve_list_b_view where backoffice_no=?1 and reserve_state !='false' and user_name like ?4 and rownum between ?2 and ?3")
 	public List<ReserveListViewEntity> backoffice_reserve_selectAll_search(String backoffice_no, Integer start_row,
 			Integer end_row, String searchword);
 
 	// 예약 관리 - 리스트(이용중 검색) in_use
-	@Query(nativeQuery = true, value="select reserve_no,reserve_sdate,reserve_edate,reserve_state,user_no,backoffice_no,room_name,user_name,user_email,user_tel,actual_payment,payment_state from reserve_list_b_view where backoffice_no=?1 and reserve_state in ('begin', 'in_use') and user_name like ?4 and rnum between ?2 and ?3")
+	@Query(nativeQuery = true, value="select reserve_no,reserve_sdate,reserve_edate,reserve_state,user_no,backoffice_no,room_name,user_name,user_email,user_tel,actual_payment,payment_state from reserve_list_b_view where backoffice_no=?1 and reserve_state in ('begin', 'in_use') and user_name like ?4 and rownum between ?2 and ?3")
 	public List<ReserveListViewEntity> backoffice_reserve_selectAll_inuse_search(String backoffice_no, Integer start_row, Integer end_row, String searchword);
 	
 	// 예약 관리 - 리스트(종료 검색) end
-	@Query(nativeQuery = true, value="select reserve_no,reserve_sdate,reserve_edate,reserve_state,user_no,backoffice_no,room_name,user_name,user_email,user_tel,actual_payment,payment_state from reserve_list_b_view where backoffice_no=?1 and reserve_state = 'end' and user_name like ?4 and rnum between ?2 and ?3")
+	@Query(nativeQuery = true, value="select reserve_no,reserve_sdate,reserve_edate,reserve_state,user_no,backoffice_no,room_name,user_name,user_email,user_tel,actual_payment,payment_state from reserve_list_b_view where backoffice_no=?1 and reserve_state = 'end' and user_name like ?4 and rownum between ?2 and ?3")
 	public List<ReserveListViewEntity> backoffice_reserve_selectAll_end_search(String backoffice_no, Integer start_row, Integer end_row, String searchword);
 	
 	// 예약 관리 - 리스트(취소 검색) cancel
-	@Query(nativeQuery = true, value="select reserve_no,reserve_sdate,reserve_edate,reserve_state,user_no,backoffice_no,room_name,user_name,user_email,user_tel,actual_payment,payment_state from reserve_list_b_view where backoffice_no=?1 and reserve_state = 'cancel' and user_name like ?4 and rnum between ?2 and ?3")
+	@Query(nativeQuery = true, value="select reserve_no,reserve_sdate,reserve_edate,reserve_state,user_no,backoffice_no,room_name,user_name,user_email,user_tel,actual_payment,payment_state from reserve_list_b_view where backoffice_no=?1 and reserve_state = 'cancel' and user_name like ?4 and rownum between ?2 and ?3")
 	public List<ReserveListViewEntity> backoffice_reserve_selectAll_cancel_search(String backoffice_no, Integer start_row, Integer end_row, String searchword);
 
 	//*************페이징*****************//
