@@ -70,7 +70,7 @@ export default {
             $('#master-id').val('');
             $('#master-pw').val('');
 
-            window.location.href = '/master/main';
+            this.$router.replace('/master/main');
           } else {
             $('.popup-background').removeClass('blind');
             $('#common-alert-popup').removeClass('blind');

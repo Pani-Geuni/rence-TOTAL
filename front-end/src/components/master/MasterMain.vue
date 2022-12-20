@@ -74,7 +74,7 @@ export default {
       // eslint-disable-next-line camelcase
       const url = `/master/backoffice_apply_detail?backoffice_no=${backoffice_no}&page=apply`;
       // this.$router.push(url);
-      window.location.href = url;
+      this.$router.push(url);
     },
 
     clickGrantPopup(e) {
