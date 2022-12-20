@@ -63,11 +63,6 @@ const routes = [
         component: NowReserveInfoView,
       },
       {
-        path: 'review',
-        name: 'ReviewView',
-        component: ReviewView,
-      },
-      {
         path: 'question',
         name: 'QuestionView',
         component: QuestionView,
@@ -86,6 +81,11 @@ const routes = [
         path: 'payment/:parameters',
         name: 'PaymentView',
         component: PaymentView,
+      },
+      {
+        path: 'review',
+        name: 'ReviewView',
+        component: ReviewView,
       },
     ],
   },

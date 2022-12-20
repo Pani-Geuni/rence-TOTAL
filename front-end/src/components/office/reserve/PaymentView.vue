@@ -12,7 +12,7 @@
 -->
 
 <template>
-  <div v-if="load === true" class="space-detail-wrap" th:fragment="content">
+  <div v-if="load === true" class="space-detail-wrap">
     <section class="page-title-section">
         <span class="page-title">예약하기</span>
     </section>

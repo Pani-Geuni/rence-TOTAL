@@ -1266,8 +1266,13 @@ export default {
       $('.question-paging').find('.paging-box.paging-num').removeClass('choice');
       $('.question-paging').find('.paging-box.paging-num').addClass('un-choice');
 
-      $(this).addClass('choice');
-      $(this).removeClass('un-choice');
+      $(param).addClass('choice');
+      $(param).removeClass('un-choice');
+
+      if (!$('.question-paging').find('.paging-box.paging-num').hasClass('choice')) {
+        $('.question-paging').find('.paging-box.paging-num:eq(0)').addClass('choice');
+        $('.question-paging').find('.paging-box.paging-num:eq(0)').removeClass('un-choice');
+      }
 
       // 로딩 화면
       $('.popup-background:eq(1)').removeClass('blind');
@@ -1299,6 +1304,11 @@ export default {
 
       $(param).addClass('choice');
       $(param).removeClass('un-choice');
+
+      if (!$('.review-paging').find('.paging-box.paging-num').hasClass('choice')) {
+        $('.review-paging').find('.paging-box.paging-num:eq(0)').addClass('choice');
+        $('.review-paging').find('.paging-box.paging-num:eq(0)').removeClass('un-choice');
+      }
 
       // 로딩 화면
       $('.popup-background:eq(1)').removeClass('blind');

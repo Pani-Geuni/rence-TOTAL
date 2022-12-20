@@ -55,18 +55,18 @@
 	    </div>
 	    
       <!-- START PAGING -->
-      <section :class="{'paging-section': maxPage > 0, 'paging-section blind': maxPage === 0}">
+      <section :class="{'paging-section': this.maxPage > 0, 'paging-section blind': this.maxPage === 0}">
         <section class="paging-section">
           <div class="paging-wrap">
-            <span @click="prev_page" :class="{'paging-box before-page-btn hide': maxPage <= 5, 'paging-box before-page-btn' : maxPage > 5}"> &lt;&lt; </span>
+            <span @click="prev_page" :class="{'paging-box before-page-btn hide': this.maxPage <= 5, 'paging-box before-page-btn' : this.maxPage > 5}"> &lt;&lt; </span>
             
             <div class="paging-num-wrap paging-wrap">
-              <span @click="do_select_page($event.target)" v-for="num in forRange" :key="num" :idx="num" :class="{'paging-box paging-num choice': num === nowPage, 'paging-box paging-num un-choice' :num !== nowPage}">{{num}}</span>
+              <span @click="do_select_page($event.target)" v-for="num in this.forRange" :key="num" :idx="num" :class="{'paging-box paging-num choice': num === this.nowPage, 'paging-box paging-num un-choice' :num !== this.nowPage}">{{num}}</span>
             </div>
             
-            <span @click="next_page" v-if="totalPageCnt > 5 && maxPage < totalPageCnt" class="paging-box next-page-btn">>></span>
+            <span @click="next_page" v-if="this.totalPageCnt > 5 && this.maxPage < this.totalPageCnt" class="paging-box next-page-btn">>></span>
             <span v-else class="paging-box next-page-btn hide">>></span>
-            <input type="hidden" id="totalPageCnt" v-bind:value="totalPageCnt">
+            <input type="hidden" id="totalPageCnt" :value="this.totalPageCnt">
           </div>
         </section>
       </section>
@@ -115,6 +115,7 @@ export default {
 
           axios.get(`http://localhost:8800/rence/review_list?user_no=${window.atob(this.$cookies.get('user_no'))}&page=1`)
             .then((res) => {
+              console.log(res.data);
               this.list = res.data.list;
               this.maxPage = res.data.maxPage;
               this.nowPage = res.data.nowPage;
@@ -276,6 +277,11 @@ export default {
 
               $(param).addClass('choice');
               $(param).removeClass('un-choice');
+
+              if (!$('.paging-box.paging-num').hasClass('choice')) {
+                $('.paging-box.paging-num:eq(0)').addClass('choice');
+                $('.paging-box.paging-num:eq(0)').removeClass('un-choice');
+              }
 
               axios.get(`http://localhost:8800/rence/review_list?user_no=${window.atob(this.$cookies.get('user_no'))}&page=${$(param).attr('idx')}`)
                 .then((res) => {

@@ -101,7 +101,7 @@
   </div>
 </template>
 
-<style lang="scss" scoped >
+<style lang="scss" >
   @import '@/assets/CSS/office/my-page.scss';
 </style>
 

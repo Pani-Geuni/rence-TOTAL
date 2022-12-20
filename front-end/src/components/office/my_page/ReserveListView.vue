@@ -49,7 +49,7 @@
         <!-- 예약 내역 NOT NULL일 때 -->
         <section :class="{'reserve-not-null' : this.cnt !== 0, 'reserve-not-null blind' : this.cnt === 0}">
           <section class="box-section">
-            <div v-for="obj in list" :key="obj" @click="go_reserve_info($event.target)" class = "reserve-box before" v-bind:idx ="obj.reserve_no">
+            <div v-for="obj in list" :key="obj" @click="go_reserve_info($event.currentTarget)" class = "reserve-box before" :idx ="obj.reserve_no">
               <section class="box-img-section">
                 <img :src="obj.backoffice_image" alt ="default-space-img" class="space-img" />
               </section>
@@ -72,18 +72,20 @@
             </div>
           </section>
 
-          <section :class="{'paging-section': maxPage > 0, 'paging-section blind': maxPage === 0}">
+          <section :class="{'paging-section': this.maxPage > 0, 'paging-section blind': this.maxPage === 0}">
             <section class="paging-section">
               <div class="paging-wrap">
-                <span @click="prev_page" :class="{'paging-box before-page-btn hide': maxPage <= 5, 'paging-box before-page-btn' : maxPage > 5}"> &lt;&lt; </span>
+                <span @click="prev_page" :class="{'paging-box before-page-btn hide': this.maxPage <= 5, 'paging-box before-page-btn' : this.maxPage > 5}"> &lt;&lt; </span>
                   
                 <div class="paging-num-wrap paging-wrap">
-                  <span @click="do_select_page($event.target)" v-for="num in forRange" v-bind:key="num" v-bind:idx="num" :class="{'paging-box paging-num choice': num === nowPage, 'paging-box paging-num un-choice' :num !== nowPage}">{{num}}</span>
+                  <span @click="do_select_page($event.target)" v-for="num in this.forRange" :key="num" :idx="num" :class="{'paging-box paging-num choice': num === this.nowPage, 'paging-box paging-num un-choice' :num !== this.nowPage}">
+                    {{num}}
+                  </span>
                 </div>
                   
-                <span @click="next_page" v-if="totalPageCnt > 5 && maxPage < totalPageCnt" class="paging-box next-page-btn">>></span>
+                <span @click="next_page" v-if="this.totalPageCnt > 5 && this.maxPage < this.totalPageCnt" class="paging-box next-page-btn">>></span>
                 <span v-else class="paging-box next-page-btn hide">>></span>
-                <input type="hidden" id="totalPageCnt" v-bind:value="totalPageCnt">
+                <input type="hidden" id="totalPageCnt" :value="this.totalPageCnt">
               </div>
             </section>
           </section>
@@ -317,8 +319,6 @@ export default {
       $('.paging-box.paging-num').removeClass('choice');
       $('.paging-box.paging-num').addClass('un-choice');
 
-      $('.paging-box.paging-num:eq(0)').attr('idx', start);
-      $('.paging-box.paging-num:eq(0)').text(start);
       $('.paging-box.paging-num:eq(0)').click();
     },
     /** 페이지 번호에 맞는 데이터 불러오기 */
@@ -339,14 +339,16 @@ export default {
               $('.popup-background:eq(1)').removeClass('blind');
               $('#spinner-section').removeClass('blind');
 
-              console.log(param);
-              console.log($(param));
-
               $('.paging-box.paging-num').removeClass('choice');
               $('.paging-box.paging-num').addClass('un-choice');
 
               $(param).addClass('choice');
               $(param).removeClass('un-choice');
+
+              if (!$('.paging-box.paging-num').hasClass('choice')) {
+                $('.paging-box.paging-num:eq(0)').addClass('choice');
+                $('.paging-box.paging-num:eq(0)').removeClass('un-choice');
+              }
 
               axios.get(`http://localhost:8800/rence/reserve_list?time_point=${this.type}&user_no=${window.atob(this.$cookies.get('user_no'))}&page=${$(param).attr('idx')}`)
                 .then((res) => {

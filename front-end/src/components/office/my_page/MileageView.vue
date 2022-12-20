@@ -293,6 +293,7 @@ export default {
       $('.paging-box.paging-num').addClass('un-choice');
 
       $('.paging-box.paging-num:eq(0)').click();
+      $('.paging-box.paging-num:eq(0)').addClass('choice');
     },
     /** 페이지 번호에 맞는 데이터 불러오기 */
     do_select_page(param) {
@@ -312,13 +313,11 @@ export default {
               $('.popup-background:eq(1)').removeClass('blind');
               $('#spinner-section').removeClass('blind');
 
-              if (param !== undefined && param !== null) {
-                $('.paging-box.paging-num').removeClass('choice');
-                $('.paging-box.paging-num').addClass('un-choice');
+              $('.paging-box.paging-num').removeClass('choice');
+              $('.paging-box.paging-num').addClass('un-choice');
 
-                $(param).addClass('choice');
-                $(param).removeClass('un-choice');
-              }
+              $(param).addClass('choice');
+              $(param).removeClass('un-choice');
 
               let URL = '';
               if (this.searchFlag) {

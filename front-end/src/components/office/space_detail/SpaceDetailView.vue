@@ -985,8 +985,8 @@ export default {
                     $('.popup-background:eq(1)').addClass('blind');
                     $('#spinner-section').addClass('blind');
 
-                    const { reserve_list } = res.data;
-                    let temp_stime = '';
+                    const { reserve_list } = res.data.reserve_list;
+                    const temp_stime = '';
                     const now = new Date();
                     const year = now.getFullYear();
                     let month = now.getMonth() + 1;
@@ -1003,12 +1003,13 @@ export default {
                     $('#check_available').addClass('blind');
                     $('#go_reserve').removeClass('blind');
 
-                    let running_stime = '';
-                    let running_etime = '';
+                    const running_stime = '';
+                    const running_etime = '';
 
-                    $('.running-time-li-wrap li').each(function (index, item) {
-                      if (index === dayOfWeek) {
-                        const running_time = $(this).children('span').text().trim();
+                    const running_arr = $('.running-time-li-wrap li').slice();
+                    for (let i = 0; i < running_arr.length; i++) {
+                      if ($(running_arr[i]).children('label') === dayOfWeek) {
+                        const running_time = $(running_arr[i]).children('span').text().trim();
 
                         if (running_time !== '휴무') {
                           const split_time = running_time.split(' ~ ');
@@ -1021,13 +1022,13 @@ export default {
 
                           temp_stime = '';
 
-                          if (this.time == today) {
+                          if (this.time === today) {
                             if (running_stime <= now_hours) {
                               temp_stime = now_hours + 1;
                             } else {
                               temp_stime = running_stime;
                             }
-                          } else if (pickerDate > today) {
+                          } else if (this.time > today) {
                             temp_stime = running_stime;
                           }
 
@@ -1055,8 +1056,7 @@ export default {
                           });
                         }
                       }
-                    });
-                    // END runnint-time-li-wrap li each
+                    }
                   })
                   .catch(() => {
                     // 로딩 화면 닫기
@@ -1390,8 +1390,13 @@ export default {
       $('.question-paging').find('.paging-box.paging-num').removeClass('choice');
       $('.question-paging').find('.paging-box.paging-num').addClass('un-choice');
 
-      $(this).addClass('choice');
-      $(this).removeClass('un-choice');
+      $(param).addClass('choice');
+      $(param).removeClass('un-choice');
+
+      if (!$('.question-paging').find('.paging-box.paging-num').hasClass('choice')) {
+        $('.question-paging').find('.paging-box.paging-num:eq(0)').addClass('choice');
+        $('.question-paging').find('.paging-box.paging-num:eq(0)').removeClass('un-choice');
+      }
 
       // 로딩 화면
       $('.popup-background:eq(1)').removeClass('blind');
@@ -1422,6 +1427,11 @@ export default {
 
       $(param).addClass('choice');
       $(param).removeClass('un-choice');
+
+      if (!$('.review-paging').find('.paging-box.paging-num').hasClass('choice')) {
+        $('.review-paging').find('.paging-box.paging-num:eq(0)').addClass('choice');
+        $('.review-paging').find('.paging-box.paging-num:eq(0)').removeClass('un-choice');
+      }
 
       // 로딩 화면
       $('.popup-background:eq(1)').removeClass('blind');
