@@ -105,14 +105,12 @@ public interface BackOfficeRepository extends JpaRepository<BackOfficeEntity, Ob
 	@Query(nativeQuery = true, value="UPDATE backofficeinfo SET backoffice_state='O',apply_date=current_date where backoffice_no=?1 and backoffice_no not in (select backoffice_no from reserveinfo where backoffice_no=?1 and (reserve_state='begin' or reserve_state='in_use'))")
 	public int update_backoffice_state_o(String backoffice_no);
 
-
 	// 탈퇴 요청 성공 시, 공간 삭제
 	@Modifying
 	@Transactional
 	@Query(nativeQuery = true, value="delete from roominfo where backofficE_no=?1")
 	public int backoffice_room_deleteALL(String backoffice_no);
 
-	
 	// 업체 정보 수정
 	@Modifying
 	@Transactional

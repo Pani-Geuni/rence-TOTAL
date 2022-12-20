@@ -48,7 +48,7 @@ public interface SalesSettlementRepository extends JpaRepository<SalesSettlement
 
 //****[SALESSETTLEMENT_LIST_VIEW] view code****
 //*
-//select TO_CHAR(reserve_sdate, 'YYYY-MM-DD HH24:MI:SS') as reserve_sdate, TO_CHAR(reserve_edate, 'YYYY-MM-DD HH24:MI:SS') as reserve_edate, room_name, TO_CHAR(actual_payment) actual_payment, payment_state, sales_state, payment_no, rv.room_no, rv.backoffice_no 
+//select rownum as rnum, TO_CHAR(reserve_sdate, 'YYYY-MM-DD HH24:MI:SS') as reserve_sdate, TO_CHAR(reserve_edate, 'YYYY-MM-DD HH24:MI:SS') as reserve_edate, room_name, TO_CHAR(actual_payment) actual_payment, payment_state, sales_state, payment_no, rv.room_no, rv.backoffice_no 
 //from reserveinfo rv, paymentinfo p ,roominfo rm where rv.reserve_no=p.reserve_no and p.room_no=rm.room_no and reserve_state='end' order by reserve_sdate desc
 //*
 //***************************************

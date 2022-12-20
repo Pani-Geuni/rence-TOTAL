@@ -9,7 +9,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
@@ -251,8 +250,6 @@ public class DashboardDAOImpl implements DashboardDAO {
 	@Override
 	public int backoffice_insertOK_room(String backoffice_no, RoomDTO rvo) {
 		
-		log.info("rvo.getRoom_price()::::::{}", rvo.getRoom_price());
-		
 		RoomEntity re = modelMapper.map(rvo, RoomEntity.class);
 
 		if (rvo.getRoom_type().equals("desk")) {
@@ -343,12 +340,9 @@ public class DashboardDAOImpl implements DashboardDAO {
 		List<CommentListQViewEntity> qes = cq_repository.select_all_q(backoffice_no, start_row, end_row);
 		List<CommentListQViewDTO> qvos = qes.stream().map(qvo -> modelMapper.map(qvo, CommentListQViewDTO.class)).collect(Collectors.toList());
 		
-		log.info("Question:{}", qvos);
-		log.info("Question::::{}", qvos.size());
 		if (qvos != null) {
 			for (int i = 0; i < qvos.size(); i++) {
 				List<CommentListAViewEntity> avos = ca_repository.select_all_a(backoffice_no, qvos.get(i).getComment_no());
-				log.info("Answer:{}", avos);
 
 				if (avos != null) {
 					for (int j = 0; j < avos.size(); j++) {
@@ -360,7 +354,6 @@ public class DashboardDAOImpl implements DashboardDAO {
 				}
 			}
 		}
-		log.info("Question&+Answer:{}", qvos);
 
 		return qvos;
 
@@ -828,6 +821,7 @@ public class DashboardDAOImpl implements DashboardDAO {
 	public RoomDTO backoffice_schedule_calendar_room_name(String room_no) { // room_price 변환 되는 지 호가인 필요
 		
 		RoomEntity re = rm_repository.backoffice_schedule_calendar_room_name(room_no);
+		
 		RoomDTO rvo = modelMapper.map(re, RoomDTO.class);
 		
 		return rvo;
@@ -985,11 +979,8 @@ public class DashboardDAOImpl implements DashboardDAO {
 
 		for (ReserveUpdateDTO rvo : rvs) {
 
-//			log.info("현재 날짜 및 시간 : {}", ss);
 			Date stime = rvo.getReserve_stime();
-//			log.info("에약 시작 날짜 및 시간 : {}", stime);
 			Date etime = rvo.getReserve_etime();
-//			log.info("예약 종료 날짜 및 시간 : {}", etime);
 
 			int start = stime.compareTo(sysdate);
 			int end = etime.compareTo(sysdate);

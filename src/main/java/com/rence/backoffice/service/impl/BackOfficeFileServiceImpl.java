@@ -20,14 +20,6 @@ public class BackOfficeFileServiceImpl implements BackOfficeFileService {
 	@Autowired
 	BackOfficeFAO fao;
 
-//	@Override
-//	public BackOfficeDTO backoffice_image_upload(BackOfficeDTO vo, MultipartHttpServletRequest mtfRequest,
-//			MultipartFile multipartFile_room, MultipartFile multipartFile_host) {
-//		vo = fao.backoffice_image_upload(vo, mtfRequest, multipartFile_room);
-//		vo = fao.host_image_upload(vo, multipartFile_host);
-//		return vo;
-//	}
-
 	@Override
 	public BackOfficeDTO backoffice_image_upload(BackOfficeDTO bvo, MultipartHttpServletRequest mtfRequest,
 			MultipartFile multipartFile_room) {
