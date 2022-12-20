@@ -45,4 +45,7 @@ public class RoomEntity implements Serializable{
 	
 	@Column(name="backoffice_no")
 	private String backoffice_no;
+	
+	@Column(name="room_state")
+	private String room_state;
 }

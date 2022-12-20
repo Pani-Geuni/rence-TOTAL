@@ -12,6 +12,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -45,7 +47,7 @@ public class DashboardServiceImpl implements DashboardService {
 
 	@Autowired
 	DashboardDAO dao;
-
+	
 	/**
 	 * 대쉬보드 메인
 	 */
@@ -147,7 +149,10 @@ public class DashboardServiceImpl implements DashboardService {
 
 		RoomDTO rmvo = new RoomDTO();
 
-		String type = bvo.getBackoffice_type().replace("meeting_room", "meeting_04,meeting_06,meeting_10");
+		String type = bvo.getBackoffice_type();
+		if (type.contains("meeting_room")) {
+			type = bvo.getBackoffice_type().replace("meeting_room", "meeting_04,meeting_06,meeting_10");
+		}
 		rmvo.setRoom_type(type);
 
 		List<String> type_list = new ArrayList<String>();
@@ -267,12 +272,14 @@ public class DashboardServiceImpl implements DashboardService {
 		}
 
 		if (result == 1) {
+			dao.backoffice_qna_insert(backoffice_no,room_no);
+			
 			log.info("successed...");
 			map.put("result", "1");
 		}
 
 		else {
-			log.info("failed...");
+			log.info("room delete failed...");
 			map.put("result", "0"); // 남은 예약이 있을 시
 		}
 
@@ -748,6 +755,7 @@ public class DashboardServiceImpl implements DashboardService {
 		if (result == 1) {
 			int flag = dao.backoffice_room_deleteALL(bvo);
 			if (flag == 1) {
+				dao.backoffice_qna_insert(bvo.getBackoffice_no());
 				log.info("successed...");
 				map.put("result", "1");
 			} else {
@@ -1143,4 +1151,6 @@ public class DashboardServiceImpl implements DashboardService {
 	public void reserve_auto_delete(String reserve_no) {
 		dao.reserve_auto_delete(reserve_no);
 	}
+
+	
 }

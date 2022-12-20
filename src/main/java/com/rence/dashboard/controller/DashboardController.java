@@ -11,6 +11,8 @@ import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -51,18 +53,22 @@ public class DashboardController {
 
 	@Autowired
 	HostPaymentCancelService cancelService;
+	
+	@Autowired
+	HttpSession session;
 
+	
 	/**
 	 * 대쉬보드 메인
 	 */
 	@ApiOperation(value = "대쉬보드 메인", notes = "대쉬보드 메인 페이지")
 	@GetMapping("/main")
 	public String dashboard_main_rsu(String backoffice_no) {
-
+		
 		Map<String, Object> map = service.dashboard_main(backoffice_no);
-
+		
 		String json = gson.toJson(map);
-
+		
 		return json;
 	}
 
@@ -354,7 +360,7 @@ public class DashboardController {
 	 */
 	@ApiOperation(value = "업체 정보 변경 처리", notes = "대쉬보드 환경설정 페이지 - 업체 정보 변경")
 	@PostMapping("/updateOK_host")
-	public String backoffice_updateOK_host(BackOfficeDTO bvo, BackOfficeOperatingTimeDTO ovo, MultipartHttpServletRequest mtfRequest, @RequestParam(value = "multipartFile_room") MultipartFile multipartFile_room) {
+	public String backoffice_updateOK_host(BackOfficeDTO bvo, BackOfficeOperatingTimeDTO ovo, MultipartHttpServletRequest mtfRequest, @RequestParam(value = "multipartFile_room" , required = false) MultipartFile multipartFile_room) {
 
 		BackOfficeDTO bvo2 = service.backoffice_setting_selectOne(bvo);
 		if(!bvo.getBackoffice_image().equals(bvo2.getBackoffice_image())) {
