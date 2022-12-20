@@ -25,7 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 @NoArgsConstructor
 public class RoomSummaryViewDTO {
 
-	private Float review_point;
+	private String review_point;
 	
 	private Integer comment_no;
 	

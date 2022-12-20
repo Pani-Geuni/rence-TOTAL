@@ -16,7 +16,7 @@ public interface ScheduleListRepository extends JpaRepository<ScheduleListViewEn
 
 	// 일정 관리 - 리스트 해당 날짜에 예약이 있는 공간 -> vo에는 reserve_state 없음
 	@Query(nativeQuery = true, value = "select B.* from( "
-			+ "select ROW_NUMBER() OVER(PARTITION BY room_no ORDER BY room_no ASC ) no, A.* from ( "
+			+ "select rownum as rnum, ROW_NUMBER() OVER(PARTITION BY room_no ORDER BY room_no ASC ) no, A.* from ( "
 			+ "select room_no, backoffice_no, room_type, room_name, reserve_cnt from "
 			+ "(select count(reserve_no) OVER(PARTITION BY rm.room_no) as reserve_cnt, rm.room_no,rm.backoffice_no, rm.room_type, room_name, reserve_stime, reserve_etime, reserve_state  from reserveinfo rv , roominfo rm where rv.room_no=rm.room_no and reserve_state in ('begin', 'in_use') "
 			+ "and ( ((reserve_stime > To_date(?2,'YYYY-MM-DD HH24:MI:SS') and reserve_stime < To_date(?3,'YYYY-MM-DD HH24:MI:SS') )or( reserve_etime > To_date(?2,'YYYY-MM-DD HH24:MI:SS') and reserve_etime < To_date(?3,'YYYY-MM-DD HH24:MI:SS'))) "
@@ -28,7 +28,7 @@ public interface ScheduleListRepository extends JpaRepository<ScheduleListViewEn
 			+ "select room_no from roominfo where backoffice_no=?1 and room_state!='F' "
 			+ "minus "
 			+ "select room_no from roomschedule where backoffice_no=?1  and (not_stime <= TO_DATE(?2,'YYYY-MM-DD HH24:MI:SS')) and (not_etime >= TO_DATE(?3,'YYYY-MM-DD HH24:MI:SS'))) ) "
-			+ ")A )B where B.no=1 and rownum between ?4 and ?5")
+			+ ")A )B where B.no=1 and B.rnum  between ?4 and ?5")
 	public List<ScheduleListViewEntity> backoffice_schedule_list(String backoffice_no, String reserve_stime, String reserve_etime, Integer min, Integer max);
 
 	// 일정 갯수

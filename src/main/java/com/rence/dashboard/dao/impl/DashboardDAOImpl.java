@@ -206,6 +206,8 @@ public class DashboardDAOImpl implements DashboardDAO {
 		RoomSummaryViewEntity rse = rm_summary_repository.select_room_summary(backoffice_no);
 		RoomSummaryViewDTO rs = modelMapper.map(rse, RoomSummaryViewDTO.class);
 		
+		rs.setReview_point(String.format("%.1f", rse.getReview_point()));
+		
 		return rs;
 	}
 
@@ -249,6 +251,8 @@ public class DashboardDAOImpl implements DashboardDAO {
 	@Override
 	public int backoffice_insertOK_room(String backoffice_no, RoomDTO rvo) {
 		
+		log.info("rvo.getRoom_price()::::::{}", rvo.getRoom_price());
+		
 		RoomEntity re = modelMapper.map(rvo, RoomEntity.class);
 
 		if (rvo.getRoom_type().equals("desk")) {
@@ -260,6 +264,7 @@ public class DashboardDAOImpl implements DashboardDAO {
 		} else if (rvo.getRoom_type().equals("meeting_10")) {
 			re.setRoom_price(50000);
 		}
+		
 		re.setBackoffice_no(backoffice_no);
 		re.setRoom_state("T");
 
