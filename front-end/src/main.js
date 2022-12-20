@@ -10,6 +10,7 @@ import store from './store';
 
 const app = createApp(App);
 app.config.globalProperties.$is_officeLogin = 'false';
+app.config.globalProperties.$is_backofficeLogin = 'false';
 app.use(store).use(router).use(VueCookies)
   .use(Vue3Storage)
   .use(VCalendar, {})

@@ -132,9 +132,17 @@ export default {
   },
 
   mounted() {
-    this.$nextTick(() => {
-      this.getBackofficeInfo();
-    });
+    axios.get('http://localhost:8800/backoffice/loginCheck')
+      .then((res) => {
+        if (res.data.result === '1') {
+          this.$nextTick(() => {
+            this.getBackofficeInfo();
+          });
+        } else {
+          this.$store.commit('backoffice_setLogin_false');
+          this.$router.replace('/backoffice/landing');
+        }
+      });
   },
 };
 </script>

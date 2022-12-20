@@ -259,10 +259,18 @@ export default {
   },
 
   mounted() {
-    this.$nextTick(() => {
-      this.miniNavActive();
-      this.getSales();
-    });
+    axios.get('http://localhost:8800/backoffice/loginCheck')
+      .then((res) => {
+        if (res.data.result === '1') {
+          this.$nextTick(() => {
+            this.miniNavActive();
+            this.getSales();
+          });
+        } else {
+          this.$store.commit('backoffice_setLogin_false');
+          this.$router.replace('/backoffice/landing');
+        }
+      });
   },
 };
 </script>

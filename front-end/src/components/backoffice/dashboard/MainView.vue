@@ -182,17 +182,15 @@ export default {
   mounted() {
     axios.get('http://localhost:8800/backoffice/loginCheck')
       .then((res) => {
-        console.log('--------- main mounted');
-        console.log(res.data);
         if (res.data.result === '1') {
           this.$store.commit('backoffice_setLogin_true');
+          this.$nextTick(() => {
+            this.getReserveList();
+          });
         } else {
           this.$store.commit('backoffice_setLogin_false');
+          this.$router.replace('/backoffice/landing');
         }
-
-        this.$nextTick(() => {
-          this.getReserveList();
-        });
       });
   },
 };
