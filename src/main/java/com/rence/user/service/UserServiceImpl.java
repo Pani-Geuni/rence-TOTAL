@@ -1,7 +1,12 @@
 package com.rence.user.service;
 
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,16 +29,52 @@ public class UserServiceImpl implements UserService {
 	UserSendEmail authSendEmail;
 
 	@Override
-	// 로그인
-	public UserDto user_login_info(String username) {
-		log.info("user_login_info()...");
+	public Map<String, String> user_loginOK(String username, HttpServletResponse response, HttpSession session) {
+		log.info("user_loginOK()...");
 		log.info("username: {}", username);
 
-		return dao.user_login_info(username);
+		Map<String, String> map = new HashMap<String, String>();
+
+		// 로그인 성공시 기존의 유저관련쿠키 제거
+		Cookie cc = new Cookie("user_no", null); // choiceCookieName(쿠키 이름)에 대한 값을 null로 지정
+		Cookie cc2 = new Cookie("user_image", null);
+		cc.setMaxAge(0); // 유효시간을 0으로 설정
+		cc2.setMaxAge(0);
+		response.addCookie(cc); // 응답 헤더에 추가해서 없어지도록 함
+		response.addCookie(cc2);
+
+		UserDto udto = dao.user_login_info(username);
+
+		String user_id = udto.getUser_id();
+
+		session.setAttribute("user_id", user_id);
+
+		// 쿠키저장을 위해 유저번호 및 이미지 base64 암호화 처리
+		Base64.Encoder encoder = Base64.getEncoder();
+		byte[] user_no = udto.getUser_no().getBytes();
+		byte[] user_image = ("https://rence.s3.ap-northeast-2.amazonaws.com/user/" + udto.getUser_image()).getBytes();
+
+		String user_no_base64 = encoder.encodeToString(user_no);
+		String user_image_base64 = encoder.encodeToString(user_image);
+
+		log.info("user_no_base64: {},  user_image_base64: {}", user_no_base64, user_image_base64);
+
+		Cookie cookie = new Cookie("user_no", user_no_base64); // 고유번호 쿠키 저장
+		Cookie cookie2 = new Cookie("user_image", user_image_base64); // 고유번호 쿠키 저장
+		cookie.setPath("/");
+		cookie2.setPath("/");
+		response.addCookie(cookie);
+		response.addCookie(cookie2);
+
+		log.info("User Login success.....");
+		map.put("result", "1"); // 로그인 성공
+
+		map.put("user_id", user_id);
+		return map;
 	}
 
-	@Override
 	// 이메일 체크
+	@Override
 	public String user_EmailCheckOK(UserDto udto, AuthDTO adto, EmailVO evo) {
 		log.info("user_EmailCheckOK()....");
 		log.info("udto: {}", udto);
@@ -131,12 +172,12 @@ public class UserServiceImpl implements UserService {
 		return idCheck_result;
 	}
 
-	@Override
 	// 회원가입
+	@Override
 	public Map<String, String> user_insertOK(UserDto udto) {
 		log.info("user_insertOK()....");
 		log.info("udto: {}", udto);
-		
+
 		Map<String, String> map = new HashMap<String, String>();
 
 		int join_result = 0;
@@ -154,14 +195,13 @@ public class UserServiceImpl implements UserService {
 			// 회원가입은 했지만 마일리지 데이터가 안들어갔으므로 실패
 			join_result = 0;
 		}
-		
-		
+
 		log.info("join_result: {}", join_result);
-		
-		if(join_result == 0) {
+
+		if (join_result == 0) {
 			// 회원가입실패
 			map.put("result", "0");
-		} else if(join_result == 1) {
+		} else if (join_result == 1) {
 			// 회원가입 성공
 			map.put("result", "1");
 		}
@@ -194,16 +234,16 @@ public class UserServiceImpl implements UserService {
 		return findId_res;
 	}
 
-	//비밀번호 찾기
+	// 비밀번호 찾기
 	@Override
 	public String user_find_pw(UserDto udto, EmailVO evo) {
 		log.info("user_find_pw()...");
 		log.info("udto: {}", udto);
-		
+
 		String findPw_res = null;
-		
+
 		UserDto udto2 = dao.user_id_email_select(udto); // 아이디 이메일 체크
-		
+
 		if (udto2 != null) {
 			// udto2가 null이 아니면(테이블에 데이터가 존재하면) 메일을 통해 수정링크 제공
 			udto2 = authSendEmail.findPw(udto2, evo);
