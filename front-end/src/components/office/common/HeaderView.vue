@@ -4,6 +4,12 @@
 <!-- eslint-disable space-before-blocks -->
 <!-- eslint-disable next-line default-case-->
 <!-- eslint-disable -->
+
+<!--
+ - @author 김예은
+ - @refactoring 김예은
+-->
+
 <template>
   <section class ="headerWrap">
     <div class = "logo-section">
@@ -175,7 +181,7 @@ export default {
           this.location = '';
         }
 
-        const port = window.location.href.split('localhost:')[1].split('/#')[0];
+        const port = window.location.href.split('localhost:')[1].split('/static')[0];
         window.location.href = `http://localhost:${port}/list/search_list/type=${this.type}&location=${this.location}&searchWord=${$('#input_searchBar').val().trim()}&condition=date&page=1`;
       } else {
         $('.popup-background:eq(1)').removeClass('blind');

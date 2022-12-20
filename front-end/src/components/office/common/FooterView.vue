@@ -1,3 +1,8 @@
+<!--
+ - @author 김예은
+ - @refactoring 김예은
+-->
+
 <template>
   <section id = "footerWrap">
     <h5>© Golfzon Tech Academy, Inc. All rights reserved.</h5>

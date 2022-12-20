@@ -2,16 +2,6 @@
  * @author 김예은, 전판근
  */
 $(() => {
-  // // desk / metting-room / office
-  // $('#question-create-btn').click(() => {
-  //   if (is_login2 != null) {
-  //     $('#question-popup').removeClass('blind');
-  //   } else {
-  //     $('.popup-background:eq(1)').removeClass('blind');
-  //     $('#common-alert-popup').removeClass('blind');
-  //     $('.common-alert-txt').text('로그인 후 이용가능한 기능입니다.');
-  //   }
-  // });
 
   // /** *********************************************** */
   // /** **************** PAGING SECTION *************** */
@@ -159,64 +149,6 @@ $(() => {
   //     },
   //   });
   // });
-
-  // // $('.review-paging').on('click', '.paging-box.paging-num', function () {
-  // //   $('.review-paging').find('.paging-box.paging-num').removeClass('choice');
-  // //   $('.review-paging').find('.paging-box.paging-num').addClass('un-choice');
-
-  // //   $(this).addClass('choice');
-  // //   $(this).removeClass('un-choice');
-
-  // //   // 로딩 화면
-  // //   $('.popup-background:eq(1)').removeClass('blind');
-  // //   $('#spinner-section').removeClass('blind');
-
-  // //   $.ajax({
-  // //     url: '/office/introduce_r_paging',
-  // //     type: 'GET',
-  // //     dataType: 'json',
-  // //     data: {
-  // //       backoffice_no: window.location.href.split('?backoffice_no=')[1].split('&')[0],
-  // //       page: Number($(this).text()),
-  // //     },
-  // //     success(res) {
-  // //       // 로딩 화면 닫기
-  // //       $('.popup-background:eq(1)').addClass('blind');
-  // //       $('#spinner-section').addClass('blind');
-
-  // //       $('#review-wrap').find('.quest-list-wrap').empty();
-
-  // //       for (let i = 0; i < res.revos.length; i++) {
-  // //         const sample = `${"<li class='quest-list'>"
-  // // 								+ '<section>'
-  // // 								+ "<img src='' alt='write-user-img' class='write-user-img' />"
-  // // 								+ '</section>'
-  // // 								+ "<section class='quest-content-section'>"
-  // // 								+ "<ul class='quest-content-wrap'>"
-  // // 								+ "<li class='quest-content-list quest-content-writer'>"
-  // // 								+ "<span class='quest-writer'>"}${res.revos[i].user_name}</span>`
-  // // 								+ '<span class=\'review-star-wrap\'>'
-  // // 								+ '<img src=\'/static/IMG/common/star.svg\' class=\'review-star-img\' alt=\'review-star-img\' />'
-  // // 								+ `<span class='review-star-num'>${res.revos[i].review_point}</span>`
-  // // 								+ '</span>'
-  // // 								+ '</li>'
-  // // 								+ `<li class='quest-content-list quest-content'>${res.revos[i].review_content}</li>`
-  // // 								+ `<li class='quest-content-list quest-content-date'>${res.revos[i].review_date}</li>`
-  // // 								+ '</ul>'
-  // // 								+ '</section>'
-  // // 								+ '</li>';
-
-  // //         $('#review-wrap').find('.quest-list-wrap').append(sample);
-  // //         $('#review-wrap').find('.quest-list:last').find('.write-user-img').attr('src', `https://rence.s3.ap-northeast-2.amazonaws.com/user/${res.revos[i].user_image}`);
-  // //       }
-  // //     },
-  // //     error() {
-  // //       // 로딩 화면 닫기
-  // //       $('.popup-background:eq(1)').addClass('blind');
-  // //       $('#spinner-section').addClass('blind');
-  // //     },
-  // //   });
-  // // });
 
   // /** ***************************** */
   // /** * 예약 가능 여부 버튼 클릭 ** */
