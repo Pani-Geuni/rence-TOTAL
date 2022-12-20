@@ -47,12 +47,12 @@ public class UserMypageDAOImpl implements UserMypageDAO {
 
 	@Autowired
 	MileageRepository mileageRepository;
-	
+
 	@Autowired
 	UserReviewRepository userReviewRepository;
-	
+
 	@Autowired
-	MyQuestionRepository  myQuestionRepository;
+	MyQuestionRepository myQuestionRepository;
 
 	// 마이페이지 정보 불러오기
 	@Override
@@ -61,10 +61,10 @@ public class UserMypageDAOImpl implements UserMypageDAO {
 		log.info("user_no: {}", user_no);
 
 		UserMypageEntity entity = repository.user_mypage_select(user_no);
-		
+
 		UserMypageDto mypagedto = null;
-		if(entity != null) {
-			 mypagedto = modelmapper.map(entity, UserMypageDto.class);
+		if (entity != null) {
+			mypagedto = modelmapper.map(entity, UserMypageDto.class);
 		}
 
 		return mypagedto;
@@ -158,7 +158,7 @@ public class UserMypageDAOImpl implements UserMypageDAO {
 
 		List<MyPageReserveListEntity> entity_vos = myReserveRepository.select_all_now_reserve_list_paging(user_no,
 				start_row, end_row);
-		//log.info("entity_vos: {}", entity_vos);
+		// log.info("entity_vos: {}", entity_vos);
 
 		List<MyPageReserveListDto> vos = entity_vos.stream()
 				.map(source -> modelmapper.map(source, MyPageReserveListDto.class)).collect(Collectors.toList());
@@ -180,7 +180,8 @@ public class UserMypageDAOImpl implements UserMypageDAO {
 		log.info("start_row: " + start_row);
 		log.info("end_row: " + end_row);
 
-		List<MyPageReserveListEntity> entity_vos = myReserveRepository.select_all_before_reserve_list_paging(user_no, start_row, end_row);
+		List<MyPageReserveListEntity> entity_vos = myReserveRepository.select_all_before_reserve_list_paging(user_no,
+				start_row, end_row);
 		log.info("entity_vos: {}", entity_vos);
 
 		List<MyPageReserveListDto> vos = entity_vos.stream()
@@ -221,7 +222,7 @@ public class UserMypageDAOImpl implements UserMypageDAO {
 		if (total_rowCount_mileage_all == 0) {
 			page = 0;
 		}
-		
+
 		Integer row_count = 8;
 		Integer start_row = (page - 1) * row_count + 1;
 		Integer end_row = page * row_count;
@@ -232,24 +233,24 @@ public class UserMypageDAOImpl implements UserMypageDAO {
 		}
 		log.info("start_row: " + start_row);
 		log.info("end_row: " + end_row);
-		
-		
-		List<UserMileageEntity> entity_vos = mileageRepository.user_mileage_selectAll_paging(udto.getUser_no(), start_row, end_row);
+
+		List<UserMileageEntity> entity_vos = mileageRepository.user_mileage_selectAll_paging(udto.getUser_no(),
+				start_row, end_row);
 		log.info("entity_vos: {}", entity_vos);
 
-		List<UserMileageDto> vos = entity_vos.stream()
-				.map(source -> modelmapper.map(source, UserMileageDto.class)).collect(Collectors.toList());
-		
+		List<UserMileageDto> vos = entity_vos.stream().map(source -> modelmapper.map(source, UserMileageDto.class))
+				.collect(Collectors.toList());
+
 		return vos;
 	}
-	
+
 	// 마이페이지 - 마일리지 리스트 - 총 마일리지 조건 리스트 수
 	@Override
 	public long total_rowCount_mileage_searchKey(UserDto udto, String searchKey) {
 		log.info("total_rowCount_mileage_searchKey()....");
 		log.info("udto: {}", udto);
 		log.info("searchKey: {}", searchKey);
-		
+
 		long total_rowCount_mileage_all = 0;
 		if (searchKey.equals("all")) {
 			total_rowCount_mileage_all = mileageRepository.count_allmileage(udto.getUser_no());
@@ -261,7 +262,7 @@ public class UserMypageDAOImpl implements UserMypageDAO {
 		return total_rowCount_mileage_all;
 	}
 
-	//마이페이지 - 마일리지 리스트 - 적립/사용 마일리지 리스트
+	// 마이페이지 - 마일리지 리스트 - 적립/사용 마일리지 리스트
 	@Override
 	public List<UserMileageDto> user_mileage_search_list_paging(UserDto udto, String searchKey, Integer page,
 			long total_rowCount_mileage_search) {
@@ -294,12 +295,12 @@ public class UserMypageDAOImpl implements UserMypageDAO {
 		} else if (searchKey.equals("minus")) {
 			entity_vos = mileageRepository.mileage_search_list_minus_paging(udto.getUser_no(), start_row, end_row);
 		}
-		
-		List<UserMileageDto> vos = entity_vos.stream()
-				.map(source -> modelmapper.map(source, UserMileageDto.class)).collect(Collectors.toList());
+
+		List<UserMileageDto> vos = entity_vos.stream().map(source -> modelmapper.map(source, UserMileageDto.class))
+				.collect(Collectors.toList());
 		return vos;
 	}
-	
+
 	// 리뷰(후기) 리스트 수
 	@Override
 	public long total_rowCount_review(String user_no) {
@@ -309,7 +310,7 @@ public class UserMypageDAOImpl implements UserMypageDAO {
 		return userReviewRepository.total_rowCount_review(user_no);
 	}
 
-	//리뷰(후기) 리스트
+	// 리뷰(후기) 리스트
 	@Override
 	public List<UserReview_ViewDto> select_all_review_paging(String user_no, Integer page) {
 		log.info("select_all_review_paging()....");
@@ -323,15 +324,16 @@ public class UserMypageDAOImpl implements UserMypageDAO {
 		log.info("start_row: " + start_row);
 		log.info("end_row: " + end_row);
 
-		List<UserReview_ViewEntity> entity_vos = userReviewRepository.select_all_review_paging(user_no, start_row, end_row);
+		List<UserReview_ViewEntity> entity_vos = userReviewRepository.select_all_review_paging(user_no, start_row,
+				end_row);
 		log.info("entity_vos: {}", entity_vos);
 
 		List<UserReview_ViewDto> vos = entity_vos.stream()
 				.map(source -> modelmapper.map(source, UserReview_ViewDto.class)).collect(Collectors.toList());
 		return vos;
 	}
-	
-	//문의 리스트 수
+
+	// 문의 리스트 수
 	@Override
 	public long total_rowCount_question(String user_no) {
 		log.info("total_rowCount_question()....");
@@ -339,7 +341,7 @@ public class UserMypageDAOImpl implements UserMypageDAO {
 
 		return myQuestionRepository.count_question(user_no);
 	}
-	
+
 	// 마이페이지 - 문의내역리스트 페이징
 	@Override
 	public List<UserQuestionDto> select_all_question_paging(String user_no, Integer page) {
@@ -354,24 +356,31 @@ public class UserMypageDAOImpl implements UserMypageDAO {
 		log.info("start_row: " + start_row);
 		log.info("end_row: " + end_row);
 
-		List<UserQuestioEntity> entity_vos = myQuestionRepository.select_all_question_paging(user_no, start_row, end_row);
+		List<UserQuestioEntity> entity_vos = myQuestionRepository.select_all_question_paging(user_no, start_row,
+				end_row);
 		log.info("entity_vos: {}", entity_vos);
 
-		List<UserQuestionDto> vos = entity_vos.stream()
-				.map(source -> modelmapper.map(source, UserQuestionDto.class)).collect(Collectors.toList());
+		List<UserQuestionDto> vos = null;
+		if (entity_vos != null) {
+
+			vos = entity_vos.stream().map(source -> modelmapper.map(source, UserQuestionDto.class))
+					.collect(Collectors.toList());
+		}
 		return vos;
 	}
-	
+
 	// 마이페이지 - 문의내역리스트(답변)
 	@Override
 	public UserQuestionDto select_one_answer(String comment_no) {
 		log.info("select_one_answer()....");
 		log.info("comment_no: {}", comment_no);
 		UserQuestioEntity entity = myQuestionRepository.select_one_answer(comment_no);
-		
-		UserQuestionDto dto = modelmapper.map(entity, UserQuestionDto.class);
-		
+
+		UserQuestionDto dto = null;
+		if (entity != null) {
+			dto = modelmapper.map(entity, UserQuestionDto.class);
+		}
 		return dto;
 	}
-	
+
 }// end class

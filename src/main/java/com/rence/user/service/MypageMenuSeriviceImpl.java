@@ -62,7 +62,7 @@ public class MypageMenuSeriviceImpl implements MypageMenuSerivice {
 			ReserveInfo_ViewDto dto = dao.select_one_reserve_info(reserve_no);
 
 			List<String> splitImage = info_map.splitImage(dto.getBackoffice_image());
-			String room_first_image = splitImage.get(0);
+			String room_first_image = splitImage.get(1);
 			dto.setBackoffice_image(room_first_image);
 
 			dto.setRoom_type(info_map.changeType(dto.getRoom_type()));

@@ -8,7 +8,9 @@
 
 package com.rence.user.model;
 
-import java.sql.Date;
+
+
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Id;
@@ -39,5 +41,11 @@ public class UserMypageDto {
 	private Date user_birth; //생년월일
 	
 	private String mileage_total; // 총 마일리지
+
+
+	
+
+	
+	
 
 }//end class

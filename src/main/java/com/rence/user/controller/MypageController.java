@@ -70,7 +70,7 @@ public class MypageController {
 		
 		UserMypageDto umdto = service.user_mypage_select(request, response);
 
-		
+		log.info("====umdto: {}", umdto);
 		String jsonObject = gson.toJson(umdto);
 		return jsonObject;
 	}
