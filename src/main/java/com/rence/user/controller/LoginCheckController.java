@@ -37,7 +37,7 @@ public class LoginCheckController {
 
 		Map<String, String> map = new HashMap<String, String>();
 
-		log.info("(테스트 로그)session==== {}", session.getAttribute("user_id"));
+		log.info("(테스트 로그)Get session==== {}", session.getAttribute("user_id"));
 
 		if (session.getAttribute("user_id") != null) {
 			map.put("result", "1");

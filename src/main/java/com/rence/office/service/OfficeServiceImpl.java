@@ -15,6 +15,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -44,8 +46,8 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 public class OfficeServiceImpl implements OfficeService {
 
-//	@Autowired
-//	HttpSession session;
+	@Autowired
+	HttpSession session;
 
 	@Autowired
 	officeDAO dao;
@@ -156,8 +158,8 @@ public class OfficeServiceImpl implements OfficeService {
 
 		List<OfficeQuestionDto> cvdto = dao.select_all_comment(backoffice_no, page);
 
-//		String is_login = (String) session.getAttribute("user_id");
-		String is_login = null;
+		String is_login = (String) session.getAttribute("user_id");
+		// String is_login = null;
 
 		if (cvdto != null) {
 			for (OfficeQuestionDto vo : cvdto) {
@@ -352,8 +354,8 @@ public class OfficeServiceImpl implements OfficeService {
 
 		List<OfficeQuestionDto> cvdto = dao.select_all_comment(backoffice_no, page);
 
-//		String is_login = (String) session.getAttribute("user_id");
-		String is_login = null;
+		String is_login = (String) session.getAttribute("user_id");
+//		String is_login = null;
 
 		if (cvdto != null) {
 			for (OfficeQuestionDto dto : cvdto) {
