@@ -43,9 +43,8 @@ public class BackofficeFAOImpl implements BackOfficeFAO {
 	@Override
 	public BackOfficeDTO backoffice_image_upload(BackOfficeDTO vo, MultipartHttpServletRequest mtfRequest,
 			MultipartFile multipartFile_room) {
-		log.info("{} byte", multipartFile_room.getSize());
 
-		if (multipartFile_room.getSize() > 0) {
+		if (multipartFile_room != null) {
 			log.info("filename : {}", multipartFile_room.getOriginalFilename());
 			List<MultipartFile> imgs = mtfRequest.getFiles("multipartFile_room");
 
@@ -83,6 +82,8 @@ public class BackofficeFAOImpl implements BackOfficeFAO {
 			}
 
 		} else if (vo.getBackoffice_image() == null) {
+			vo.setBackoffice_image("img_room_001.jpg");
+		} else if (multipartFile_room == null) {
 			vo.setBackoffice_image("img_room_001.jpg");
 		}
 
