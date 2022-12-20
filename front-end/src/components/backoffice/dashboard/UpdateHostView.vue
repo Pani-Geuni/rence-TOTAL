@@ -885,7 +885,7 @@ export default {
         .then((res) => {
           if (res.data.result === '1') {
             console.log('변경 성공');
-            this.$router.replace(`/backoffice/dash/main?backoffice_no=${this.$cookies.get('backoffice_no')}`);
+            this.$router.replace(`/backoffice/dash/settings?backoffice_no=${this.$cookies.get('backoffice_no')}`);
           } else {
             console.log('변경 실패');
           }
