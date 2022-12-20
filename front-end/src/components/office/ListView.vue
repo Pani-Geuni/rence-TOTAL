@@ -134,6 +134,7 @@ export default {
 
     axios.get(this.url)
       .then((res) => {
+        console.log(res.data);
         this.list = res.data.list;
         this.maxCnt = res.data.maxCnt;
         this.nowCnt = res.data.nowCnt;
@@ -171,13 +172,14 @@ export default {
       $('#spinner-section').removeClass('blind');
 
       type = this.$route.params.parameters.split('type=')[1].split('&')[0];
+      const url = window.location.href.split('/list')[0];
+
       if (this.$route.params.call === 'list_page') {
-        URL = `http://localhost:8800/office/${this.$route.params.call}?type=${type}&condition=${$(param).attr('condition')}&page=1`;
-        window.location.href = `http://localhost:8081/list/list_page/type=${type}&condition=${$(param).attr('condition')}&page=1`;
+        window.location.href = `${url}/list/list_page/type=${type}&condition=${$(param).attr('condition')}&page=1`;
       } else {
         location = this.$route.params.parameters.split('location=')[1].split('&')[0];
         searchWord = this.$route.params.parameters.split('searchWord=')[1].split('&')[0];
-        window.location.href = `http://localhost:8081/list/search_list/type=${type}&location=${location}&searchWord=${searchWord}&condition=${$(param).attr('condition')}&page=1`;
+        window.location.href = `${url}/list/search_list/type=${type}&location=${location}&searchWord=${searchWord}&condition=${$(param).attr('condition')}&page=1`;
       }
     },
     list_paging(param) {
@@ -187,7 +189,7 @@ export default {
           $('.popup-background:eq(1)').removeClass('blind');
           $('#spinner-section').removeClass('blind');
 
-          if (window.location.href.includes('list_page')) {
+          if (this.$route.params.call.includes('list_page')) {
             const type = this.$route.params.parameters.split('type=')[1].split('&')[0];
             const condition = this.$route.params.parameters.split('condition=')[1].split('&')[0];
             const page = Number($('#maxCnt').attr('nowCnt'));
@@ -267,23 +269,15 @@ export default {
         }
       }
     },
-    emit_space_detail_page(param) {
-      const backofficeNo = $(param).parents('.list-box').attr('idx');
-      const type = this.$route.params.parameters.split('type=')[1].split('&')[0];
-
-      if (type !== 'office') { window.open(`http://localhost:8081/space/backoffice_no=${backofficeNo}`); }
-      // 오피스용 공간 소개 페이지로 이동
-      else { window.open(`http://localhost:8081/space_office/backoffice_no=${backofficeNo}`); }
-
-      this.$emit('click', param.parents('.list-box').attr('idx'));
-    },
     go_space_detail_page(param) {
       const backofficeNo = $(param).parents('.list-box').attr('idx');
       const type = this.$route.params.parameters.split('type=')[1].split('&')[0];
 
-      if (type !== 'office') { window.open(`http://localhost:8081/space/backoffice_no=${backofficeNo}`); }
+      const url = window.location.href.split('/list')[0];
+
+      if (type !== 'office') { window.open(`${url}/space/backoffice_no=${backofficeNo}`); }
       // 오피스용 공간 소개 페이지로 이동
-      else { window.open(`http://localhost:8081/space_office/backoffice_no=${backofficeNo}`); }
+      else { window.open(`${url}/space_office/backoffice_no=${backofficeNo}`); }
     },
   },
 };

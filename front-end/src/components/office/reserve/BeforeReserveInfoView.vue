@@ -253,6 +253,7 @@ export default {
       review_flag: true,
       reserveNo: '',
       load: false,
+      axiosFlag: true,
     };
   },
   mounted() {
@@ -271,9 +272,9 @@ export default {
           $('.popup-background:eq(1)').removeClass('blind');
           $('#spinner-section').removeClass('blind');
 
-          this.reserveNo = decodeURI(window.location.href).split('reserve_no=')[1];
+          this.reserveNo = this.$route.params.parameters.split('reserve_no=')[1];
 
-          axios.get(`http://localhost:8800/rence/reserved_info?reserve_no=${reserveNo}`)
+          axios.get(`http://localhost:8800/rence/reserved_info?reserve_no=${this.reserveNo}`)
             .then((res) => {
               this.list = res.data;
               this.load = true;
@@ -308,7 +309,34 @@ export default {
   methods: {
     /** 후기 팝업 열기 버튼 클릭 이벤트 */
     show_review_popup() {
-      $('#review-popup').removeClass('blind');
+      if (this.axiosFlag) {
+        this.axiosFlag = false;
+
+        // 로그인 여부 체크 -> 헤더를 위해
+        axios.get('http://localhost:8800/loginCheck')
+          .then((response) => {
+            this.axiosFlag = true;
+
+            // 로그인 되어 있음
+            if (response.data.result === '1') {
+              this.$is_officeLogin = 'true';
+              $('#review-popup').removeClass('blind');
+            }
+            // 로그인 되어 있지 않음(or 세션 만료)
+            else {
+              this.$is_officeLogin = 'false';
+              $('.popup-background:eq(0)').removeClass('blind');
+              $('#disconnect-session-popup').removeClass('blind');
+            }
+          })
+          .catch(() => {
+            this.axiosFlag = true;
+
+            $('.popup-background:eq(1)').removeClass('blind');
+            $('#common-alert-popup').removeClass('blind');
+            $('.common-alert-txt').text('오류 발생으로 인해 로그인 여부를 불러오는데에 실패하였습니다.');
+          });
+      }
     },
     /** * 후기 작성 경고 테두리 제거 */
     remove_null_input_border() {
@@ -358,78 +386,106 @@ export default {
     },
     /** 리뷰 생성 로직 함수 */
     create_review(param) {
-      if (this.review_flag) {
-        if ($('#review-write').val().trim().length > 0) {
-          this.review_flag = false;
+      if (this.axiosFlag) {
+        this.axiosFlag = false;
 
-          // 로딩 화면
-          $('.popup-background:eq(0)').removeClass('blind');
-          $('#spinner-section').removeClass('blind');
+        // 로그인 여부 체크 -> 헤더를 위해
+        axios.get('http://localhost:8800/loginCheck')
+          .then((response) => {
+            this.axiosFlag = true;
 
-          let point = 0;
-          for (let i = 0; i < 5; i++) {
-            if ($('.g-star').hasClass('blind')) point++;
-          }
+            // 로그인 되어 있음
+            if (response.data.result === '1') {
+              this.$is_officeLogin = 'true';
 
-          const params = new URLSearchParams();
-          params.append('user_no', this.$cookies.get('user_no'));
-          params.append('backoffice_no', $(param).attr('backoffice_no'));
-          params.append('room_no', $(param).attr('room_no'));
-          params.append('review_point', point);
-          params.append('review_content', $('#review-write').val().trim());
+              if (this.review_flag) {
+                if ($('#review-write').val().trim().length > 0) {
+                  this.review_flag = false;
 
-          axios.get('http://localhost:8081/rence/insert_review', params)
-            .then((res) => {
-              this.review_flag = true;
+                  // 로딩 화면
+                  $('.popup-background:eq(0)').removeClass('blind');
+                  $('#spinner-section').removeClass('blind');
 
-              // 로딩 화면 닫기
-              $('.popup-background:eq(0)').addClass('blind');
-              $('#spinner-section').addClass('blind');
+                  let point = 0;
+                  for (let i = 0; i < 5; i++) {
+                    if ($('.g-star').hasClass('blind')) point++;
+                  }
 
-              if (res.data.result === 1) {
-              // TEXTAREA 초기화
-                $('#review-write').val('');
+                  const params = new URLSearchParams();
+                  params.append('user_no', window.atob(this.$cookies.get('user_no')));
+                  params.append('backoffice_no', $(param).attr('backoffice_no'));
+                  params.append('room_no', $(param).attr('room_no'));
+                  params.append('review_point', point);
+                  params.append('review_content', $('#review-write').val().trim());
 
-                // 글자수 초기화
-                $('.review-length').text('0');
+                  axios.get('http://localhost:8800/rence/insert_review', params)
+                    .then((res) => {
+                      this.review_flag = true;
 
-                $('#review-write').removeClass('null-input-border');
+                      // 로딩 화면 닫기
+                      $('.popup-background:eq(0)').addClass('blind');
+                      $('#spinner-section').addClass('blind');
 
-                // 별점 초기화
-                $('.y-star').addClass('blind');
-                $('.g-star').removeClass('blind');
+                      if (res.data.result === 1) {
+                        // TEXTAREA 초기화
+                        $('#review-write').val('');
 
-                // 팝업 닫기
-                $('#review-popup').addClass('blind');
+                        // 글자수 초기화
+                        $('.review-length').text('0');
 
-                $('.popup-background:eq(1)').removeClass('blind');
-                $('#common-alert-popup').removeClass('blind');
-                $('.common-alert-txt').text('성공적으로 후기가 등록되었습니다.');
-                $('#common-alert-btn').attr('is_reload', true);
-              } else {
-                $('.popup-background:eq(1)').removeClass('blind');
-                $('#common-alert-popup').removeClass('blind');
-                $('.common-alert-txt').text('후기등록에 실패하였습니다.');
+                        $('#review-write').removeClass('null-input-border');
+
+                        // 별점 초기화
+                        $('.y-star').addClass('blind');
+                        $('.g-star').removeClass('blind');
+
+                        // 팝업 닫기
+                        $('#review-popup').addClass('blind');
+
+                        $('.popup-background:eq(1)').removeClass('blind');
+                        $('#common-alert-popup').removeClass('blind');
+                        $('.common-alert-txt').text('성공적으로 후기가 등록되었습니다.');
+                        $('#common-alert-btn').attr('is_reload', true);
+                      } else {
+                        $('.popup-background:eq(1)').removeClass('blind');
+                        $('#common-alert-popup').removeClass('blind');
+                        $('.common-alert-txt').text('후기등록에 실패하였습니다.');
+                      }
+                    }).catch(() => {
+                      this.review_flag = true;
+
+                      // 로딩 화면 닫기
+                      $('.popup-background:eq(0)').addClass('blind');
+                      $('#spinner-section').addClass('blind');
+
+                      $('.popup-background:eq(1)').removeClass('blind');
+                      $('#common-alert-popup').removeClass('blind');
+                      $('.common-alert-txt').text('오류 발생으로 인해 처리에 실패하였습니다.');
+                    });
+                } else {
+                  if ($('#review-write').val().trim().length === 0) {
+                    $('#review-write').addClass('null-input-border');
+                  }
+                  if ($('#review-select-choice').attr('choice') !== 'true') {
+                    $('.question-popup-select-val-wrap:eq(1)').addClass('null-input-border');
+                  }
+                }
               }
-            }).catch(() => {
-              this.review_flag = true;
+            }
+            // 로그인 되어 있지 않음(or 세션 만료)
+            else {
+              this.$is_officeLogin = 'false';
+              $('.popup-background:eq(0)').removeClass('blind');
+              $('#disconnect-session-popup').removeClass('blind');
+            }
+          })
+          .catch(() => {
+            this.axiosFlag = true;
 
-              // 로딩 화면 닫기
-              $('.popup-background:eq(0)').addClass('blind');
-              $('#spinner-section').addClass('blind');
-
-              $('.popup-background:eq(1)').removeClass('blind');
-              $('#common-alert-popup').removeClass('blind');
-              $('.common-alert-txt').text('오류 발생으로 인해 처리에 실패하였습니다.');
-            });
-        } else {
-          if ($('#review-write').val().trim().length === 0) {
-            $('#review-write').addClass('null-input-border');
-          }
-          if ($('#review-select-choice').attr('choice') !== 'true') {
-            $('.question-popup-select-val-wrap:eq(1)').addClass('null-input-border');
-          }
-        }
+            $('.popup-background:eq(1)').removeClass('blind');
+            $('#common-alert-popup').removeClass('blind');
+            $('.common-alert-txt').text('오류 발생으로 인해 로그인 여부를 불러오는데에 실패하였습니다.');
+          });
       }
     },
   }, // END methods()

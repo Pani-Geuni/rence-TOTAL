@@ -65,7 +65,9 @@
                 <ul class="user-select-wrap">
                     <li class="user-select-list" @click="before_login_menu('go-login')">로그인</li>
                     <li class="user-select-list" @click="before_login_menu('go-join')">회원가입</li>
-                    <li class="user-select-list" @click="before_login_menu('go-backOffice')">공간등록신청</li>
+                    <router-link to ="/backoffice/landing">
+                      <li class="user-select-list">공간등록신청</li>
+                    </router-link>
                 </ul>
             </div>
         </section>
@@ -79,8 +81,12 @@
           <!-- CUSTOM SELECT -->
           <div class = "custom-select-user blind">
                 <ul class="user-select-wrap">
-                  <li id = "go-myPage" class="user-select-list" @click="after_login_menu('go-myPage')">마이페이지</li>
-                  <li id = "go-backOffice" class="user-select-list" @click="after_login_menu('go-backOffice')">공간등록신청</li>
+                  <router-link to ="/my_page">
+                    <li id = "go-myPage" class="user-select-list">마이페이지</li>
+                  </router-link>
+                  <router-link to ="/backoffice/landing">
+                    <li class="user-select-list">공간등록신청</li>
+                  </router-link>
                   <li id = "go-logOut" class="user-select-list" @click="after_login_menu('go-logOut')">로그아웃</li>
                 </ul>
             </div>
@@ -169,7 +175,8 @@ export default {
           this.location = '';
         }
 
-        window.location.href = `http://localhost:8081/list/search_list/type=${this.type}&location=${this.location}&searchWord=${$('#input_searchBar').val().trim()}&condition=date&page=1`;
+        const port = window.location.href.split('localhost:')[1].split('/#')[0];
+        window.location.href = `http://localhost:${port}/list/search_list/type=${this.type}&location=${this.location}&searchWord=${$('#input_searchBar').val().trim()}&condition=date&page=1`;
       } else {
         $('.popup-background:eq(1)').removeClass('blind');
         $('#common-alert-popup').removeClass('blind');
@@ -193,21 +200,14 @@ export default {
         $('#login-section').removeClass('blind');
       } else if (menu === 'go-join') {
         $('#join-section').removeClass('blind');
-      } else if (menu === 'go-backOffice') {
-        window.location.href = 'http://localhost:8081/backoffice/landing';
       }
     },
     // 로그인 후 유저 메뉴 클릭에 따른 이벤트
     after_login_menu(menu) {
-      console.log(menu);
-      if (menu === 'go-myPage') {
-        window.location.href = 'http://localhost:8081/my_page';
-      } else if (menu === 'go-logOut') {
+      if (menu === 'go-logOut') {
         $('.popup-background:eq(0)').removeClass('blind');
         $('#after_login>.custom-select-user').addClass('blind');
         $('#logout-popup').removeClass('blind');
-      } else if (menu === 'go-backOffice') {
-        window.location.href = 'http://localhost:8081/backoffice/landing';
       }
     },
   }, // END methods()
