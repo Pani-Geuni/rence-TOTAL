@@ -182,6 +182,11 @@ export default {
           this.location = '';
         }
 
+        $('#custom-type-select').addClass('blind');
+        $('#custom-location-select').addClass('blind');
+        $('#location-town').addClass('blind');
+        $('#location-city').addClass('blind');
+
         const port = window.location.href.split('localhost:')[1].split('/static')[0];
 
         if (port === '8800') {
@@ -217,6 +222,9 @@ export default {
     },
     // 로그인 후 유저 메뉴 클릭에 따른 이벤트
     after_login_menu(menu) {
+      $('#after_login>.custom-select-user').addClass('blind');
+      $('.popup-background:eq(0)').removeClass('blind');
+
       if (menu === 'go-logOut') {
         $('.popup-background:eq(0)').removeClass('blind');
         $('#after_login>.custom-select-user').addClass('blind');

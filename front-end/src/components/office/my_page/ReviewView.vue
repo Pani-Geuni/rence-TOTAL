@@ -61,7 +61,7 @@
             <span @click="prev_page" :class="{'paging-box before-page-btn hide': maxPage <= 5, 'paging-box before-page-btn' : maxPage > 5}"> &lt;&lt; </span>
             
             <div class="paging-num-wrap paging-wrap">
-              <span @click="do_select_page($event.target)" v-for="num in forRange" v-bind:key="num" v-bind:idx="num" :class="{'paging-box paging-num choice': num === nowPage, 'paging-box paging-num un-choice' :num !== nowPage}">{{num}}</span>
+              <span @click="do_select_page($event.target)" v-for="num in forRange" :key="num" :idx="num" :class="{'paging-box paging-num choice': num === nowPage, 'paging-box paging-num un-choice' :num !== nowPage}">{{num}}</span>
             </div>
             
             <span @click="next_page" v-if="totalPageCnt > 5 && maxPage < totalPageCnt" class="paging-box next-page-btn">>></span>
@@ -224,20 +224,6 @@ export default {
       $('.paging-box.paging-num').addClass('un-choice');
 
       $('.paging-box.paging-num:eq(0)').click();
-
-      // const sample = $('.paging-num-wrap>.paging-box.paging-num:eq(0)').clone();
-      // $('.paging-num-wrap').empty();
-
-      // for (let i = s; i <= end; i++) {
-      //   const sampleSpan = sample.clone();
-
-      //   sampleSpan.text(i);
-      //   sampleSpan.attr('idx', i);
-      //   sampleSpan.removeClass('choice');
-      //   sampleSpan.addClass('un-choice');
-
-      //   $('.paging-num-wrap').append(sampleSpan);
-      // }
     },
     /** 다음 페이지 리스트로 이동 */
     next_page() {
@@ -266,20 +252,6 @@ export default {
       $('.paging-box.paging-num').addClass('un-choice');
 
       $('.paging-box.paging-num:eq(0)').click();
-
-      // const sample = $('.paging-num-wrap>.paging-box.paging-num:eq(0)').clone();
-      // $('.paging-num-wrap').empty();
-
-      // for (let i = start; i <= last; i++) {
-      //   const sampleSpan = sample.clone();
-
-      //   sampleSpan.text(i);
-      //   sampleSpan.attr('idx', i);
-      //   sampleSpan.removeClass('choice');
-      //   sampleSpan.addClass('un-choice');
-
-      //   $('.paging-num-wrap').append(sampleSpan);
-      // }
     },
     /** 페이지 번호에 맞는 데이터 불러오기 */
     do_select_page(param) {
@@ -299,20 +271,19 @@ export default {
               $('.popup-background:eq(1)').removeClass('blind');
               $('#spinner-section').removeClass('blind');
 
+              $('.paging-box.paging-num').removeClass('choice');
+              $('.paging-box.paging-num').addClass('un-choice');
+
+              $(param).addClass('choice');
+              $(param).removeClass('un-choice');
+
               axios.get(`http://localhost:8800/rence/review_list?user_no=${window.atob(this.$cookies.get('user_no'))}&page=${$(param).attr('idx')}`)
                 .then((res) => {
                   // 로딩 화면 닫기
                   $('.popup-background:eq(1)').addClass('blind');
                   $('#spinner-section').addClass('blind');
 
-                  // this.mileage_total = res.data.mileage_total;
-                  // this.searchKey = res.data.searchKey;
                   this.list = res.data.list;
-                  // this.maxPage = res.data.maxPage;
-                  // this.nowPage = res.data.nowPage;
-                  // this.totalPageCnt = res.data.totalPageCnt;
-                  // this.start = Math.ceil(res.data.nowPage / 5.0);
-                  // this.start = 5 * (this.start - 1) + 1;
                 })
                 .catch(() => {
                   // 로딩 화면 닫기
