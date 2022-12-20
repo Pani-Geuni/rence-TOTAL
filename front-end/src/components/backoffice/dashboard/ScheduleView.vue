@@ -5,7 +5,7 @@
 <template>
   <div class="titleSection">
     <h1>일정관리</h1>
-    <button id="btn-dayoff-calendar" class="btn-dayoff-calendar">휴무 일정</button>
+    <button @click="clickDayoffCalendar" id="btn-dayoff-calendar" class="btn-dayoff-calendar">휴무 일정</button>
   </div>
 
   <div class="boardWrap">
@@ -103,13 +103,16 @@
               </span>
             </div>
             <div class="ct-body-cell schedule">
-              <span class="reserve_cnt" :reserve_cnt="vos.reserve_cnt">{{ vos.reserve_cnt }}명</span>
+              <span @click="clickReservationDetail" class="reserve_cnt" :room_no="vos.room_no"
+                :reserve_cnt="vos.reserve_cnt">{{
+                    vos.reserve_cnt
+                }}명</span>
             </div>
           </div>
           <!-- END ct-body-row -->
         </div>
-        <input type='button' id='schedule-confirm-btn' class='schedule-confirm-btn' value='일정 설정'
-          v-if="sc_vos_cnt > 0" />
+        <input @click="clickScheduleConfirm" type='button' id='schedule-confirm-btn' class='schedule-confirm-btn'
+          value='일정 설정' v-if="sc_vos_cnt > 0" />
       </div>
       <!-- END select-room-section -->
     </div>
@@ -141,6 +144,8 @@ export default {
       },
       sc_vos: [],
       sc_vos_cnt: 0,
+
+      check_room: '',
     };
   },
 
@@ -184,6 +189,148 @@ export default {
           this.sc_vos = res.data.sc_vos;
           this.sc_vos_cnt = res.data.cnt;
         });
+      }
+    },
+
+    clickReservationDetail(e) {
+      console.log(e.target.value);
+      const sDateTime = this.not_sdate.toString().split(' ');
+      const eDateTime = this.not_edate.toString().split(' ');
+
+      const not_sdate = sDateTime[0];
+      const not_stime = sDateTime[1];
+      const not_edate = eDateTime[0];
+      const not_etime = eDateTime[1];
+      const room_no = e.target.getAttribute('room_no');
+      const off_type = $("input:radio[name='set_schedule']:checked").val();
+      const reserve_cnt = parseInt(e.target.getAttribute('reserve_cnt'), 10);
+
+      console.log(this.backoffice_no);
+      console.log(sDateTime[0], sDateTime[1]);
+      console.log(eDateTime[0], eDateTime[1]);
+      console.log(room_no);
+      console.log(off_type);
+      console.log(reserve_cnt);
+
+      // 로딩 화면
+      $('.popup-background:eq(1)').removeClass('blind');
+      $('#spinner-section').removeClass('blind');
+
+      if (reserve_cnt !== 0) {
+        // 로딩 화면 닫기
+        $('.popup-background:eq(1)').addClass('blind');
+        $('#spinner-section').addClass('blind');
+
+        this.$router.push(`/backoffice/dash/reservation?backoffice_no=${this.backoffice_no}&room_no=${room_no}&not_sdate=${not_sdate}&not_edate=${not_edate}&not_stime=${not_stime}&not_etime=${not_etime}&off_type=${off_type}&page=1`);
+      } else {
+        // 로딩 화면 닫기
+        $('.popup-background:eq(1)').addClass('blind');
+        $('#spinner-section').addClass('blind');
+
+        $('.popup-background:eq(0)').removeClass('blind');
+        $('#no-reservation-popup').removeClass('blind');
+      }
+    },
+
+    clickDayoffCalendar() {
+      const backoffice_no = this.$cookies.get('backoffice_no');
+      const month = '';
+
+      // 로딩 화면 열기
+      $('.popup-background:eq(1)').removeClass('blind');
+      $('#spinner-section').removeClass('blind');
+
+      axios.get(`http://localhost:8800/backoffice/dash/schedule_calendar?backoffice_no=${backoffice_no}`)
+        .then((res) => {
+          console.log(res.data);
+          $('.popup-background:eq(0)').removeClass('blind');
+          $('.dayoff-calendar-wrap').removeClass('blind');
+
+          // 로딩 화면 닫기
+          $('.popup-background:eq(1)').addClass('blind');
+          $('#spinner-section').addClass('blind');
+        });
+    },
+
+    clickScheduleConfirm() {
+      console.log('schedule confirm');
+      this.check_room = $('input[type=checkbox]:checked').parents('.ct-body-row');
+      console.log(this.check_room);
+
+      if (this.check_room.length !== 0) {
+        const backoffice_no = this.$cookies.get('backoffice_no');
+        const sDateTime = this.not_sdate.toString().split(' ');
+        const eDateTime = this.not_edate.toString().split(' ');
+
+        const not_sdate = sDateTime[0];
+        const not_stime = sDateTime[1];
+        const not_edate = eDateTime[0];
+        const not_etime = eDateTime[1];
+        const off_type = $("input:radio[name='set_schedule']:checked").val();
+        let schedule_flag = '';
+
+        for (let i = 0; i < this.check_room.length; i++) {
+          const room_no = $(this.check_room[i]).find('#room_no').attr('room_no');
+
+          if (room_no !== null) {
+            // 로딩 화면
+            $('.popup-background:eq(1)').removeClass('blind');
+            $('#spinner-section').removeClass('blind');
+
+            const params = new URLSearchParams();
+            params.append('backoffice_no', backoffice_no);
+            params.append('room_no', room_no);
+            params.append('not_sdate', not_sdate);
+            params.append('not_edate', not_edate);
+            params.append('not_stime', not_stime);
+            params.append('not_etime', not_etime);
+            params.append('off_type', off_type);
+
+            axios.post('http://localhost:8800/backoffice/dash/scheduleOK', params)
+              // eslint-disable-next-line no-loop-func
+              .then((res) => {
+                if (res.data.result === '1') {
+                  // eslint-disable-next-line camelcase
+                  schedule_flag = 1;
+                } else {
+                  // eslint-disable-next-line camelcase
+                  schedule_flag = 0;
+                }
+              })
+              .catch(() => {
+                schedule_flag = 0;
+              });
+
+            if (schedule_flag = 1) {
+              // 로딩 화면 닫기
+              $('.popup-background:eq(1)').addClass('blind');
+              $('#spinner-section').addClass('blind');
+
+              $('.popup-background:eq(1)').removeClass('blind');
+              $('#common-alert-popup').removeClass('blind');
+              $('.common-alert-txt').text('일정이 설정되었습니다.');
+
+              // 리스트 새로고침
+              $('#common-alert-btn').click(() => {
+                $('.btn-schedule-research').trigger('click');
+              });
+            }
+            if (schedule_flag = 0) {
+              // 로딩 화면 닫기
+              $('.popup-background:eq(1)').addClass('blind');
+              $('#spinner-section').addClass('blind');
+
+              $('.popup-background:eq(1)').removeClass('blind');
+              $('#common-alert-popup').removeClass('blind');
+              $('.common-alert-txt').text('오류 발생으로 인해 처리에 실패하였습니다.');
+              break;
+            }
+          }
+        }
+      } else {
+        $('.popup-background:eq(1)').removeClass('blind');
+        $('#common-alert-popup').removeClass('blind');
+        $('.common-alert-txt').text('공간을 선택해주세요.');
       }
     },
   },
