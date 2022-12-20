@@ -985,8 +985,7 @@ export default {
                     $('.popup-background:eq(1)').addClass('blind');
                     $('#spinner-section').addClass('blind');
 
-                    const { reserve_list } = res;
-                    let pickerDate = '';
+                    const { reserve_list } = res.data;
                     let temp_stime = '';
                     const now = new Date();
                     const year = now.getFullYear();
@@ -999,8 +998,7 @@ export default {
                     const now_hours = now.getHours();
 
                     // 선택 날짜 요일 구하기
-                    pickerDate = $('.type-border-txt.time-input').val().trim();
-                    const dayOfWeek = getDayOfWeek(pickerDate);
+                    const dayOfWeek = this.getDayOfWeek(this.time);
 
                     $('#check_available').addClass('blind');
                     $('#go_reserve').removeClass('blind');
@@ -1023,7 +1021,7 @@ export default {
 
                           temp_stime = '';
 
-                          if (pickerDate == today) {
+                          if (this.time == today) {
                             if (running_stime <= now_hours) {
                               temp_stime = now_hours + 1;
                             } else {

@@ -21,16 +21,16 @@
         <section class="mileage-section">
           <section class="mileage">
             <span class="mileage-label">현재 마일리지</span>
-            <span id="now-mileage" class="mileage-won">{{mileage_total}} 원</span>
+            <span id="now-mileage" class="mileage-won">{{this.mileage_total}} 원</span>
           </section>
         </section>
       </section>
 
       <section class="mileage-list-section">
         <section class="mileage-list-menu">
-          <span id = "all" @click="choice_menu($event.target)" :class="{'menus choice' : searchKey == 'all', 'menus un-choice' : searchKey != 'all'}">전체</span>
-          <span id = "plus" @click="choice_menu($event.target)" :class="{'menus choice' : searchKey == 'plus', 'menus un-choice' : searchKey != 'plus'}">적립</span>
-          <span id = "minus" @click="choice_menu($event.target)" :class="{'menus choice' : searchKey == 'minus', 'menus un-choice' : searchKey != 'minus'}">사용</span>
+          <span id = "all" @click="choice_menu($event.target)" :class="{'menus choice' : this.searchKey == 'all', 'menus un-choice' : this.searchKey != 'all'}">전체</span>
+          <span id = "plus" @click="choice_menu($event.target)" :class="{'menus choice' : this.searchKey == 'plus', 'menus un-choice' : this.searchKey != 'plus'}">적립</span>
+          <span id = "minus" @click="choice_menu($event.target)" :class="{'menus choice' : this.searchKey == 'minus', 'menus un-choice' : this.searchKey != 'minus'}">사용</span>
         </section>
 
         <section class="mileage-history-section">
@@ -60,18 +60,20 @@
         </section>
 
         <!-- START PAGING -->
-        <section :class="{'paging-section': maxPage > 0, 'paging-section blind': maxPage === 0}">
+        <section :class="{'paging-section': this.maxPage > 0, 'paging-section blind': this.maxPage === 0}">
           <section class="paging-section">
             <div class="paging-wrap">
-              <span @click="prev_page" :class="{'paging-box before-page-btn hide': maxPage <= 5, 'paging-box before-page-btn' : maxPage > 5}"> &lt;&lt; </span>
+              <span @click="prev_page" :class="{'paging-box before-page-btn hide': this.maxPage <= 5, 'paging-box before-page-btn' : this.maxPage > 5}"> &lt;&lt; </span>
               
               <div class="paging-num-wrap paging-wrap">
-                <span @click="do_select_page($event.target)" v-for="num in forRange" v-bind:key="num" v-bind:idx="num" :class="{'paging-box paging-num choice': num === nowPage, 'paging-box paging-num un-choice' :num !== nowPage}">{{num}}</span>
+                <span @click="do_select_page($event.target)" v-for="num in this.forRange" :key="num" :idx="num" :class="{'paging-box paging-num choice': num === this.nowPage, 'paging-box paging-num un-choice' :num !== this.nowPage}">
+                  {{num}}
+                </span>
               </div>
               
-              <span @click="next_page" v-if="totalPageCnt > 5 && maxPage < totalPageCnt" class="paging-box next-page-btn">>></span>
+              <span @click="next_page" v-if="this.totalPageCnt > 5 && this.maxPage < this.totalPageCnt" class="paging-box next-page-btn">>></span>
               <span v-else class="paging-box next-page-btn hide">>></span>
-              <input type="hidden" id="totalPageCnt" v-bind:value="totalPageCnt">
+              <input type="hidden" id="totalPageCnt" :value="this.totalPageCnt">
             </div>
           </section>
         </section>
@@ -124,8 +126,8 @@ export default {
 
           axios.get(`http://localhost:8800/rence/mileage?user_no=${window.atob(this.$cookies.get('user_no'))}&page=1`)
             .then((res) => {
+              console.log(res.data);
               this.mileage_total = res.data.mileage_total;
-              this.searchKey = res.data.searchKey;
               this.list = res.data.list;
               this.maxPage = res.data.maxPage;
               this.nowPage = res.data.nowPage;
@@ -190,26 +192,25 @@ export default {
               $('.popup-background:eq(1)').removeClass('blind');
               $('#spinner-section').removeClass('blind');
 
-              axios.get(`http://localhost:8800/rence/mileage_search_list?searchKey=${$(this).attr('id')}&user_no=${window.atob(this.$cookies.get('user_no'))}&page=1`)
+              axios.get(`http://localhost:8800/rence/mileage_search_list?searchKey=${$(param).attr('id')}&user_no=${window.atob(this.$cookies.get('user_no'))}&page=1`)
                 .then((res) => {
                 // 로딩 화면 닫기
                   $('.popup-background:eq(1)').addClass('blind');
                   $('#spinner-section').addClass('blind');
 
-                  // this.mileage_total = res.data.mileage_total;
-                  // this.searchKey = res.data.searchKey;
                   this.list = res.data.list;
-                  // this.maxPage = res.data.maxPage;
-                  // this.nowPage = res.data.nowPage;
-                  // this.totalPageCnt = res.data.totalPageCnt;
-                  // this.start = Math.ceil(res.data.nowPage / 5.0);
-                  // this.start = 5 * (this.start - 1) + 1;
-                  // this.searchFlag = true;
+                  this.maxPage = res.data.maxPage;
+                  this.nowPage = res.data.nowPage;
+                  this.totalPageCnt = res.data.totalPageCnt;
+                  this.start = Math.ceil(res.data.nowPage / 5.0);
+                  this.start = 5 * (this.start - 1) + 1;
+                  this.searchFlag = true;
+                  this.searchKey = $(param).attr('id');
 
-                // this.forRange = [];
-                // for (let i = this.start; i <= this.maxPage; i++) {
-                //   this.forRange.push(i);
-                // }
+                  this.forRange = [];
+                  for (let i = this.start; i <= this.maxPage; i++) {
+                    this.forRange.push(i);
+                  }
                 })
                 .catch(() => {
                 // 로딩 화면 닫기
@@ -264,20 +265,6 @@ export default {
       $('.paging-box.paging-num').addClass('un-choice');
 
       $('.paging-box.paging-num:eq(0)').click();
-
-      // const sample = $('.paging-num-wrap>.paging-box.paging-num:eq(0)').clone();
-      // $('.paging-num-wrap').empty();
-
-      // for (let i = s; i <= end; i++) {
-      //   const sampleSpan = sample.clone();
-
-      //   sampleSpan.text(i);
-      //   sampleSpan.attr('idx', i);
-      //   sampleSpan.removeClass('choice');
-      //   sampleSpan.addClass('un-choice');
-
-      //   $('.paging-num-wrap').append(sampleSpan);
-      // }
     },
     /** 다음 페이지 리스트로 이동 */
     next_page() {
@@ -306,20 +293,6 @@ export default {
       $('.paging-box.paging-num').addClass('un-choice');
 
       $('.paging-box.paging-num:eq(0)').click();
-
-      // const sample = $('.paging-num-wrap>.paging-box.paging-num:eq(0)').clone();
-      // $('.paging-num-wrap').empty();
-
-      // for (let i = start; i <= last; i++) {
-      //   const sampleSpan = sample.clone();
-
-      //   sampleSpan.text(i);
-      //   sampleSpan.attr('idx', i);
-      //   sampleSpan.removeClass('choice');
-      //   sampleSpan.addClass('un-choice');
-
-      //   $('.paging-num-wrap').append(sampleSpan);
-      // }
     },
     /** 페이지 번호에 맞는 데이터 불러오기 */
     do_select_page(param) {
@@ -339,7 +312,15 @@ export default {
               $('.popup-background:eq(1)').removeClass('blind');
               $('#spinner-section').removeClass('blind');
 
-              const URL = '';
+              if (param !== undefined && param !== null) {
+                $('.paging-box.paging-num').removeClass('choice');
+                $('.paging-box.paging-num').addClass('un-choice');
+
+                $(param).addClass('choice');
+                $(param).removeClass('un-choice');
+              }
+
+              let URL = '';
               if (this.searchFlag) {
                 URL = `http://localhost:8800/rence/mileage_search_list?searchKey=${this.searchKey}&user_no=${window.atob(this.$cookies.get('user_no'))}&page=${$(param).attr('idx')}`;
               } else {
@@ -352,17 +333,10 @@ export default {
                   $('.popup-background:eq(1)').addClass('blind');
                   $('#spinner-section').addClass('blind');
 
-                  // this.mileage_total = res.data.mileage_total;
-                  // this.searchKey = res.data.searchKey;
                   this.list = res.data.list;
-                // this.maxPage = res.data.maxPage;
-                // this.nowPage = res.data.nowPage;
-                // this.totalPageCnt = res.data.totalPageCnt;
-                // this.start = Math.ceil(res.data.nowPage / 5.0);
-                // this.start = 5 * (this.start - 1) + 1;
                 })
                 .catch(() => {
-                // 로딩 화면 닫기
+                  // 로딩 화면 닫기
                   $('.popup-background:eq(1)').addClass('blind');
                   $('#spinner-section').addClass('blind');
 

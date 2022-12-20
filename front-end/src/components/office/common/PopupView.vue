@@ -302,11 +302,11 @@
                 세션이 만료되어 홈으로 이동합니다.
             </span>
         </section>
-        <section class="confirm-btn-section">
-          <router-link to="/">
+        <router-link to="/">
+        <section @click="close_disconnect_session_popup" class="confirm-btn-section">
             <div class="confirm-yesBtn">확인</div>
-          </router-link>
-        </section>
+          </section>
+        </router-link>
     </div>
     <!-- END RESERVE-CANCLE-CONFIRM CONFIRM POPUP -->
 	</div>
@@ -380,6 +380,10 @@ export default {
       if ($(param).hasClass('null-input-border')) {
         $(param).removeClass('null-input-border');
       }
+    },
+    close_disconnect_session_popup() {
+      $('.popup-background:eq(0)').addClass('blind');
+      $('#disconnect-session-popup').addClass('blind');
     },
 
     /** ********************************** */

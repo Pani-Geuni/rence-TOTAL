@@ -32,8 +32,8 @@
               <span>&nbsp;{{list.user_email}}</span>
             </section>
             <section class="info-etc-section info-etc-section-second">
-              <span>{{list.user_tel}}</span> 
-              <span>•</span> 
+              <span>{{list.user_tel}}</span>&nbsp;
+              <span>•</span>&nbsp;
               <span>{{list.user_birth}}</span>
             </section>
             <section class="user-delete-section">
@@ -137,8 +137,8 @@ export default {
 
           axios.get('http://localhost:8800/rence/go_my_page')
             .then((res) => {
-              console.log(res.data.list);
-              this.list = res.data.list;
+              console.log(res.data);
+              this.list = res.data;
               this.load = true;
 
               // 로딩 화면
