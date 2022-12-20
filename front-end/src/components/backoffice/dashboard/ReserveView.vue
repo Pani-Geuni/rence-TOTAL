@@ -85,7 +85,9 @@
             </div>
             <div class="ct-body-cell reserve reserve-btn-cell">
               <button class="ct-body-btn reserve-ing reserve_is_cancle" v-if="vos.reserve_state === 'begin'"
-                :reserve_no="vos.reserve_no" :user_no="vos.user_no">예약 취소</button>
+                :reserve_no="vos.reserve_no" :user_no="vos.user_no" :user_email="vos.user_email"
+                :reserve_stime="vos.reserve_sdate" :reserve_etime="vos.reserve_edate" @click="clickReserveIsCancel">예약
+                취소</button>
 
               <button class="ct-body-btn reserve-end" v-if="vos.reserve_state !== 'begin'">취소불가</button>
             </div>
@@ -246,6 +248,37 @@ export default {
         console.log(res.data);
         this.r_vos = res.data.r_vos;
       });
+    },
+
+    clickReserveIsCancel(e) {
+      $('.popup-background:eq(0)').removeClass('blind');
+      $('#reserve-delete-one-popup').removeClass('blind');
+
+      // const user_email = $(this).parents('.reserve-btn-cell').siblings('.reserve_user_email').text();
+      // const user_email = e.target.parentElement();
+      // const reserve_stime = $(this).parents('.reserve-btn-cell').siblings('.reserve_date_set').text()
+      //   .split(' ~ ')[0];
+      // const reserve_etime = $(this).parents('.reserve-btn-cell').siblings('.reserve_date_set').text()
+      //   .split(' ~ ')[1];
+
+
+      const reserve_no = e.target.getAttribute('reserve_no')
+      const user_no = e.target.getAttribute('user_no')
+      const user_email = e.target.getAttribute('user_email')
+      const reserve_stime = e.target.getAttribute('reserve_stime')
+      const reserve_etime = e.target.getAttribute('reserve_etime')
+
+      console.log(e.target.getAttribute('reserve_no'));
+      console.log(e.target.getAttribute('user_no'));
+      console.log(e.target.getAttribute('user_email'));
+      console.log(e.target.getAttribute('reserve_stime'));
+      console.log(e.target.getAttribute('reserve_etime'));
+
+      $('#reserve-delete-one-btn').attr('reserve_no', reserve_no);
+      $('#reserve-delete-one-btn').attr('user_no', user_no);
+      $('#reserve-delete-one-btn').attr('user_email', user_email);
+      $('#reserve-delete-one-btn').attr('reserve_stime', reserve_stime);
+      $('#reserve-delete-one-btn').attr('reserve_etime', reserve_etime);
     },
   },
 

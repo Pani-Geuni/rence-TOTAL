@@ -157,14 +157,13 @@ export default {
         params.append('username', $('#login-id').val().trim());
         params.append('password', $('#login-pw').val().trim());
 
-        axios.post('http://localhost:8800/backoffice/loginOK', params)
+        axios.post('http://localhost:8800/backoffice/loginOK', params, { withCredentials: true })
           .then((res) => {
             if (res.data.result === '1') {
               console.log('res.data : ', res.data);
-              console.log(this.backoffice_no);
-              this.$cookies.set('backoffice_no', res.data.backoffice_no);
-              this.$cookies.set('host_image', res.data.host_image);
-              this.$storage.setStorageSync('backoffice_id', res.data.backoffice_id);
+              // this.$cookies.set('backoffice_no', res.data.backoffice_no);
+              // this.$cookies.set('host_image', res.data.host_image);
+              // this.$cookies.set('JSESSIONID', res.data.JsessionId);
 
               this.$router.push(`/backoffice/dash/main?backoffice_no=${this.$cookies.get('backoffice_no')}`);
             } else {
@@ -175,6 +174,11 @@ export default {
               $('.popup-background:eq(1)').removeClass('blind');
               $('#common-alert-popup').removeClass('blind');
               $('.common-alert-txt').text('로그인에 실패하였습니다.');
+
+              console.log(params.get('username'));
+              console.log(params.get('password'));
+              console.log(res.data);
+              console.log(res.data.result)
             }
           })
           .catch((e) => {
@@ -298,9 +302,9 @@ export default {
       axios.get('http://localhost:8800/backoffice/logoutOK').then((res) => {
         console.log(res.data);
         if (res.data.result === '1') {
-          console.log(this.$cookies.remove('backoffice_no'));
-          this.$cookies.remove('backoffice_no');
-          this.$cookies.remove('host_image');
+          // this.$cookies.remove('backoffice_no');
+          // this.$cookies.remove('host_image');
+          // this.$cookies.remove('JSESSIONID');
 
           $('#logout-popup').addClass('blind');
           $('.popup-background:eq(0)').addClass('blind');
