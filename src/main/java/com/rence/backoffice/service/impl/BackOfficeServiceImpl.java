@@ -171,10 +171,15 @@ public class BackOfficeServiceImpl implements BackOfficeService {
         
 		session.setAttribute("backoffice_id", bvo.getBackoffice_id());
 		
+		log.info("backoffice_no : {}",backoffice_no);
+		log.info("host_image : {}",host_image);
+		
 		Cookie cookie_no = new Cookie("backoffice_no", backoffice_no);
 		cookie_no.setMaxAge(-1);
+		cookie_no.setPath("/");
 		Cookie cookie_profile = new Cookie("host_image", host_image);
 		cookie_profile.setMaxAge(-1);
+		cookie_profile.setPath("/");
 		response.addCookie(cookie_no);
 		response.addCookie(cookie_profile);
 
