@@ -51,8 +51,8 @@
         <div class="room-input-wrap blind">
           <p>가격을 입력해 주세요.</p>
           <div>
-            <input type="number" name="room_price" id="input-price-name" class="room-input"
-              placeholder="가격을 입력해 주세요.(숫자만 입력 가능)" value="" />
+            <input v-model="input_price_name" type="number" name="room_price" id="input-price-name" class="room-input"
+              placeholder="가격을 입력해 주세요.(숫자만 입력 가능)" />
             <span class="r-input-warning blind">숫자만 입력가능합니다.</span>
           </div>
         </div>
@@ -93,8 +93,8 @@
         <div class="room-input-wrap">
           <p>가격을 입력해 주세요.</p>
           <div>
-            <input type="number" v-model="input_price_name" name="room_price" id="m-input-price-name" class="room-input"
-              placeholder="가격을 입력해 주세요.(숫자만 입력 가능)" />
+            <input type="number" v-model="m_input_price_name" name="room_price" id="m-input-price-name"
+              class="room-input" placeholder="가격을 입력해 주세요.(숫자만 입력 가능)" />
             <span class="r-input-warning blind">숫자만 입력가능합니다.</span>
           </div>
         </div>
@@ -440,8 +440,8 @@ export default {
       room_name: '',
       edit_room_type: '',
       m_edit_room_type: '',
-      input_price_name: '',
-      m_input_price_name: '',
+      input_price_name: 0,
+      m_input_price_name: 0,
       room_no: '',
 
       // Calendar
@@ -553,11 +553,15 @@ export default {
       console.log('--------');
       console.log(this.room_name);
       console.log(this.edit_room_type);
+
+      console.log(this.input_price_name);
+      console.log(typeof this.input_price_name);
+
       console.log('--------');
 
       if (this.room_name !== '' && this.edit_room_type !== '') {
         if (this.edit_room_type === 'office') {
-          if (this.input_price_name.length !== '') {
+          if (this.input_price_name !== 0) {
             this.insert();
           } else {
             $('#input-price-name').addClass('null-input-border');
@@ -639,9 +643,12 @@ export default {
       this.room_no = e.target.getAttribute('idx');
       this.room_name = $('#m-input-room-name').val().trim();
 
+      console.log(this.m_input_price_name);
+      console.log(typeof this.m_input_price_name);
+
       if (this.room_name !== '' && this.m_edit_room_type !== '') {
         if (this.m_edit_room_type === 'office') {
-          if (this.m_input_price_name !== '') {
+          if (this.m_input_price_name !== 0) {
             if (this.update_room_flag) {
               this.update();
             }
@@ -1043,7 +1050,7 @@ export default {
             reserve_etime,
           },
           success(res) {
-            if (res.result != 1) {
+            if (res.data.result !== 1) {
               stop_flag = true;
             }
           },
@@ -1222,9 +1229,11 @@ export default {
       params.append('backoffice_no', this.backoffice_no);
       params.append('room_name', this.room_name);
       params.append('room_type', this.edit_room_type);
-      params.append('room_price', this.input_price_name);
+      params.append('room_price', Number(this.input_price_name));
 
-      // const url = `http://localhost:8800/backoffice/dash/insertOK_room?${params}`;
+      console.log(this.input_price_name);
+      console.log('tlqkf : ', typeof this.input_price_name);
+      const url = `http://localhost:8800/backoffice/dash/insertOK_room?${params}`;
 
       axios.post('http://localhost:8800/backoffice/dash/insertOK_room', params).then((res) => {
         this.insert_room_flag = true;
@@ -1290,7 +1299,12 @@ export default {
       params.append('room_no', this.room_no);
       params.append('room_name', this.room_name);
       params.append('room_type', this.m_edit_room_type);
-      params.append('room_price', this.m_input_price_name);
+      params.append('room_price', Number(this.m_input_price_name));
+
+      console.log('------');
+      console.log(this.m_edit_room_type);
+      console.log(typeof this.m_edit_room_type);
+      console.log('------');
 
       axios.post('http://localhost:8800/backoffice/dash/updateOK_room', params)
         .then((res) => {
