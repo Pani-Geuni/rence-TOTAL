@@ -37,7 +37,7 @@
             <div class="ct-header-cell reservation">예약 기간</div>
           </div>
           <!-- END ct-header -->
-          <div class="ct-body reservation-ct">
+          <div class="ct-body reservation-ct" @scroll="handleReservationList($event.target)">
             <div class="ct-body-row" v-for="vo in rv_vos" :key="vo">
               <div class="ct-body-cell reservation">
                 <input type="hidden" name="user_no" class="user_no" :user_no="vo.user_no" />
@@ -86,6 +86,11 @@ export default {
 
   data() {
     return {
+      cnt: 0,
+      maxCnt: 0,
+      nowCnt: 0,
+      scroll_flag: true,
+
       backoffice_no: decodeURIComponent(window.atob(this.$cookies.get('backoffice_no'))),
       room_no: '',
       not_sdate: '',
@@ -138,6 +143,9 @@ export default {
           this.reserve_stime = res.data.reserve_stime;
           this.reserve_etime = res.data.reserve_etime;
           this.rv_vos = res.data.rv_vos;
+
+          this.maxCnt = res.data.maxCnt;
+          this.nowCnt = res.data.nowCnt;
         });
     },
 
@@ -170,6 +178,65 @@ export default {
         }
       }
     },
+
+    handleReservationList(e) {
+      if (Math.ceil($(e).scrollTop() + $(e).innerHeight()) >= $(e).prop('scrollHeight')) {
+        if ($('.ct-body-row').length < Number($('#maxCnt').attr('maxCnt')) && this.scroll_flag) {
+          // 로딩 화면
+          $('.popup-background:eq(1)').removeClass('blind');
+          $('#spinner-section').removeClass('blind');
+
+          const { room_no } = this.$route.query;
+
+          const sDateTime = this.not_sdate.toString().split(' ');
+          const eDateTime = this.not_edate.toString().split(' ');
+
+          const not_sdate = sDateTime[0];
+          const not_stime = sDateTime[1];
+          const not_edate = eDateTime[0];
+          const not_etime = eDateTime[1];
+          // const off_type = $("input:radio[name='set_schedule']:checked").val();
+          const { off_type } = this.$route.query;
+
+          const page = $('#maxCnt').attr('nowCnt');
+
+          const param = new URLSearchParams();
+          param.append('backoffice_no', this.backoffice_no);
+          param.append('room_no', room_no);
+          param.append('not_sdate', not_sdate);
+          param.append('not_edate', not_edate);
+          param.append('not_stime', not_stime);
+          param.append('not_etime', not_etime);
+          param.append('off_type', off_type);
+          param.append('page', Number(page) + 1);
+
+          this.scroll_flag = false;
+
+          const url = `http://localhost:8800/backoffice/dash/reservation_paging?${param}`;
+
+          axios.get(url)
+            .then((res) => {
+              this.scroll_flag = true;
+
+              // 로딩 화면 닫기
+              $('.popup-background:eq(1)').addClass('blind');
+              $('#spinner-section').addClass('blind');
+
+              const now = $('#maxCnt').attr('nowCnt');
+              $('#maxCnt').attr('nowCnt', Number(now) + 1);
+
+              this.rv_vos = this.rv_vos.concat(res.data.rv_vos);
+            })
+            .catch(() => {
+              this.scroll_flag = true;
+
+              // 로딩 화면 닫기
+              $('.popup-background:eq(1)').addClass('blind');
+              $('#spinner-section').addClass('blind');
+            });
+        }
+      }
+    },
   },
 
   mounted() {
@@ -177,6 +244,7 @@ export default {
       .then((res) => {
         if (res.data.result === '1') {
           this.$nextTick(() => {
+            console.log('reservation');
             this.getReservationList();
           });
         } else {
