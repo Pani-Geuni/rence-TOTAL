@@ -461,7 +461,7 @@ export default {
           $('.popup-background:eq(1)').addClass('blind');
           $('#spinner-section').addClass('blind');
 
-          // 로그아웃 성공
+          // 로그아웃 성공 시
           if (res.data.result === '1') {
             this.$store.commit('office_setLogin_false');
             const port = window.location.href.split('localhost:')[1].split('/static')[0];
