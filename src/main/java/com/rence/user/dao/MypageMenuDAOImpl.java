@@ -60,8 +60,12 @@ public class MypageMenuDAOImpl implements MypageMenuDAO {
 		log.info("reserve_no: {}", reserve_no);
 
 		ReserveInfo_ViewEntity entity = menuRepository.select_one_reserve_info(reserve_no);
-
-		ReserveInfo_ViewDto dto = modelmapper.map(entity, ReserveInfo_ViewDto.class);
+		
+		ReserveInfo_ViewDto dto = null;
+		if(entity != null) {
+			
+			dto = modelmapper.map(entity, ReserveInfo_ViewDto.class);
+		}
 
 		return dto;
 	}
