@@ -203,9 +203,14 @@ public class officeDAOImpl implements officeDAO {
 	@Override
 	public List<OfficeReserveDto> check_reserve(String backoffice_no, String room_no, String reserve_stime) {
 		log.info("check_reserve()....");
+		log.info("===backoffice_no: {}",backoffice_no );
+		log.info("===room_no: {}",room_no );
+		log.info("===reserve_stime: {}",reserve_stime );
 
 		List<OfficeReserveEntity> entity_list = reserve_repository.select_all_reserve(backoffice_no, room_no,
 				reserve_stime);
+		
+		log.info("===entity_list: {}",entity_list );
 
 		List<OfficeReserveDto> dtos = null;
 		if (entity_list != null) {
@@ -219,9 +224,13 @@ public class officeDAOImpl implements officeDAO {
 	@Override
 	public List<RoomScheduleDto> select_all_room_schedule(String backoffice_no, String room_no, String reserve_stime) {
 		log.info("select_all_room_schedule()...");
+		log.info("===backoffice_no: {}",backoffice_no );
+		log.info("===room_no: {}",room_no );
+		log.info("===reserve_stime: {}",reserve_stime );
 
 		List<RoomScheduleEntity> entity_list = room_schedule_repository.select_all_room_schedule(backoffice_no, room_no,
 				reserve_stime);
+		log.info("===entity_list: {}",entity_list );
 		List<RoomScheduleDto> dtos = null;
 		if (entity_list != null) {
 			dtos = entity_list.stream().map(source -> modelmapper.map(source, RoomScheduleDto.class))
@@ -232,9 +241,14 @@ public class officeDAOImpl implements officeDAO {
 
 	@Override
 	public List<RoomScheduleDto> select_all_room_schedule_dayoff(String backoffice_no, String room_no) {
-
+		log.info("select_all_room_schedule()...");
+		log.info("===backoffice_no: {}",backoffice_no );
+		log.info("===room_no: {}",room_no );
+		
+		
 		List<RoomScheduleEntity> entity_list = room_schedule_repository.select_all_room_schedule_dayoff(backoffice_no,
 				room_no);
+		log.info("===entity_list: {}",entity_list );
 		List<RoomScheduleDto> dtos = null;
 		if (entity_list != null) {
 			dtos = entity_list.stream().map(source -> modelmapper.map(source, RoomScheduleDto.class))

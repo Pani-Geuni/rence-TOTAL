@@ -567,7 +567,7 @@ public class OfficeServiceImpl implements OfficeService {
 			}
 
 		}
-
+		log.info("already_reserve_list: {}",already_reserve_list);
 		map.put("reserve_list", already_reserve_list);
 		return map;
 	}
