@@ -134,7 +134,7 @@ export default {
   name: 'ScheduleView',
   data() {
     return {
-      backoffice_no: this.$cookies.get('backoffice_no'),
+      backoffice_no: decodeURIComponent(window.atob(this.$cookies.get('backoffice_no'))),
       set_schedule: '',
       not_sdate: new Date(),
       not_edate: new Date(),

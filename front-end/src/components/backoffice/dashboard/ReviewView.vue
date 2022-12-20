@@ -86,7 +86,7 @@ export default {
   name: 'ReviewView',
   data() {
     return {
-      babckoffice_no: this.$cookies.get('backoffice_no'),
+      backoffice_no: decodeURIComponent(window.atob(this.$cookies.get('backoffice_no'))),
       rv_vos: [],
       res: [],
     };

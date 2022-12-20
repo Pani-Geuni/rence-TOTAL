@@ -95,7 +95,7 @@ export default {
 
   data() {
     return {
-      backoffice_no: this.$cookies.get('backoffice_no'),
+      backoffice_no: decodeURIComponent(window.atob(this.$cookies.get('backoffice_no'))),
       // room_type: [],
       rm_vos: [],
       res: [],

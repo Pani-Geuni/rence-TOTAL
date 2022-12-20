@@ -144,7 +144,7 @@ export default {
 
   data() {
     return {
-      backoffice_no: this.$route.query.backoffice_no,
+      backoffice_no: decodeURIComponent(window.atob(this.$cookies.get('backoffice_no'))),
       reserve_state: 'all',
       r_vos: [],
       res: [],

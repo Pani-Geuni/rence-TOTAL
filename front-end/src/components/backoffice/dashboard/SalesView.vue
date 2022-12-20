@@ -170,7 +170,7 @@ export default {
 
   data() {
     return {
-      backoffice_no: this.$cookies.get('backoffice_no'),
+      backoffice_no: decodeURIComponent(window.atob(this.$cookies.get('backoffice_no'))),
       sales_date: this.$route.query.sales_date,
       svo: [],
       s_vos: [],
