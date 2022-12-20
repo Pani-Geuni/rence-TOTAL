@@ -1,0 +1,553 @@
+/* ************** */
+/* @author 김예은 */
+/* ************** */
+.space-detail-wrap {
+	width: 100%;
+	height: calc(100vh - 95px - 75px);
+	display: flex;
+	height: 100%;
+	flex-direction: column;
+	align-items: center;
+	position: relative;
+}
+.question-list-wrap {
+	* {
+		font-family: 'MICEGothic';
+	}
+}
+.page-title-section {
+	width: 920px;
+	height: 90px;
+	box-sizing: border-box;
+	padding-top: 10px;
+	display: flex;
+	align-items: center;
+	box-sizing: border-box;
+	border-bottom: 2px solid #e4e4e4;
+}
+.page-title {
+	font-size: 24px;
+	font-weight: bold;
+	font-family: 'MICEGothic';
+}
+.body-semi-wrap {
+	width: 920px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+.deatil-info-section {
+	width: 920px;
+	display: flex;
+	flex-direction: column;
+	box-sizing: border-box;
+	padding-top: 30px;
+	display: flex;
+	flex-direction: column;
+}
+.reserve-info-section {
+	display: flex;
+	flex-direction: column;
+	margin-bottom: 45px;
+}
+.section-title {
+	font-family: 'HallymGothic';
+	font-weight: 900;
+	font-size: 16px;
+	letter-spacing: 0.2px;
+	margin-bottom: 16px;
+}
+.reserve-info-wrap {
+	height: 200px;
+	box-sizing: border-box;
+	padding: 15px;
+	display: flex;
+	border: 2px solid #2EE49D;
+	border-radius: 5px;
+}
+.reserve-info-img {
+	border-radius: 13px;
+	margin-right: 30px;
+	width: 170px;
+	height: 170px;
+}
+.reserve-info-txt {
+	width: 100%;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+}
+.info-company-name {
+	width: 100%;
+	height: 70px;
+	display: flex;
+	align-items: center;
+	border-bottom: 2px solid #e4e4e4;
+	font-family: 'HallymGothic';
+	font-size: 24px;
+	font-weight: 800;
+}
+.info-li-wrap {
+	width: 100%;
+	height: auto;
+	padding-top: 17px;
+	display: flex;
+	flex-wrap: wrap;
+}
+.info-li {
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	&:nth-child(2n-1) {
+		width: 280px;
+	}
+	&:nth-child(2n) {
+		width: calc(100% - 280px);
+	}
+}
+.info-li:nth-child(1),.info-li:nth-child(2) {
+	margin-bottom: 10px;
+}
+.info-label {
+	font-family: 'HallymGothic';
+	font-weight: 600;
+	font-size: 14px;
+	color: #808080;
+	margin-right: 40px;
+}
+.info-text {
+	font-family: "OTWelcome";
+	font-size: 15px;
+	font-weight: 600;
+	letter-spacing: 0.5px;
+}
+.user-host-info-section {
+	display: flex;
+	width: 920px;
+	margin-bottom: 45px;
+}
+.uh-info-section {
+	width: 450px;
+	display: flex;
+	flex-direction: column;
+	&:nth-child(1) {
+		margin-right: 20px;
+	}
+}
+.person-type-title {
+	font-family: 'HallymGothic';
+	font-weight: 900;
+	font-size: 16px;
+	letter-spacing: 0.2px;
+	padding-bottom: 8px;
+	border-bottom: 2px solid #e4e4e4;
+}
+.uh-info-wrap {
+	padding-top: 18px;
+}
+.host-info-li {
+	display: flex;
+	height: 24.8px;
+	align-items: center;
+	margin-bottom: 4px;
+}
+.uh-label {
+	width: 53px;
+	font-family: 'HallymGothic';
+	font-weight: 600;
+	font-size: 14px;
+	color: #808080;
+	margin-right: 40px;
+}
+.uh-text {
+	width: 357px;
+	font-family: "MonoplexKR";
+	font-size: 14px;
+	font-weight: 500;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+.pay-input {
+	width: 200px;
+	border-radius: 7px;
+	border: 2px solid #808080;
+	background-color: #EEEEEE;
+	padding-left: 5px;
+	font-family: 'MonoplexKR';
+	font-weight: 500;
+}
+.careful-info-section {
+	display: flex;
+	flex-direction: column;
+	margin-bottom: 30px;
+}
+.section-list-wrap {
+	width: 100%;
+	border-top: 2px solid #e4e4e4;
+	padding-top: 20px;
+}
+.section-list {
+	font-family: 'HallymGothic';
+	font-weight: 600;
+	font-size: 14px;
+	margin-bottom: 15px;
+}
+.refund-info-section {
+	display: flex;
+	flex-direction: column;
+	margin-bottom: 30px;
+}
+.refund-list-wrap {
+	width: 100%;
+	border-top: 2px solid #e4e4e4;
+	padding-top: 20px;
+	* {
+		font-family: 'HallymGothic';
+		font-weight: 600;
+		font-size: 14px;
+	}
+}
+.refund-list {
+	margin-bottom: 15px;
+}
+.refund-label {
+	margin-right: 30px;
+	color: #2EE49D;
+}
+.after-refund-label {
+	color: #FF5C71 !important;
+	margin-right: 30px;
+}
+.payment-method-section {
+	display: flex;
+	flex-direction: column;
+	margin-bottom: 50px;
+}
+.payment-methods-wrap {
+	border-top: 2px solid #e4e4e4;
+	display: flex;
+	flex-direction: column;
+	padding-top: 25px;
+}
+.money-payment {
+	display: flex;
+	margin-bottom: 15px;
+}
+.payment-method-wrap {
+	display: flex;
+	width: auto;
+	height: 28px;
+	border: 2px solid #2EE49D;
+	border-radius: 7px;
+	margin-right: 30px;
+}
+.payment-method {
+	display: flex;
+	align-items: center;
+	padding: 2.5px 30px 2.5px 20px;
+}
+.custom-radio {
+	width: 15px;
+	height: 15px;
+	border-radius: 100%;
+	border: 2px solid #e4e4e4;
+	margin-right: 10px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+.inner-radio {
+	width: 8px;
+	height: 8px;
+	border-radius: 100%;
+}
+.choice-radio {
+	background-color: #42C2FF;
+}
+.payment-method-text {
+	font-family: 'HallymGothic';
+	font-weight: 600;
+	font-size: 14px;
+}
+.mileage-line-wrap {
+	display: flex;
+	align-items: center;
+	margin-bottom: 5px;
+}
+.mileage-label {
+	font-family: 'HallymGothic';
+	font-weight: 600;
+	font-size: 17px;
+	color: #808080;
+	margin-right: 15px;
+}
+.use-mileage-input {
+	border: 2px solid #808080;
+	border-radius: 5px;
+	margin-right: 10px;
+	height: 18px;
+	padding: 2px 8px;
+	font-family: 'HallymGothic';
+	font-weight: 600;
+	font-size: 13px;
+}
+.use-mileage-btn {
+	height: 26px;
+	border: 2px solid #42C2FF;
+	border-radius: 8px;
+	background-color: #42C2FF;
+	font-family: 'HallymGothic';
+	font-weight: 600;
+	font-size: 13px;
+	color: #ffffff;
+}
+.my-mileage-wrap {
+	font-family: 'HallymGothic';
+	font-weight: 600;
+	font-size: 12px;
+}
+.payment-section {
+	display: flex;
+	flex-direction: column;
+	margin-bottom: 50px;
+}
+.payment-info-wrap {
+	width: 800px;
+	border: 2px solid #2EE49D;
+	padding: 0px 20px 9px 20px;
+}
+.payment-company-section {
+	margin-bottom: 20px;
+}
+.payment-info-li-wrap {
+	width: 790px;
+	height: calc(100% - 70px);
+	padding-top: 20px;
+	display: flex;
+	flex-wrap: wrap;
+}
+.pay-info-label {
+	font-family: 'HallymGothic';
+	font-weight: 600;
+	font-size: 14px;
+	color: #808080;
+	margin-right: 20px;
+}
+.pay-info-text {
+	font-family: "OTWelcome";
+	font-size: 25px;
+	font-weight: 600;
+	letter-spacing: 0.5px;
+}
+.pay-mileage-section {
+	display: flex;
+	border-top: 2px solid #e4e4e4;
+}
+.btn-section, .btn-pay-section {
+	width: 100%;
+	margin-top: 30px;
+	margin-bottom: 100px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+.pay-btn {
+	width: 200px;
+	height: 45px;
+	background-color: #B2A4FF;
+	border-radius: 6px;
+	cursor: pointer;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-family: 'HallymGothic';
+	font-weight: 600;
+	font-size: 14px;
+	color: #ffffff;
+	letter-spacing: 0.5px;
+}
+.pay-canceled-btn {
+	width: 200px;
+	height: 45px;
+	background-color: #404040;
+	border-radius: 6px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-family: 'HallymGothic';
+	font-weight: 600;
+	font-size: 14px;
+	color: #ffffff;
+	letter-spacing: 0.5px;
+}
+.write-review-btn {
+	width: 200px;
+	height: 45px;
+	background-color: #8D9EFF;
+	border-radius: 6px;
+	margin-left: 15px;
+	cursor: pointer;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-family: 'HallymGothic';
+	font-weight: 600;
+	font-size: 14px;
+	color: #ffffff;
+	letter-spacing: 0.5px;
+}
+.review-popup-wrap {
+	width: 350px;
+	height: auto;
+	position: fixed;
+	top: 70px;
+	margin: auto;
+	display: flex;
+	flex-direction: column;
+	box-sizing: border-box;
+	padding: 17px;
+	box-shadow: 1px 1px 4px 2px #e4e4e4;
+	background-color: white;
+	* {
+		font-weight: bold;
+		font-family: 'MICEGothic';
+	}
+}
+.popup-star-section {
+	margin-bottom: 12px;
+	display: flex;
+	align-items: center;
+}
+.popup-star-title {
+	font-size: 13.5px;
+	margin-right: 15px;
+}
+.popup-star-wrap {
+	display: flex;
+	align-items: center;
+}
+.popup-star-li {
+	cursor: pointer;
+}
+.r-star {
+	width: 16px;
+	height: 14px;
+}
+.review-upload-section {
+	width: 100%;
+	margin-bottom: 25px;
+	display: flex;
+}
+.review-upload-btn {
+	width: 65px;
+	padding: 4px 10px 4px 10px;
+	border-radius: 8px;
+	background-color: #42C2FF;
+	font-family: 'HallymGothic';
+	font-weight: 900;
+	font-size: 13px;
+	color: white;
+	cursor: pointer;
+}
+input[type="file"] {
+	display: none;
+}
+.review-upload-value {
+	max-width: 180px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	border: none;
+	margin-left: 10px;
+}
+.review-popup-title {
+	font-size: 18px;
+	font-weight: 900;
+	letter-spacing: 0.5px;
+	margin-bottom: 20px;
+}
+.review-popup-small-title {
+	font-size: 14px;
+	font-weight: 900;
+	letter-spacing: 0.5px;
+	margin-bottom: 5px;
+}
+.review-popup-type-select-wrap {
+	display: flex;
+	flex-direction: column;
+	position: relative;
+}
+.review-popup-select-val-wrap {
+	width: 96%;
+	box-sizing: border-box;
+	padding: 5px 13px 5px 10px;
+	margin-bottom: 16px;
+	display: flex;
+	align-items: center;
+	border: 2px solid #2EE49D;
+	border-radius: 8px;
+}
+.review-popup-select-value {
+	width: 100%;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	font-size: 13px;
+	font-weight: 500;
+	letter-spacing: 0.5px;
+	color: #808080;
+}
+.textarea-section {
+	margin-bottom: 20px;
+	display: flex;
+	flex-direction: column;
+}
+.review-write {
+	width: 300px;
+	height: 190px;
+	border: 2px solid #e4e4e4;
+	resize: none;
+	outline-color: #2EE49D;
+	text-align: left;
+	font-family: "HallymGothic" !important;
+	font-size: 13.8px;
+	font-weight: 500px;
+	margin-bottom: 5px;
+}
+.txt-length-wrap {
+	width: 97%;
+	font-size: 12px;
+	text-align: right;
+}
+.review-popup-btn-section {
+	display: flex;
+	box-sizing: border-box;
+	padding-left: 5px;
+	padding-right: 5px;
+	justify-content: space-between;
+}
+.popup-close-btn {
+	width: 145px;
+	height: 24px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	border-radius: 10px;
+	border: 2px solid #e4e4e4;
+	cursor: pointer;
+}
+.popup-create-btn {
+	width: 145px;
+	height: 24px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background-color: #2EE49D;
+	color: white;
+	border-radius: 10px;
+	cursor: pointer;
+}
+.confirm-txt-section {
+	text-align: center;
+}

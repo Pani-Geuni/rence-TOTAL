@@ -53,12 +53,12 @@ const routes = [
         component: ReserveListView,
       },
       {
-        path: 'reserved_info',
+        path: 'reserved_info/:parameters',
         name: 'BeforeReserveInfoView',
         component: BeforeReserveInfoView,
       },
       {
-        path: 'reserve_info',
+        path: 'reserve_info/:parameters',
         name: 'NowReserveInfoView',
         component: NowReserveInfoView,
       },

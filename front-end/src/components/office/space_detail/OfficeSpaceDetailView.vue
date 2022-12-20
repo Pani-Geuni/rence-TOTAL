@@ -522,6 +522,7 @@ export default {
       load: false,
       now: '',
       checkout: '',
+      axiosFlag: true,
     };
   },
   mounted() {
@@ -768,80 +769,108 @@ export default {
     },
     /** 문의 추가 로직 */
     do_create_q_popup() {
-      if ($('#question-select-choice').attr('choice') === 'true' && $('#question-write').val().trim().length > 0) {
-        if (this.question_flag) {
-          this.question_flag = false;
+      if (this.axiosFlag) {
+        this.axiosFlag = false;
 
-          // 로딩 화면
-          $('.popup-background:eq(1)').removeClass('blind');
-          $('#spinner-section').removeClass('blind');
+        // 로그인 여부 체크 -> 헤더를 위해
+        axios.get('http://localhost:8800/loginCheck')
+          .then((response) => {
+            this.axiosFlag = true;
 
-          let is_secret = '';
-          $('#toggle').prop('checked') ? is_secret = 'T' : is_secret = 'F';
+            // 로그인 되어 있음
+            if (response.data.result === '1') {
+              this.$is_officeLogin = 'true';
 
-          const params = new URLSearchParams();
-          params.append('user_no', this.$cookies.get('user_no'));
-          params.append('backoffice_no', decodeURI(window.location.href).split('?backoffice_no=')[1]);
-          params.append('room_no', $('#question-select-choice').attr('choice_idx'));
-          params.append('comment_content', $('#question-write').val().trim());
-          params.append('is_secret', is_secret);
+              if ($('#question-select-choice').attr('choice') === 'true' && $('#question-write').val().trim().length > 0) {
+                if (this.question_flag) {
+                  this.question_flag = false;
 
-          axios.get('http://localhost:8800/office/insert_question', params)
-            .then((res) => {
-              console.log(res.data);
+                  // 로딩 화면
+                  $('.popup-background:eq(1)').removeClass('blind');
+                  $('#spinner-section').removeClass('blind');
 
-              this.question_flag = true;
+                  let is_secret = '';
+                  $('#toggle').prop('checked') ? is_secret = 'T' : is_secret = 'F';
 
-              // 로딩 화면 닫기
-              $('.popup-background:eq(1)').addClass('blind');
-              $('#spinner-section').addClass('blind');
+                  const params = new URLSearchParams();
+                  params.append('user_no', window.atob(this.$cookies.get('user_no')));
+                  params.append('backoffice_no', this.$route.params.parameters.split('backoffice_no=')[1]);
+                  params.append('room_no', $('#question-select-choice').attr('choice_idx'));
+                  params.append('comment_content', $('#question-write').val().trim());
+                  params.append('is_secret', is_secret);
 
-              if (res.data.result === 1) {
-                $('.qna-length').text('0');
-                $('#question-write').val('');
+                  axios.get('http://localhost:8800/office/insert_question', params)
+                    .then((res) => {
+                      console.log(res.data);
 
-                $('.question-popup-select-val-wrap:eq(0)').removeClass('null-input-border');
-                $('#question-write').removeClass('null-input-border');
+                      this.question_flag = true;
 
-                $('#question-select-choice').text('타입을 선택해 주세요');
-                $('#question-select-choice').attr('choice_idx', '');
-                $('#question-select-choice').attr('choice', '');
+                      // 로딩 화면 닫기
+                      $('.popup-background:eq(1)').addClass('blind');
+                      $('#spinner-section').addClass('blind');
 
-                $('.question-popup-select-val-wrap:eq(0)').removeClass('open-select');
-                $('.question-popup-select:eq(0)').addClass('blind');
-                $('#question-popup').addClass('blind');
+                      if (res.data.result === 1) {
+                        $('.qna-length').text('0');
+                        $('#question-write').val('');
 
-                $('#toggle').prop('checked', false);
+                        $('.question-popup-select-val-wrap:eq(0)').removeClass('null-input-border');
+                        $('#question-write').removeClass('null-input-border');
 
-                $('.popup-background:eq(1)').removeClass('blind');
-                $('#common-alert-popup').removeClass('blind');
-                $('.common-alert-txt').text('성공적으로 문의가 등록되었습니다.');
-                $('#common-alert-btn').attr('is_reload', true);
+                        $('#question-select-choice').text('타입을 선택해 주세요');
+                        $('#question-select-choice').attr('choice_idx', '');
+                        $('#question-select-choice').attr('choice', '');
+
+                        $('.question-popup-select-val-wrap:eq(0)').removeClass('open-select');
+                        $('.question-popup-select:eq(0)').addClass('blind');
+                        $('#question-popup').addClass('blind');
+
+                        $('#toggle').prop('checked', false);
+
+                        $('.popup-background:eq(1)').removeClass('blind');
+                        $('#common-alert-popup').removeClass('blind');
+                        $('.common-alert-txt').text('성공적으로 문의가 등록되었습니다.');
+                        $('#common-alert-btn').attr('is_reload', true);
+                      } else {
+                        $('.popup-background:eq(1)').removeClass('blind');
+                        $('#common-alert-popup').removeClass('blind');
+                        $('.common-alert-txt').text('문의 등록에 실패하였습니다.');
+                      }
+                    })
+                    .catch(() => {
+                      this.question_flag = true;
+
+                      // 로딩 화면 닫기
+                      $('.popup-background:eq(1)').addClass('blind');
+                      $('#spinner-section').addClass('blind');
+
+                      $('.popup-background:eq(1)').removeClass('blind');
+                      $('#common-alert-popup').removeClass('blind');
+                      $('.common-alert-txt').text('오류 발생으로 인해 처리에 실패하였습니다.');
+                    });
+                }
               } else {
-                $('.popup-background:eq(1)').removeClass('blind');
-                $('#common-alert-popup').removeClass('blind');
-                $('.common-alert-txt').text('문의 등록에 실패하였습니다.');
+                if ($('#question-write').val().trim().length === 0) {
+                  $('#question-write').addClass('null-input-border');
+                }
+                if ($('#question-select-choice').attr('choice') !== 'true') {
+                  $('.question-popup-select-val-wrap:eq(0)').addClass('null-input-border');
+                }
               }
-            })
-            .catch(() => {
-              this.question_flag = true;
+            }
+            // 로그인 되어 있지 않음(or 세션 만료)
+            else {
+              this.$is_officeLogin = 'false';
+              $('.popup-background:eq(0)').removeClass('blind');
+              $('#disconnect-session-popup').removeClass('blind');
+            }
+          })
+          .catch(() => {
+            this.axiosFlag = true;
 
-              // 로딩 화면 닫기
-              $('.popup-background:eq(1)').addClass('blind');
-              $('#spinner-section').addClass('blind');
-
-              $('.popup-background:eq(1)').removeClass('blind');
-              $('#common-alert-popup').removeClass('blind');
-              $('.common-alert-txt').text('오류 발생으로 인해 처리에 실패하였습니다.');
-            });
-        }
-      } else {
-        if ($('#question-write').val().trim().length === 0) {
-          $('#question-write').addClass('null-input-border');
-        }
-        if ($('#question-select-choice').attr('choice') !== 'true') {
-          $('.question-popup-select-val-wrap:eq(0)').addClass('null-input-border');
-        }
+            $('.popup-background:eq(1)').removeClass('blind');
+            $('#common-alert-popup').removeClass('blind');
+            $('.common-alert-txt').text('오류 발생으로 인해 로그인 여부를 불러오는데에 실패하였습니다.');
+          });
       }
     },
     /** *** ************** **** */
@@ -995,58 +1024,87 @@ export default {
     },
     /** 예약 로직 */
     do_reservation() {
-      const user_no = this.$cookies.get('user_no');
-      const backoffice_no = decodeURI(window.location.href).split('?backoffice_no=')[1];
-      const room_no = $('#type-choice-value').attr('room_no');
-      const reserve_stime = String(`${this.time} 00:00:00`);
-      const reserve_etime = String(`${this.checkout.getFullYear()}/${this.checkout.getMonth() + 1}/${this.checkout.getDate()} 00:00:00`);
-      let roomType = $('#type-choice-value').attr('room_type').trim();
+      if (this.axiosFlag) {
+        this.axiosFlag = false;
 
-      if (roomType == '오피스') {
-        roomType = 'office';
+        // 로그인 여부 체크 -> 헤더를 위해
+        axios.get('http://localhost:8800/loginCheck')
+          .then((response) => {
+            this.axiosFlag = true;
+
+            // 로그인 되어 있음
+            if (response.data.result === '1') {
+              this.$is_officeLogin = 'true';
+
+              const user_no = window.atob(this.$cookies.get('user_no'));
+              const backoffice_no = this.$route.params.parameters.split('backoffice_no=')[1];
+              const room_no = $('#type-choice-value').attr('room_no');
+              const reserve_stime = String(`${this.time} 00:00:00`);
+              const reserve_etime = String(`${this.checkout.getFullYear()}/${this.checkout.getMonth() + 1}/${this.checkout.getDate()} 00:00:00`);
+              let roomType = $('#type-choice-value').attr('room_type').trim();
+
+              if (roomType === '오피스') {
+                roomType = 'office';
+              }
+
+              if (this.time.length === 0) {
+                $('.fixed-popup').removeClass('blind');
+                $('.using-time-fail-txt:eq(0)').html(
+                  '날짜를 선택해 주세요.',
+                );
+
+                $('#office_check_available').removeClass('blind');
+                $('#office_go_reserve').addClass('blind');
+              }
+
+              // 로딩 화면
+              $('.popup-background:eq(1)').removeClass('blind');
+              $('#spinner-section').removeClass('blind');
+
+              const params = new URLSearchParams();
+              params.append('user_no', user_no);
+              params.append('backoffice_no', backoffice_no);
+              params.append('room_no', room_no);
+              params.append('reserve_stime', reserve_stime);
+              params.append('reserve_etime', reserve_etime);
+              params.append('room_type', roomType);
+
+              axios.get('http://localhost:8800/office/reserve', params)
+                .then((res) => {
+                  // 로딩 화면 닫기
+                  $('.popup-background:eq(1)').addClass('blind');
+                  $('#spinner-section').addClass('blind');
+
+                  if (res.data.result === '1') {
+                    const url = window.location.href.split('/space')[0];
+                    window.location.href = `${url}/payment?reserve_no=${res.data.reserve_no}`;
+                  }
+                })
+                .catch(() => {
+                  // 로딩 화면 닫기
+                  $('.popup-background:eq(1)').addClass('blind');
+                  $('#spinner-section').addClass('blind');
+
+                  $('.popup-background:eq(1)').removeClass('blind');
+                  $('#common-alert-popup').removeClass('blind');
+                  $('.common-alert-txt').text('오류 발생으로 인해 처리에 실패하였습니다.');
+                });
+            }
+            // 로그인 되어 있지 않음(or 세션 만료)
+            else {
+              this.$is_officeLogin = 'false';
+              $('.popup-background:eq(0)').removeClass('blind');
+              $('#disconnect-session-popup').removeClass('blind');
+            }
+          })
+          .catch(() => {
+            this.axiosFlag = true;
+
+            $('.popup-background:eq(1)').removeClass('blind');
+            $('#common-alert-popup').removeClass('blind');
+            $('.common-alert-txt').text('오류 발생으로 인해 로그인 여부를 불러오는데에 실패하였습니다.');
+          });
       }
-
-      if (this.time.length === 0) {
-        $('.fixed-popup').removeClass('blind');
-        $('.using-time-fail-txt:eq(0)').html(
-          '날짜를 선택해 주세요.',
-        );
-
-        $('#office_check_available').removeClass('blind');
-        $('#office_go_reserve').addClass('blind');
-      }
-
-      // 로딩 화면
-      $('.popup-background:eq(1)').removeClass('blind');
-      $('#spinner-section').removeClass('blind');
-
-      const params = new URLSearchParams();
-      params.append('user_no', user_no);
-      params.append('backoffice_no', backoffice_no);
-      params.append('room_no', room_no);
-      params.append('reserve_stime', reserve_stime);
-      params.append('reserve_etime', reserve_etime);
-      params.append('room_type', roomType);
-
-      axios.get('http://localhost:8800/office/reserve', params)
-        .then((res) => {
-          // 로딩 화면 닫기
-          $('.popup-background:eq(1)').addClass('blind');
-          $('#spinner-section').addClass('blind');
-
-          if (res.data.result === '1') {
-            window.location.href = `http://localhost:8081/payment?reserve_no=${res.reserve_no}`;
-          }
-        })
-        .catch(() => {
-          // 로딩 화면 닫기
-          $('.popup-background:eq(1)').addClass('blind');
-          $('#spinner-section').addClass('blind');
-
-          $('.popup-background:eq(1)').removeClass('blind');
-          $('#common-alert-popup').removeClass('blind');
-          $('.common-alert-txt').text('오류 발생으로 인해 처리에 실패하였습니다.');
-        });
     },
     /** 예약 시간 실패 팝업창 닫기 버튼 클릭 */
     close_time_fail_popup() {
@@ -1230,34 +1288,62 @@ export default {
     },
     space_detail_q_paging() {},
     space_detail_r_paging(param) {
-      $('.review-paging').find('.paging-box.paging-num').removeClass('choice');
-      $('.review-paging').find('.paging-box.paging-num').addClass('un-choice');
+      if (this.axiosFlag) {
+        this.axiosFlag = false;
 
-      $(param).addClass('choice');
-      $(param).removeClass('un-choice');
+        // 로그인 여부 체크 -> 헤더를 위해
+        axios.get('http://localhost:8800/loginCheck')
+          .then((response) => {
+            this.axiosFlag = true;
 
-      // 로딩 화면
-      $('.popup-background:eq(1)').removeClass('blind');
-      $('#spinner-section').removeClass('blind');
+            // 로그인 되어 있음
+            if (response.data.result === '1') {
+              this.$is_officeLogin = 'true';
 
-      axios.get(`http://localhost:8800/office/introduce_r_paging?backoffice_no=${this.$route.params.parameters.split('backoffice_no=')[1]}&page=${Number($(param).text())}`)
-        .then((res) => {
-          console.log(res.data);
-          // 로딩 화면 닫기
-          $('.popup-background:eq(1)').addClass('blind');
-          $('#spinner-section').addClass('blind');
+              $('.review-paging').find('.paging-box.paging-num').removeClass('choice');
+              $('.review-paging').find('.paging-box.paging-num').addClass('un-choice');
 
-          this.list.revos = res.data.redtos;
-        })
-        .catch(() => {
-          // 로딩 화면 닫기
-          $('.popup-background:eq(1)').addClass('blind');
-          $('#spinner-section').addClass('blind');
+              $(param).addClass('choice');
+              $(param).removeClass('un-choice');
 
-          $('.popup-background:eq(1)').removeClass('blind');
-          $('#common-alert-popup').removeClass('blind');
-          $('.common-alert-txt').text('오류 발생으로 인해 후기를 불러오는데에 실패하였습니다.');
-        });
+              // 로딩 화면
+              $('.popup-background:eq(1)').removeClass('blind');
+              $('#spinner-section').removeClass('blind');
+
+              axios.get(`http://localhost:8800/office/introduce_r_paging?backoffice_no=${this.$route.params.parameters.split('backoffice_no=')[1]}&page=${Number($(param).text())}`)
+                .then((res) => {
+                  console.log(res.data);
+                  // 로딩 화면 닫기
+                  $('.popup-background:eq(1)').addClass('blind');
+                  $('#spinner-section').addClass('blind');
+
+                  this.list.revos = res.data.redtos;
+                })
+                .catch(() => {
+                  // 로딩 화면 닫기
+                  $('.popup-background:eq(1)').addClass('blind');
+                  $('#spinner-section').addClass('blind');
+
+                  $('.popup-background:eq(1)').removeClass('blind');
+                  $('#common-alert-popup').removeClass('blind');
+                  $('.common-alert-txt').text('오류 발생으로 인해 후기를 불러오는데에 실패하였습니다.');
+                });
+            }
+            // 로그인 되어 있지 않음(or 세션 만료)
+            else {
+              this.$is_officeLogin = 'false';
+              $('.popup-background:eq(0)').removeClass('blind');
+              $('#disconnect-session-popup').removeClass('blind');
+            }
+          })
+          .catch(() => {
+            this.axiosFlag = true;
+
+            $('.popup-background:eq(1)').removeClass('blind');
+            $('#common-alert-popup').removeClass('blind');
+            $('.common-alert-txt').text('오류 발생으로 인해 로그인 여부를 불러오는데에 실패하였습니다.');
+          });
+      }
     },
   }, // END methods()
 };

@@ -6,6 +6,7 @@
 package com.rence.dashboard.repository;
 
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -45,5 +46,21 @@ public interface CommentRepository extends JpaRepository<CommentEntity, Object> 
 	@Transactional
 	@Query(nativeQuery = true, value = "update comments set comment_state='F' where backoffice_no=?1 and comment_no=?2")
 	public int update_comment_state_F(String backoffice_no, String mother_no);
+
+	// 공간 문의 - 공간 삭제 후, 문의 답변 처리를 위한 문의 리스트
+	@Query(nativeQuery = true, value = "select comment_no from comments where comment_state='F' and room_no = ?1")
+	public List<String> select_qna_f(String room_no);
+
+	// 공간 문의 - 공간 삭제 후, 문의 답변 처리
+	@Modifying
+	@Transactional
+	@Query(nativeQuery = true, value = "insert into comments(comment_no, room_no, backoffice_no, mother_no, comment_content, comment_date, writer, comment_state, host_no) "
+			+ " values ('C'||SEQ_COMMENTS.nextval, ?2, ?1, ?3, '삭제된 공간입니다.', current_date, '관리자', 'T', ?1)")
+	public int backoffice_qna_insert(String backoffice_no, String room_no, String q);
+
+	// 환경 설정 - 호스트 탈퇴 신청 후, 문의 답변 처리를 위한 문의 리스트
+	@Query(nativeQuery = true, value = "select comment_no,mother_no,comment_state,room_name,comment_content, TO_CHAR(comment_date, 'YYYY-MM-DD HH24:MI:SS') as comment_date, c.room_no, c.backoffice_no, user_no, host_no, writer   from comments where comment_state='F' and backoffice_no = ?1")
+	public List<CommentEntity> select_qna_f_all(String backoffice_no);
+
 
 }

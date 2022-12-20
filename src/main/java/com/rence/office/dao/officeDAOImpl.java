@@ -96,11 +96,10 @@ public class officeDAOImpl implements officeDAO {
 	@Override
 	public OfficeInfo_ViewDto select_one_office_info(String backoffice_no) {
 		log.info("select_one_office_info()...");
-		log.info("backoffice_no: {}",backoffice_no);
+		log.info("backoffice_no: {}", backoffice_no);
 
 		OfficeInfo_ViewEntity entity = detail_repository.select_one_office_info(backoffice_no);
-		log.info("entity: {}",entity);
-		
+		log.info("entity: {}", entity);
 
 		OfficeInfo_ViewDto dto = modelmapper.map(entity, OfficeInfo_ViewDto.class);
 
@@ -117,7 +116,6 @@ public class officeDAOImpl implements officeDAO {
 		OfficeOperatingTimeDto_date dto = modelmapper.map(entity, OfficeOperatingTimeDto_date.class);
 
 		return dto;
-//		return null;
 	}
 
 	// backoffice 운영 공간(Room)
@@ -135,24 +133,25 @@ public class officeDAOImpl implements officeDAO {
 
 	@Override
 	public long total_rowCount_question_all(String backoffice_no) {
+		log.info("total_rowCount_question_all()...");
 		return question_repository.total_rowCount_question_all(backoffice_no);
 	}
 
 	@Override
 	public List<OfficeQuestionDto> select_all_comment(String backoffice_no, Integer page) {
-//		log.info("select_all_comment()...");
+		log.info("select_all_comment()...");
 
 		Integer row_count = 4;
 		Integer start_row = (page - 1) * row_count + 1;
 		Integer end_row = page * row_count;
 
-		List<OfficeQuestionDto> dtos =null;
+		List<OfficeQuestionDto> dtos = null;
 		List<OfficeQuestionEntity> entity_list = question_repository.select_all_comment(backoffice_no, start_row,
 				end_row);
 
-		if(entity_list != null) {
-			 dtos = entity_list.stream()
-					.map(source -> modelmapper.map(source, OfficeQuestionDto.class)).collect(Collectors.toList());
+		if (entity_list != null) {
+			dtos = entity_list.stream().map(source -> modelmapper.map(source, OfficeQuestionDto.class))
+					.collect(Collectors.toList());
 		}
 
 		return dtos;
@@ -165,10 +164,10 @@ public class officeDAOImpl implements officeDAO {
 		OfficeQuestionDto dto = null;
 		OfficeQuestionEntity entity = question_repository.select_one_answer(mother_no);
 
-		if(entity != null) {
+		if (entity != null) {
 			dto = modelmapper.map(entity, OfficeQuestionDto.class);
 		}
-		
+
 		return dto;
 	}
 
@@ -189,8 +188,11 @@ public class officeDAOImpl implements officeDAO {
 		List<OfficeReview_ViewEntity> entity_list = review_repository.select_all_review(backoffice_no, start_row,
 				end_row);
 
-		List<OfficeReview_ViewDto> dtos = entity_list.stream()
-				.map(source -> modelmapper.map(source, OfficeReview_ViewDto.class)).collect(Collectors.toList());
+		List<OfficeReview_ViewDto> dtos = null;
+		if (entity_list != null) {
+			dtos = entity_list.stream().map(source -> modelmapper.map(source, OfficeReview_ViewDto.class))
+					.collect(Collectors.toList());
+		}
 
 		return dtos;
 	}
@@ -202,8 +204,11 @@ public class officeDAOImpl implements officeDAO {
 		List<OfficeReserveEntity> entity_list = reserve_repository.select_all_reserve(backoffice_no, room_no,
 				reserve_stime);
 
-		List<OfficeReserveDto> dtos = entity_list.stream()
-				.map(source -> modelmapper.map(source, OfficeReserveDto.class)).collect(Collectors.toList());
+		List<OfficeReserveDto> dtos = null;
+		if (entity_list != null) {
+			dtos = entity_list.stream().map(source -> modelmapper.map(source, OfficeReserveDto.class))
+					.collect(Collectors.toList());
+		}
 
 		return dtos;
 	}
@@ -214,10 +219,11 @@ public class officeDAOImpl implements officeDAO {
 
 		List<RoomScheduleEntity> entity_list = room_schedule_repository.select_all_room_schedule(backoffice_no, room_no,
 				reserve_stime);
-
-		List<RoomScheduleDto> dtos = entity_list.stream().map(source -> modelmapper.map(source, RoomScheduleDto.class))
-				.collect(Collectors.toList());
-
+		List<RoomScheduleDto> dtos = null;
+		if (entity_list != null) {
+			dtos = entity_list.stream().map(source -> modelmapper.map(source, RoomScheduleDto.class))
+					.collect(Collectors.toList());
+		}
 		return dtos;
 	}
 
@@ -226,10 +232,11 @@ public class officeDAOImpl implements officeDAO {
 
 		List<RoomScheduleEntity> entity_list = room_schedule_repository.select_all_room_schedule_dayoff(backoffice_no,
 				room_no);
-
-		List<RoomScheduleDto> dtos = entity_list.stream().map(source -> modelmapper.map(source, RoomScheduleDto.class))
-				.collect(Collectors.toList());
-
+		List<RoomScheduleDto> dtos = null;
+		if (entity_list != null) {
+			dtos = entity_list.stream().map(source -> modelmapper.map(source, RoomScheduleDto.class))
+					.collect(Collectors.toList());
+		}
 		return dtos;
 	}
 
@@ -239,8 +246,11 @@ public class officeDAOImpl implements officeDAO {
 
 		List<OfficeReserveEntity> entity_list = reserve_repository.select_all_reserve_office(backoffice_no, room_no);
 
-		List<OfficeReserveDto> dtos = entity_list.stream()
-				.map(source -> modelmapper.map(source, OfficeReserveDto.class)).collect(Collectors.toList());
+		List<OfficeReserveDto> dtos = null;
+		if (entity_list != null) {
+			dtos = entity_list.stream().map(source -> modelmapper.map(source, OfficeReserveDto.class))
+					.collect(Collectors.toList());
+		}
 
 		return dtos;
 	}
@@ -258,7 +268,11 @@ public class officeDAOImpl implements officeDAO {
 		log.info("select_one_last_reserve()...");
 
 		OfficeReserveEntity entity = reserve_repository.select_one_reserve_no(user_no);
-		OfficeReserveDto dto = modelmapper.map(entity, OfficeReserveDto.class);
+
+		OfficeReserveDto dto = null;
+		if (entity != null) {
+			dto = modelmapper.map(entity, OfficeReserveDto.class);
+		}
 
 		String reserve_no = dto.getReserve_no();
 
@@ -270,8 +284,10 @@ public class officeDAOImpl implements officeDAO {
 		log.info("select_one_final_payment_info()...");
 
 		PaymentInfoEntity entity = payment_info_repository.select_one_final_payment_info(reserve_no);
-
-		PaymentInfoDto dto = modelmapper.map(entity, PaymentInfoDto.class);
+		PaymentInfoDto dto = null;
+		if (entity != null) {
+			dto = modelmapper.map(entity, PaymentInfoDto.class);
+		}
 
 		return dto;
 
@@ -298,8 +314,10 @@ public class officeDAOImpl implements officeDAO {
 		log.info("select_one_recent_mileage()...");
 
 		OfficeMileageEntity entity = mileage_repository.select_one_recent_mileage(user_no);
-
-		OfficeMileageDto dto = modelmapper.map(entity, OfficeMileageDto.class);
+		OfficeMileageDto dto = null;
+		if (entity != null) {
+			dto = modelmapper.map(entity, OfficeMileageDto.class);
+		}
 
 		return dto;
 	}
@@ -309,7 +327,10 @@ public class officeDAOImpl implements officeDAO {
 		log.info("select_one_recent_payment()...");
 
 		OfficePaymentEntity entity = payment_repository.select_one_recent_payment(user_no);
-		OfficePaymentDto dto = modelmapper.map(entity, OfficePaymentDto.class);
+		OfficePaymentDto dto = null;
+		if (entity != null) {
+			dto = modelmapper.map(entity, OfficePaymentDto.class);
+		}
 		return dto;
 	}
 
@@ -341,8 +362,7 @@ public class officeDAOImpl implements officeDAO {
 	@Override
 	public List<ListViewDto> select_all_list(String type, String condition, int min, int max) {
 		log.info("insert_question()...");
-		
-		
+
 		List<ListViewEntity> entity_list = null;
 
 		if (condition.equals("date")) {
@@ -354,31 +374,41 @@ public class officeDAOImpl implements officeDAO {
 		} else if (condition.equals("expensive")) {
 			entity_list = list_repository.selectAll_orderBy_expensive("%" + type + "%", min, max);
 		}
-		
-		List<ListViewDto> dtos = entity_list.stream()
-				.map(source -> modelmapper.map(source, ListViewDto.class)).collect(Collectors.toList());
-	
+		List<ListViewDto> dtos = null;
+		if (entity_list != null) {
+			dtos = entity_list.stream().map(source -> modelmapper.map(source, ListViewDto.class))
+					.collect(Collectors.toList());
+		}
+
 		return dtos;
 	}
-	
+
 	@Override
-	public List<ListViewDto> search_list(String type, String location, String searchWord, String condition, int min, int max) {
+	public List<ListViewDto> search_list(String type, String location, String searchWord, String condition, int min,
+			int max) {
 		log.info("search_list()...");
-		
+
 		List<ListViewEntity> entity_list = null;
-		if(condition.equals("date")) {
-			entity_list = list_repository.searchAll_orderBy_date("%"+type+"%", "%"+location+"%", "%"+searchWord+"%", min, max);
-		}else if(condition.equals("rating")) {
-			entity_list = list_repository.searchAll_orderBy_rating("%"+type+"%", "%"+location+"%", "%"+searchWord+"%", min, max);
-		}else if(condition.equals("cheap")) {
-			entity_list = list_repository.searchAll_orderBy_cheap("%"+type+"%", "%"+location+"%", "%"+searchWord+"%", min, max);
-		}else if(condition.equals("expensive")) {
-			entity_list = list_repository.searchAll_orderBy_expensive("%"+type+"%", "%"+location+"%", "%"+searchWord+"%", min, max);
+		if (condition.equals("date")) {
+			entity_list = list_repository.searchAll_orderBy_date("%" + type + "%", "%" + location + "%",
+					"%" + searchWord + "%", min, max);
+		} else if (condition.equals("rating")) {
+			entity_list = list_repository.searchAll_orderBy_rating("%" + type + "%", "%" + location + "%",
+					"%" + searchWord + "%", min, max);
+		} else if (condition.equals("cheap")) {
+			entity_list = list_repository.searchAll_orderBy_cheap("%" + type + "%", "%" + location + "%",
+					"%" + searchWord + "%", min, max);
+		} else if (condition.equals("expensive")) {
+			entity_list = list_repository.searchAll_orderBy_expensive("%" + type + "%", "%" + location + "%",
+					"%" + searchWord + "%", min, max);
 		}
-		
-		List<ListViewDto> dtos = entity_list.stream()
-				.map(source -> modelmapper.map(source, ListViewDto.class)).collect(Collectors.toList());
-	
+
+		List<ListViewDto> dtos = null;
+		if (entity_list != null) {
+			dtos = entity_list.stream().map(source -> modelmapper.map(source, ListViewDto.class))
+					.collect(Collectors.toList());
+		}
+
 		return dtos;
 	}
 

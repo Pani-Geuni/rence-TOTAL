@@ -128,5 +128,9 @@ public interface DashboardDAO {
 
 	public int backoffice_room_cnt(String backoffice_no, String not_sdate, String not_edate, String not_stime, String not_etime, String off_type);
 
+	public void backoffice_qna_insert(String backoffice_no, String room_no);
+
+	public void backoffice_qna_insert(String backoffice_no);
+
 
 }

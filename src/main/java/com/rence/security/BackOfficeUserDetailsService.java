@@ -45,14 +45,6 @@ public class BackOfficeUserDetailsService implements UserDetailsService {
 		
 		return new BackOfficeUserDetails(backoffice);
 
-//		return createUser(backoffice);
 	}
 	
-	 private org.springframework.security.core.userdetails.User createUser(BackOfficeDTO backoffice) {
-	     List<GrantedAuthority> grantedAuthorities = new ArrayList<GrantedAuthority>();
-	      return new org.springframework.security.core.userdetails.User(backoffice.getUsername(),
-	    		  backoffice.getPassword(),
-	              grantedAuthorities);
-	   }
-
 }

@@ -1,3 +1,4 @@
+<!-- eslint-disable prefer-destructuring -->
 <!-- eslint-disable linebreak-style -->
 <!-- eslint-disable no-plusplus -->
 <!-- eslint-disable array-callback-return -->
@@ -206,6 +207,7 @@ export default {
     return {
       list: '',
       reserveNo: '',
+      axiosFlag: true,
     };
   },
   mounted() {
@@ -224,7 +226,7 @@ export default {
           $('.popup-background:eq(1)').removeClass('blind');
           $('#spinner-section').removeClass('blind');
 
-          this.reserveNo = decodeURI(window.location.href.split('reserve_no=')[1]);
+          this.reserveNo = this.$route.params.parameters.split('reserve_no=')[1];
 
           axios.get(`http://localhost:8800/rence/reserve_info?reserve_no=${reserveNo}`)
             .then((res) => {
@@ -260,8 +262,36 @@ export default {
   },
   methods: {
     show_cancle_popup() {
-      $('.popup-background:eq(0)').removeClass('blind');
-      $('#reserve-cancel-popup').removeClass('blind');
+      if (this.axiosFlag) {
+        this.axiosFlag = false;
+
+        // 로그인 여부 체크 -> 헤더를 위해
+        axios.get('http://localhost:8800/loginCheck')
+          .then((response) => {
+            this.axiosFlag = true;
+
+            // 로그인 되어 있음
+            if (response.data.result === '1') {
+              this.$is_officeLogin = 'true';
+
+              $('.popup-background:eq(0)').removeClass('blind');
+              $('#reserve-cancel-popup').removeClass('blind');
+            }
+            // 로그인 되어 있지 않음(or 세션 만료)
+            else {
+              this.$is_officeLogin = 'false';
+              $('.popup-background:eq(0)').removeClass('blind');
+              $('#disconnect-session-popup').removeClass('blind');
+            }
+          })
+          .catch(() => {
+            this.axiosFlag = true;
+
+            $('.popup-background:eq(1)').removeClass('blind');
+            $('#common-alert-popup').removeClass('blind');
+            $('.common-alert-txt').text('오류 발생으로 인해 로그인 여부를 불러오는데에 실패하였습니다.');
+          });
+      }
     },
   }, // END methods()
 };

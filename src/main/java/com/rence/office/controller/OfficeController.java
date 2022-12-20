@@ -1,4 +1,3 @@
-
 package com.rence.office.controller;
 
 import java.text.ParseException;
@@ -7,7 +6,6 @@ import java.util.Map;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -64,13 +62,11 @@ public class OfficeController {
 		Map<String, Object> map = service.introduce_q_paging(bdto, page);
 
 		String introduce_q_paging = gson.toJson(map);
-
 		return introduce_q_paging;
 	}
 
 	@GetMapping(value = "/introduce_r_paging")
-	public String introduce_r_paging(BackOfficeDTO bdto, @RequestParam(value = "page", defaultValue = "1") Integer page,
-			Model model) {
+	public String introduce_r_paging(BackOfficeDTO bdto, @RequestParam(value = "page", defaultValue = "1") Integer page) {
 		log.info("introduce_r_paging()....");
 
 		Map<String, Object> map = service.introduce_r_paging(bdto, page);
@@ -166,7 +162,7 @@ public class OfficeController {
 
 	@ApiOperation(value = "문의 추가 컨트롤러", notes = "문의 추가 로직 컨트롤러")
 	@GetMapping(value = "/insert_question")
-	public String insert_question(Comment_Dto dto, Model model) {
+	public String insert_question(Comment_Dto dto) {
 
 		log.info("insert_question().....");
 		Map<String, String> map = service.insert_question(dto);

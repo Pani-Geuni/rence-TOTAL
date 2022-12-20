@@ -233,8 +233,12 @@ public class DashboardDAOImpl implements DashboardDAO {
 	@Override
 	public BackOfficeDTO select_one_backoffice_info(String backoffice_no) {
 
+		BackOfficeDTO bvo = new BackOfficeDTO();
+		
 		BackOfficeEntity be = b_repository.select_one_backoffice_info(backoffice_no);
-		BackOfficeDTO bvo = modelMapper.map(be, BackOfficeDTO.class);
+		if (be!=null) {
+			bvo = modelMapper.map(be, BackOfficeDTO.class);
+		}
 
 		return bvo;
 	}
@@ -257,6 +261,7 @@ public class DashboardDAOImpl implements DashboardDAO {
 			re.setRoom_price(50000);
 		}
 		re.setBackoffice_no(backoffice_no);
+		re.setRoom_state("T");
 
 		return rm_repository.backoffice_insertOK_room(re);
 	}
@@ -303,6 +308,23 @@ public class DashboardDAOImpl implements DashboardDAO {
 	@Override
 	public void backoffice_deleteOK_room(String backoffice_no, String room_no) {
 		rm_repository.backoffice_deleteOK_room(backoffice_no, room_no);
+	}
+	
+	/**
+	 * 공간관리 - 공간 삭제 후, 문의 처리
+	 */
+	@Override
+	public void backoffice_qna_insert(String backoffice_no, String room_no) {
+		
+		List<String> q_no_list = c_repository.select_qna_f(room_no);
+		if (q_no_list!=null) {
+			for (String q : q_no_list) {
+				int flag = c_repository.backoffice_qna_insert(backoffice_no,room_no,q);
+				if (flag==1) {
+					c_repository.update_comment_state_T(backoffice_no, q);
+				}
+			}
+		} 
 	}
 
 	/**
@@ -525,15 +547,24 @@ public class DashboardDAOImpl implements DashboardDAO {
 
 		BOMileageEntity mvo = m_repository.backoffice_select_mileage_total(user_no); // 1. 사용자의 마지막 mileage_total
 		BOMileageEntity mvo2 = m_repository.backoffice_select_mileage_w(user_no, payment_no); // 2. 적립 예정 마일리지
-
-		if (mvo2.getMileage_change() != 0) { // 선결제
-			int mileage_change = mvo2.getMileage_change(); // 2
-			int mileage_total = mvo.getMileage_total() + mileage_change; // 1+2
-
-			flag = m_repository.backoffice_insert_mileage_state_t(mileage_total, user_no, mileage_change, payment_no); // 마일리지
-																														// 적립
-		} else { // 후결제
-			flag = s_repository.backoffice_update_mileage_state_c(payment_no); // change 가 0인 mileage 는 C로 상태 변경
+		
+		if (mvo2!=null) {
+			if (mvo2.getMileage_change() != 0) { // 선결제
+				int mileage_total = 0;
+				int mileage_change = mvo2.getMileage_change(); // 2
+				if (mvo!=null) {
+					mileage_total = mvo.getMileage_total() + mileage_change; // 1+2
+				}else {
+					mileage_total = mileage_change;
+				}
+				
+				flag = m_repository.backoffice_insert_mileage_state_t(mileage_total, user_no, mileage_change, payment_no); // 마일리지 적립
+				
+			} else { // 후결제
+				flag = s_repository.backoffice_update_mileage_state_c(payment_no); // change 가 0인 mileage 는 C로 상태 변경
+			}
+		}else {
+			flag = 1;
 		}
 		if (flag == 1) {
 			s_repository.backoffice_updateOK_sales_state_t(backoffice_no, room_no, payment_no); // 결제 정보 테이블의 정산 상태 변경
@@ -579,6 +610,22 @@ public class DashboardDAOImpl implements DashboardDAO {
 	@Override
 	public int backoffice_room_deleteALL(BackOfficeDTO bvo) {
 		return b_repository.backoffice_room_deleteALL(bvo.getBackoffice_no());
+	}
+	
+	/**
+	 * 환경설정 - 업체 탈퇴 요청 (공간 삭제)
+	 */
+	@Override
+	public void backoffice_qna_insert(String backoffice_no) {
+		List<CommentEntity> q_no_list = c_repository.select_qna_f_all(backoffice_no);
+		if (q_no_list!=null) {
+			for (CommentEntity q : q_no_list) {
+				int flag = c_repository.backoffice_qna_insert(backoffice_no,q.getRoom_no(),q.getComment_no());
+				if (flag==1) {
+					c_repository.update_comment_state_T(backoffice_no, q.getComment_no());
+				}
+			}
+		} 
 	}
 
 	/**
@@ -980,6 +1027,5 @@ public class DashboardDAOImpl implements DashboardDAO {
 		reserveAutoUpdateRepository.reserve_auto_delete(reserve_no);
 		
 	}
-
 
 }
