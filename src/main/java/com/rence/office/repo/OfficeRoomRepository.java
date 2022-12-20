@@ -10,7 +10,7 @@ import com.rence.office.model.OfficeRoomEntity;
 public interface OfficeRoomRepository extends JpaRepository<OfficeRoomEntity, Object> {
 	
 	
-	@Query(nativeQuery = true, value = "select * from roominfo where backoffice_no=?1")
+	@Query(nativeQuery = true, value = "select * from roominfo where room_state = 'T' and backoffice_no=?1")
 	public List<OfficeRoomEntity> select_all_room_info(String backoffice_no);
 	
 	

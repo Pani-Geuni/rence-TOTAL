@@ -113,11 +113,16 @@ public class OfficeServiceImpl implements OfficeService {
 		// ************************
 		// backoffice 운영 공간(Room)
 		// ************************
-		List<OfficeRoomDto> rvos = dao.select_all_room(backoffice_no);
-
-		for (OfficeRoomDto vo : rvos) {
-			vo.setRoom_type(info_map.changeType(vo.getRoom_type()));
+		
+		List<OfficeRoomDto> rvos = null;
+		rvos = dao.select_all_room(backoffice_no);
+		
+		if (rvos != null) {
+			for (OfficeRoomDto vo : rvos) {
+				vo.setRoom_type(info_map.changeType(vo.getRoom_type()));
+			}
 		}
+		
 
 		// **************
 		// backoffice 문의
@@ -728,11 +733,16 @@ public class OfficeServiceImpl implements OfficeService {
 		// ************************
 		// backoffice 운영 공간(Room)
 		// ************************
-		List<OfficeRoomDto> rdtos = dao.select_all_room(backoffice_no);
-
-		for (OfficeRoomDto dto : rdtos) {
-			dto.setRoom_type(info_map.changeType(dto.getRoom_type()));
+		
+		List<OfficeRoomDto> rdtos = null;
+		rdtos = dao.select_all_room(backoffice_no);
+		
+		if (rdtos != null) {
+			for (OfficeRoomDto vo : rdtos) {
+				vo.setRoom_type(info_map.changeType(vo.getRoom_type()));
+			}
 		}
+		log.info("===dtos: {} ====", rdtos);
 
 		// **************
 		// backoffice 문의
