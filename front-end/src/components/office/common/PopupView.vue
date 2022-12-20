@@ -451,15 +451,15 @@ export default {
     },
     /** 로그아웃 처리 함수 */
     do_logout() {
-      // 로딩 화면 닫기
+      $('.popup-background:eq(0)').addClass('blind');
+      $('#logout-popup').addClass('blind');
+
+      // 로딩 화면 열기
       $('.popup-background:eq(1)').removeClass('blind');
       $('#spinner-section').removeClass('blind');
 
       axios.get('/rence/user_logoutOK')
         .then((res) => {
-          $('.popup-background:eq(0)').addClass('blind');
-          $('#logout-popup').addClass('blind');
-
           // 로딩 화면 닫기
           $('.popup-background:eq(1)').addClass('blind');
           $('#spinner-section').addClass('blind');
@@ -481,12 +481,9 @@ export default {
             $('.popup-background:eq(1)').addClass('blind');
             $('#spinner-section').addClass('blind');
 
-            $('.popup-background:eq(0)').addClass('blind');
-            $('#logout-popup').addClass('blind');
-
             $('.popup-background:eq(1)').removeClass('blind');
             $('#common-alert-popup').removeClass('blind');
-            $('.common-alert-txt').text('오류 발생으로 인해 로그아웃에 실패하였습니다');
+            $('.common-alert-txt').text('로그아웃에 실패하였습니다');
           }
         })
         .catch(() => {
@@ -494,9 +491,12 @@ export default {
           $('.popup-background:eq(1)').addClass('blind');
           $('#spinner-section').addClass('blind');
 
+          $('.popup-background:eq(0)').addClass('blind');
+          $('#logout-popup').addClass('blind');
+
           $('.popup-background:eq(1)').removeClass('blind');
           $('#common-alert-popup').removeClass('blind');
-          $('.common-alert-txt').text('오류 발생으로 인해 처리에 실패하였습니다.');
+          $('.common-alert-txt').text('오류 발생으로 인해 로그아웃 처리에 실패하였습니다.');
         });
     },
 
