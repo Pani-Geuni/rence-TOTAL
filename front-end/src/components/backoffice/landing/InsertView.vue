@@ -97,10 +97,10 @@
         <div class="inputWrap info">
           <p>사업체 소개</p>
           <div class="check_wrap">
-            <textarea v-model="backoffice_info" id="backoffice_info" name="backoffice_info"
-              placeholder="공간 소개를 입력해 주세요"></textarea>
+            <textarea v-model="backoffice_info" id="backoffice_info" name="backoffice_info" placeholder="공간 소개를 입력해 주세요"
+              @keyup="checkTextLength" @keydown="checkTextLength"></textarea>
             <div class="b_info_txt_length_wrap">
-              <span class="b_info_txt_length">0</span>
+              <span class="b_info_txt_length">{{ b_info_txt_length }}</span>
               <span>&nbsp;/ 500</span>
             </div>
           </div>
@@ -612,6 +612,7 @@ export default {
 
       backoffice_type: [],
       backoffice_info: '',
+      b_info_txt_length: 0,
       backoffice_option: [],
       backoffice_around: [],
 
@@ -771,6 +772,15 @@ export default {
         } else {
           $('#auth_code').addClass('null-input-border');
         }
+      }
+    },
+
+    checkTextLength(e) {
+      $('.b_info_txt_length').text(e.target.value.length);
+
+      const targetValue = e.target.value;
+      if (e.target.value.length > 500) {
+        e.target.value = targetValue.substring(0, 500);
       }
     },
 
