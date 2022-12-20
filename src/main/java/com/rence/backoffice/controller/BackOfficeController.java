@@ -5,12 +5,15 @@
  */
 package com.rence.backoffice.controller;
 
+import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,7 +36,6 @@ import com.rence.backoffice.service.BackOfficeService;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -50,8 +52,22 @@ public class BackOfficeController {
 	@Autowired
 	BackOfficeFileService fileService;
 
-//	@Autowired
-//	HttpSession session;
+	@Autowired
+	HttpSession session;
+	
+	/**
+	 * 로그인 여부
+	 */
+	@ApiOperation(value = "대쉬보드 로그인 여부", notes = "대쉬보드 로그인 여부")
+	@GetMapping("/loginCheck")
+	public String dashboard_login_check() {
+
+		Map<String, Object> map = service.login_check(session);
+
+		String json = gson.toJson(map);
+
+		return json;
+	}
 	
 	/**
 	 * 백오피스 신청 처리
@@ -62,7 +78,7 @@ public class BackOfficeController {
 	@PostMapping("/insertOK")
 	public String backoffice_insertOK(BackOfficeDTO vo, BackOfficeOperatingTimeDTO ovo,
 			MultipartHttpServletRequest mtfRequest,
-			@RequestParam(value = "multipartFile_room") MultipartFile multipartFile_room) throws ParseException {
+			@RequestParam(value = "multipartFile_room" , required = false) MultipartFile multipartFile_room) throws ParseException {
 
 		vo = fileService.backoffice_image_upload(vo, mtfRequest, multipartFile_room);
 
@@ -104,12 +120,13 @@ public class BackOfficeController {
 
 	/**
 	 * 로그인 성공 처리
+	 * @throws UnsupportedEncodingException 
 	 */
 	@ApiOperation(value = "로그인 성공", notes = "로그인 성공")
 	@PostMapping("/loginSuccess")
-	public String backoffice_loginOK(@RequestParam String username, HttpServletResponse response) {
+	public String backoffice_loginOK(@RequestParam String username, HttpServletResponse response) throws UnsupportedEncodingException {
 
-		Map<String, String> map = service.backoffice_loginOK(username, response);
+		Map<String, String> map = service.backoffice_loginOK(username, session, response);
 
 		String json = gson.toJson(map);
 
@@ -139,10 +156,8 @@ public class BackOfficeController {
 	@GetMapping("/logoutOK")
 	public String backoffice_logoutOK(HttpServletRequest request, HttpServletResponse response) {
 
-		Map<String, String> map = new HashMap<String, String>();
-
-		map.put("result", "1");
-
+		Map<String, String> map = service.backoffice_logoutOK(request,response,session);
+		
 		String json = gson.toJson(map);
 
 		return json;
@@ -180,12 +195,13 @@ public class BackOfficeController {
 
 	/**
 	 * 비밀번호 초기화 완료
+	 * @throws UnsupportedEncodingException 
 	 */
 	@ApiOperation(value = "비밀번호 초기화 처리", notes = "호스트 비밀번호 변경, 이메일로 전송된 비밀번호 재설정")
 	@PostMapping("/settingOK_pw")
-	public String backoffice_settingOK_pw(BackOfficeDTO bvo, HttpServletRequest request, HttpServletResponse response) {
+	public String backoffice_settingOK_pw(BackOfficeDTO bvo, HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException {
 
-		Map<String, String> map = service.backoffice_settingOK_pw(bvo, request, response);
+		Map<String, String> map = service.backoffice_settingOK_pw(bvo, request, response,session);
 
 		String json = gson.toJson(map);
 

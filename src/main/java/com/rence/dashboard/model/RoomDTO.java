@@ -35,4 +35,6 @@ public class RoomDTO implements Serializable{
 	private String room_price;
 	
 	private String backoffice_no;
+	
+	private String room_state;
 }
