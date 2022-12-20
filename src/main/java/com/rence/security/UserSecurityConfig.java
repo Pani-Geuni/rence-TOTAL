@@ -62,6 +62,7 @@ public class UserSecurityConfig {
 				.antMatchers("/rence/find_pw").permitAll() // 비밀번호 찾기
 				.antMatchers("/office/**").permitAll()
 				.antMatchers("/**/loginCheck").permitAll()
+				.antMatchers("/rence/user_logoutOK").permitAll()
 				.antMatchers("/", "/test/", "/api/v2/**", "/v3/api-docs", "/static/**", "/swagger*/**",
 						"/api/v1/auth/**", "/h2-console/**", "/favicon.ico", "/swagger-ui.html", "/swagger/**",
 						"/swagger-resources/**", "webjars/**", "/v2/api-docs", "/user/insertOK", "/js/**", "/css/**",
@@ -78,10 +79,12 @@ public class UserSecurityConfig {
 				.successForwardUrl("/rence/loginSuccess") // 성공시 요청을 처리할 핸들러
 				.failureForwardUrl("/rence/loginFail") // 실패시 요청을 처리할 핸들러
 				.permitAll().and().logout().logoutRequestMatcher(new AntPathRequestMatcher("/rence/user_logoutOK")) // 로그아웃
-																													// URL
-				.logoutSuccessUrl("/") // 성공시 리턴 URL
+//				.getLogoutSuccessHandler()																									// URL
+				
+				
 				.invalidateHttpSession(true) // 인증정보를 지우하고 세션을 무효화
 				.deleteCookies("JSESSIONID", "user_no", "user_image") // JSESSIONID 쿠키 삭제
+				.logoutSuccessUrl("/rence/user_logoutSucess") // 성공시 리턴 URL
 				.permitAll();
 
 		http.csrf().disable(); // csrf 토큰을 활성화

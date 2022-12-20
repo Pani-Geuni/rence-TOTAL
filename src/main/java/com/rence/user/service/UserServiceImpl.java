@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
@@ -214,7 +215,7 @@ public class UserServiceImpl implements UserService {
 	public Map<String, String> user_find_Id(UserDto udto, EmailVO evo) {
 		log.info("user_find_Id()...");
 		log.info("udto: {}", udto);
-			
+
 		Map<String, String> map = new HashMap<String, String>();
 
 		UserDto udto2 = dao.user_email_select(udto);
@@ -239,7 +240,7 @@ public class UserServiceImpl implements UserService {
 	public Map<String, String> user_find_pw(UserDto udto, EmailVO evo) {
 		log.info("user_find_pw()...");
 		log.info("udto: {}", udto);
-		
+
 		Map<String, String> map = new HashMap<String, String>();
 
 		String findPw_res = null;
@@ -264,6 +265,21 @@ public class UserServiceImpl implements UserService {
 			map.put("result", "0");
 			log.info("No user info...");
 		}
+		return map;
+	}
+
+	@Override
+	public Map<String, String> user_logoutOK(HttpServletRequest request, HttpServletResponse response,
+			HttpSession session) {
+		log.info("user_logoutOK()....");
+		
+		
+		Map<String, String> map = new HashMap<String, String>();
+
+		
+//		session.removeAttribute("user_id");
+		map.put("result", "1");
+
 		return map;
 	}
 

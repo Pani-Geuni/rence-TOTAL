@@ -5,6 +5,7 @@ package com.rence.user.service;
 
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
@@ -33,6 +34,9 @@ public interface UserService {
 
 	//비밀번호 찾기
 	Map<String, String> user_find_pw(UserDto udto, EmailVO evo);
+
+	//로그아웃
+	Map<String, String> user_logoutOK(HttpServletRequest request, HttpServletResponse response, HttpSession session);
 
 	
 
