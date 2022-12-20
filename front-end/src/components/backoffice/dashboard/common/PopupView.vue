@@ -305,7 +305,7 @@
         </span>
       </section>
       <section class="confirm-btn-section">
-        <div id="no-reservation-closeBtn" class="confirm-noBtn">닫기</div>
+        <div @click="closeNoReservation" id="no-reservation-closeBtn" class="confirm-noBtn">닫기</div>
       </section>
     </div>
     <!-- END no-reservation-popup CONFIRM popup -->
@@ -1200,6 +1200,11 @@ export default {
     clickDayoffCancelFail() {
       $('#dayoff-cancel-fail-popup').addClass('blind');
       $('.popup-background:eq(1)').addClass('blind');
+    },
+
+    closeNoReservation() {
+      $('#no-reservation-popup').addClass('blind');
+      $('.popup-background:eq(0)').addClass('blind');
     },
 
     // **************************************************
