@@ -638,9 +638,6 @@ export default {
     editRoom(e) {
       this.room_no = e.target.getAttribute('idx');
       this.room_name = $('#m-input-room-name').val().trim();
-      this.m_edit_room_type = $('#m-edit-room-type-label').val().trim();
-
-      console.log(this.room_name);
 
       if (this.room_name !== '' && this.m_edit_room_type !== '') {
         if (this.m_edit_room_type === 'office') {
