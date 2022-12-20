@@ -134,7 +134,7 @@ export default {
   name: 'ScheduleView',
   data() {
     return {
-      backoffice_no: this.$cookies.get('backoffice_no'),
+      backoffice_no: decodeURIComponent(window.atob(this.$cookies.get('backoffice_no'))),
       set_schedule: '',
       not_sdate: new Date(),
       not_edate: new Date(),
@@ -336,9 +336,17 @@ export default {
   },
 
   mounted() {
-    this.$nextTick(() => {
-      this.getScheduleList();
-    });
+    axios.get('http://localhost:8800/backoffice/loginCheck')
+      .then((res) => {
+        if (res.data.result === '1') {
+          this.$nextTick(() => {
+            this.getScheduleList();
+          });
+        } else {
+          this.$store.commit('backoffice_setLogin_false');
+          this.$router.replace('/backoffice/landing');
+        }
+      });
   },
 };
 </script>

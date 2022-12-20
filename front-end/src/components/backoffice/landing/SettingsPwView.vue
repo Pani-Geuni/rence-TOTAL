@@ -110,7 +110,7 @@ export default {
               $('#spinner-section').addClass('blind');
 
               if (res.data.result === '1') {
-                this.$router.replace(`/backoffice/settings?backoffice_no=${this.backoffice_no}`);
+                this.$router.replace(`/backoffice/dash/settings?backoffice_no=${this.backoffice_no}`);
               } else if (res.data.result === '2') {
                 this.$router.replace('/backoffice/landing');
               } else {

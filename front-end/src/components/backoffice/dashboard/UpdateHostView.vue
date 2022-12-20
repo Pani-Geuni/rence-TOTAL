@@ -530,7 +530,7 @@ export default {
 
   data() {
     return {
-      backoffice_no: this.$cookies.get('backoffice_no'),
+      backoffice_no: decodeURIComponent(window.atob(this.$cookies.get('backoffice_no'))),
 
       vo: [],
       ovo: [],
@@ -894,9 +894,17 @@ export default {
   },
 
   mounted() {
-    this.$nextTick(() => {
-      this.getHostInfo();
-    });
+    axios.get('http://localhost:8800/backoffice/loginCheck')
+      .then((res) => {
+        if (res.data.result === '1') {
+          this.$nextTick(() => {
+            this.getHostInfo();
+          });
+        } else {
+          this.$store.commit('backoffice_setLogin_false');
+          this.$router.replace('/backoffice/landing');
+        }
+      });
   },
 };
 </script>

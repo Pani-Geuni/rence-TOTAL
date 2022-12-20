@@ -144,7 +144,7 @@ export default {
 
   data() {
     return {
-      backoffice_no: this.$route.query.backoffice_no,
+      backoffice_no: decodeURIComponent(window.atob(this.$cookies.get('backoffice_no'))),
       reserve_state: 'all',
       r_vos: [],
       res: [],
@@ -254,14 +254,6 @@ export default {
       $('.popup-background:eq(0)').removeClass('blind');
       $('#reserve-delete-one-popup').removeClass('blind');
 
-      // const user_email = $(this).parents('.reserve-btn-cell').siblings('.reserve_user_email').text();
-      // const user_email = e.target.parentElement();
-      // const reserve_stime = $(this).parents('.reserve-btn-cell').siblings('.reserve_date_set').text()
-      //   .split(' ~ ')[0];
-      // const reserve_etime = $(this).parents('.reserve-btn-cell').siblings('.reserve_date_set').text()
-      //   .split(' ~ ')[1];
-
-
       const reserve_no = e.target.getAttribute('reserve_no')
       const user_no = e.target.getAttribute('user_no')
       const user_email = e.target.getAttribute('user_email')
@@ -283,10 +275,18 @@ export default {
   },
 
   mounted() {
-    this.$nextTick(() => {
-      this.miniNavActive(this.reserve_state);
-      this.getReserveList();
-    });
+    axios.get('http://localhost:8800/backoffice/loginCheck')
+      .then((res) => {
+        if (res.data.result === '1') {
+          this.$nextTick(() => {
+            this.miniNavActive(this.reserve_state);
+            this.getReserveList();
+          });
+        } else {
+          this.$store.commit('backoffice_setLogin_false');
+          this.$router.replace('/backoffice/landing');
+        }
+      });
   },
 };
 </script>

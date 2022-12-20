@@ -150,7 +150,7 @@ export default {
   name: 'DashBoardMainView',
   data() {
     return {
-      backoffice_no: this.$route.query.backoffice_no,
+      backoffice_no: decodeURIComponent(window.atob(this.$cookies.get('backoffice_no'))),
       r_vos: [],
       r_cnt: 0,
       c_vos: [],
@@ -162,6 +162,7 @@ export default {
 
   methods: {
     getReserveList() {
+      console.log('backoffice no', this.backoffice_no);
       const params = new URLSearchParams();
       params.append('backoffice_no', this.backoffice_no);
 
@@ -179,9 +180,18 @@ export default {
   },
 
   mounted() {
-    this.$nextTick(() => {
-      this.getReserveList();
-    });
+    axios.get('http://localhost:8800/backoffice/loginCheck')
+      .then((res) => {
+        if (res.data.result === '1') {
+          this.$store.commit('backoffice_setLogin_true');
+          this.$nextTick(() => {
+            this.getReserveList();
+          });
+        } else {
+          this.$store.commit('backoffice_setLogin_false');
+          this.$router.replace('/backoffice/landing');
+        }
+      });
   },
 };
 

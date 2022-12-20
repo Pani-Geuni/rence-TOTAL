@@ -86,7 +86,7 @@ export default {
   name: 'ReviewView',
   data() {
     return {
-      babckoffice_no: this.$cookies.get('backoffice_no'),
+      backoffice_no: decodeURIComponent(window.atob(this.$cookies.get('backoffice_no'))),
       rv_vos: [],
       res: [],
     };
@@ -143,10 +143,18 @@ export default {
   },
 
   mounted() {
-    this.$nextTick(() => {
-      this.miniNavActive(window.location.pathname);
-      this.getReviewList();
-    });
+    axios.get('http://localhost:8800/backoffice/loginCheck')
+      .then((res) => {
+        if (res.data.result === '1') {
+          this.$nextTick(() => {
+            this.miniNavActive(window.location.pathname);
+            this.getReviewList();
+          });
+        } else {
+          this.$store.commit('backoffice_setLogin_false');
+          this.$router.replace('/backoffice/landing');
+        }
+      });
   },
 };
 </script>
