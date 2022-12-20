@@ -299,13 +299,9 @@ export default {
 
     // 로그아웃
     logout() {
-      axios.get('http://localhost:8800/backoffice/logoutOK').then((res) => {
+      axios.get('http://localhost:8800/backoffice/logout').then((res) => {
         console.log(res.data);
         if (res.data.result === '1') {
-          this.$cookies.remove('backoffice_no');
-          this.$cookies.remove('host_image');
-          // this.$cookies.remove('JSESSIONID');
-
           $('#logout-popup').addClass('blind');
           $('.popup-background:eq(0)').addClass('blind');
           this.$router.go(0);
