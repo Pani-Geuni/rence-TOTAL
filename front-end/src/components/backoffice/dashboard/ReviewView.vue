@@ -47,30 +47,28 @@
     <!-- END review-list -->
   </div>
 
-  <section class="paging-section" v-if="res.masPage > 0">
-    <div class="paging-wrap">
-      <span th:if="${res.maxPage} <= 5" class="paging-box before-page-btn hide"> &lt;&lt; </span>
-      <span th:unless="${res.maxPage} <= 5" class="paging-box before-page-btn"> &lt;&lt; </span>
+  <section :class="{ 'paging-section': maxPage > 0, 'paging-section blind': maxPage === 0 }">
+    <section class="paging-section">
+      <div class="paging-wrap">
+        <span @click="prev_room_paging"
+          :class="{ 'paging-box before-page-btn hide': maxPage <= 5, 'paging-box before-page-btn': maxPage > 5 }">
+          &lt;&lt;
+        </span>
 
-      <!-- <th:block th:with="ceil=${#numbers.formatInteger(T(java.lang.Math).ceil((res.nowPage)/5.0),1)}">
-        <th:block th:with="start=(5 * (${ceil} - 1) + 1)">
-          <div class="paging-num-wrap paging-wrap">
-            <th:block th:each="num : ${#numbers.sequence(start, res.maxPage)}">
-              <span th:if="${num} == ${res.nowPage}" th:attr="idx=${num}"
-                class="paging-box paging-num choice">[[${num}]]</span>
-              <span th:if="${num} != ${res.nowPage}" th:attr="idx=${num}"
-                class="paging-box paging-num un-choice">[[${num}]]</span>
-            </th:block>
-          </div>
-        </th:block>
-      </th:block> -->
+        <div class="paging-num-wrap paging-wrap">
+          <!-- <div th:each="num : ${#numbers.sequence(start, res.maxPage)}"> -->
+          <span @click="room_paging($event.currentTarget)" v-for="num in totalPageCnt" :key="num" :idx="num"
+            :class="{ 'paging-box paging-num choice': num === nowPage, 'paging-box paging-num un-choice': num !== nowPage }">{{
+                num
+            }}</span>
+        </div>
 
-      <span th:if="${res.totalPageCnt} > 5 and ${res.maxPage} < ${res.totalPageCnt}"
-        class="paging-box next-page-btn">>></span>
-      <span th:unless="${res.totalPageCnt} > 5 and ${res.maxPage} < ${res.totalPageCnt}"
-        class="paging-box next-page-btn hide">>></span>
-      <input type="hidden" id="totalPageCnt" th:value="${res.totalPageCnt}">
-    </div>
+        <span @click="next_room_paging" v-if="totalPageCnt > 5 && maxPage < totalPageCnt"
+          class="paging-box next-page-btn">>></span>
+        <span v-else class="paging-box next-page-btn hide">>></span>
+        <input type="hidden" id="totalPageCnt" :value="totalPageCnt">
+      </div>
+    </section>
   </section>
 </template>
 
@@ -89,6 +87,11 @@ export default {
       backoffice_no: decodeURIComponent(window.atob(this.$cookies.get('backoffice_no'))),
       rv_vos: [],
       res: [],
+      cnt: 0,
+      maxPage: 0,
+      nowPage: 0,
+      page: 'review',
+      totalPageCnt: 0,
     };
   },
 
@@ -138,7 +141,77 @@ export default {
       axios.get(url).then((res) => {
         console.log(res.data);
         this.rv_vos = res.data.rv_vos;
+        this.cnt = res.data.cnt;
+        this.maxPage = res.data.maxPage;
+        this.nowPage = res.data.nowPage;
+        this.totalPageCnt = res.data.totalPageCnt;
       });
+    },
+
+    paging_list(e) {
+      this.nowPage = $(e).text();
+
+      const params = new URLSearchParams();
+      params.append('backoffice_no', this.backoffice_no);
+      params.append('page', this.nowPage);
+
+      axios.get(`http://localhost:8800/backoffice/dash/review?${params}`)
+        .then((res) => {
+          console.log(res.data);
+          this.rv_vos = res.data.rv_vos;
+        });
+    },
+
+    next_paging_list() {
+      const start = Number($($('.paging-box.paging-num')[0]).text()) + 5;
+      let last = Number($($('.paging-box.paging-num')[4]).text()) + 5;
+      const totalPageCnt = Number($('#totalPageCnt').val());
+
+      if ($('.before-page-btn').hasClass('hide')) {
+        $('.before-page-btn').removeClass('hide');
+      }
+
+      if (last >= totalPageCnt) {
+        last = totalPageCnt;
+        $('.next-page-btn').addClass('hide');
+      }
+
+      const params = new URLSearchParams();
+      params.append('backoffice_no', this.backoffice_no);
+      params.append('page', start);
+
+      axios.get(`http://localhost:8800/backoffice/dash/review?${params}`)
+        .then((res) => {
+          console.log(res.data);
+          this.rv_vos = res.data.rv_vos;
+        });
+    },
+
+    prev_paging_list() {
+      const start = Number($($('.paging-box.paging-num')[0]).text()) - 5;
+      let last = Number($('.paging-box.paging-num:last').text()) - 5;
+
+      if (last % 5 !== 0) {
+        last += 5 - (last % 5);
+      }
+
+      if ($('.next-page-btn').hasClass('hide')) {
+        $('.next-page-btn').removeClass('hide');
+      }
+
+      if (start === 1) {
+        $('.before-page-btn').addClass('hide');
+      }
+
+      const params = new URLSearchParams();
+      params.append('backoffice_no', this.backoffice_no);
+      params.append('page', start);
+
+      axios.get(`http://localhost:8800/backoffice/dash/review?${params}`)
+        .then((res) => {
+          console.log(res.data);
+          this.rv_vos = res.data.rv_vos;
+        });
     },
   },
 

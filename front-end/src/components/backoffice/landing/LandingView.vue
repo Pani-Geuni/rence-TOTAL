@@ -24,6 +24,7 @@
 
 <script>
 import $ from 'jquery';
+import axios from 'axios';
 // import '@/assets/JS/backoffice/host_insert';
 // import '@/assets/JS/backoffice/custom_timepicker';
 
@@ -44,13 +45,21 @@ export default {
 
     // Dashboard로 이동
     goDashboard() {
-      if (this.$cookies.isKey('backoffice_no')) {
-        this.$router.push(`/backoffice/dash/main?backoffice_no=${this.backoffice_no}`);
-      } else {
-        $('.popup-background:eq(1)').removeClass('blind');
-        $('#common-alert-popup').removeClass('blind');
-        $('.common-alert-txt').text('로그인 후 이용해 주세요.');
-      }
+      axios.get('http://localhost:8800/backoffice/loginCheck')
+        .then((res) => {
+          if (res.data.result === '1') {
+            if (this.$cookies.isKey('backoffice_no')) {
+              this.$router.push(`/backoffice/dash/main?backoffice_no=${this.backoffice_no}`);
+            } else {
+              $('.popup-background:eq(1)').removeClass('blind');
+              $('#common-alert-popup').removeClass('blind');
+              $('.common-alert-txt').text('로그인 후 이용해 주세요.');
+            }
+          } else {
+            this.$store.commit('backoffice_setLogin_false');
+            this.$router.replace('/backoffice/landing');
+          }
+        });
     },
   },
 };

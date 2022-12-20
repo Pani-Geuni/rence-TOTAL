@@ -63,7 +63,7 @@
           <div class="select-all-section">
             <label @click="selectAllCheckbox" for="select-all-room">전체선택</label>
             <input type="checkbox" id="select-all-room" />
-            <input type="hidden" id="maxCnt" />
+            <input type="hidden" :maxCnt="this.maxCnt" :nowCnt="this.nowCnt" id="maxCnt" />
           </div>
         </div>
         <!-- END select-room-section-title -->
@@ -77,7 +77,7 @@
             <div class="ct-header-cell schedule">예약 수</div>
           </div>
         </div>
-        <div class="ct-body schedule-ct">
+        <div class="ct-body schedule-ct" @scroll="handleScheduleList($event.target)">
 
           <div class="ct-body-row" :class="{ 'blind': sc_vos.length === 0 }" v-for="vos in sc_vos" :key="vos">
             <div class="ct-body-cell schedule">
@@ -134,6 +134,10 @@ export default {
   name: 'ScheduleView',
   data() {
     return {
+      cnt: 0,
+      maxCnt: 0,
+      nowCnt: 0,
+      scroll_flag: true,
       backoffice_no: decodeURIComponent(window.atob(this.$cookies.get('backoffice_no'))),
       set_schedule: '',
       not_sdate: new Date(),
@@ -162,6 +166,7 @@ export default {
       const url = `http://localhost:8800/backoffice/dash/schedule?${params}`;
       axios.get(url).then((res) => {
         console.log(res.data);
+        this.cnt = res.data.cnt;
       });
     },
 
@@ -188,6 +193,11 @@ export default {
 
           this.sc_vos = res.data.sc_vos;
           this.sc_vos_cnt = res.data.cnt;
+
+          this.maxCnt = res.data.maxCnt;
+          this.nowCnt = res.data.nowCnt;
+          console.log('????? maxCnt : ', this.maxCnt);
+          console.log('????? nowCnt : ', this.nowCnt);
         });
       }
     },
@@ -331,6 +341,73 @@ export default {
         $('.popup-background:eq(1)').removeClass('blind');
         $('#common-alert-popup').removeClass('blind');
         $('.common-alert-txt').text('공간을 선택해주세요.');
+      }
+    },
+
+    handleScheduleList(e) {
+      console.log('handleScheduleList');
+      console.log('maxCnt :', this.maxCnt);
+      console.log('nowCnt :', this.nowCnt);
+
+      if (Math.ceil($(e).scrollTop() + $(e).innerHeight()) >= $(e).prop('scrollHeight')) {
+        if ($('.ct-body-row').length - 1 < Number($('#maxCnt').attr('maxCnt')) && this.scroll_flag) {
+          // 로딩 화면
+          $('.popup-background:eq(1)').removeClass('blind');
+          $('#spinner-section').removeClass('blind');
+
+          const sDateTime = this.not_sdate.toString().split(' ');
+          const eDateTime = this.not_edate.toString().split(' ');
+
+          const not_sdate = sDateTime[0];
+          const not_stime = sDateTime[1];
+          const not_edate = eDateTime[0];
+          const not_etime = eDateTime[1];
+          const off_type = $("input:radio[name='set_schedule']:checked").val();
+
+          const page = $('#maxCnt').attr('nowCnt');
+          console.log('?????? off_type :', off_type);
+
+          this.scroll_flag = false;
+
+          const param = new URLSearchParams();
+          param.append('backoffice_no', this.backoffice_no);
+          param.append('not_sdate', not_sdate);
+          param.append('not_edate', not_edate);
+          param.append('not_stime', not_stime);
+          param.append('not_etime', not_etime);
+          param.append('off_type', off_type);
+          param.append('page', Number(page) + 1);
+
+          console.log('maxCnt2 :', this.maxCnt);
+          console.log('nowCnt2 :', this.nowCnt);
+          console.log('page :', page);
+
+          const url = `http://localhost:8800/backoffice/dash/schedule_research_paging?${param}`;
+          console.log('url ::: ', url);
+
+
+          axios.get(url)
+            .then((res) => {
+              this.scroll_flag = true;
+              console.log('paging data ::: ', res.data);
+
+              // 로딩 화면 닫기
+              $('.popup-background:eq(1)').addClass('blind');
+              $('#spinner-section').addClass('blind');
+
+              const now = $('#maxCnt').attr('nowCnt');
+              $('#maxCnt').attr('nowCnt', Number(now) + 1);
+              this.sc_vos = this.sc_vos.concat(res.data.sc_vos);
+              console.log('sc_vos :', this.sc_vos);
+            })
+            .catch(() => {
+              this.scroll_flag = true;
+
+              // 로딩 화면 닫기
+              $('.popup-background:eq(1)').addClass('blind');
+              $('#spinner-section').addClass('blind');
+            });
+        }
       }
     },
   },
