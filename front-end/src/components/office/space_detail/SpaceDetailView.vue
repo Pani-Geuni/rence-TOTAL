@@ -101,7 +101,7 @@
 							<section class="question-left">
 								<span class="big-title">문의</span> <span class="small-title">{{list.cvdto_cnt}}개</span>
 							</section>
-							<section id="question-create-btn" class="question-right">
+							<section id="question-create-btn" @click="show_question_popup" class="question-right">
 								<span>문의하기</span>
 							</section>
 
@@ -723,6 +723,39 @@ export default {
       }
       $('.qna-length').text($('#question-write').val().length);
     },
+    /** 로그인 여부에 따른 문의 팝업 SHOW */
+    show_question_popup() {
+      if (this.axiosFlag) {
+        this.axiosFlag = false;
+
+        // 로그인 여부 체크 -> 헤더를 위해
+        axios.get('http://localhost:8800/loginCheck')
+          .then((response) => {
+            this.axiosFlag = true;
+
+            // 로그인 되어 있음
+            if (response.data.result === '1') {
+              this.$store.commit('office_setLogin_true');
+
+              $('#question-popup').removeClass('blind');
+            }
+            // 로그인 되어 있지 않음(or 세션 만료)
+            else {
+              this.$store.commit('office_setLogin_false');
+              $('.popup-background:eq(1)').removeClass('blind');
+              $('#common-alert-popup').removeClass('blind');
+              $('.common-alert-txt').text('로그인 후 이용가능한 기능입니다.');
+            }
+          })
+          .catch(() => {
+            this.axiosFlag = true;
+
+            $('.popup-background:eq(1)').removeClass('blind');
+            $('#common-alert-popup').removeClass('blind');
+            $('.common-alert-txt').text('오류 발생으로 인해 로그인 여부를 불러오는데에 실패하였습니다.');
+          });
+      }
+    },
     /** 문의 작성 팝업 - 타입 선택 셀렉트 show/hide 함수 */
     toggle_q_select() {
       if ($('.question-popup-select:eq(0)').hasClass('blind')) {
@@ -793,15 +826,16 @@ export default {
                   let is_secret = '';
                   $('#toggle').prop('checked') ? is_secret = 'T' : is_secret = 'F';
 
-                  const params = new URLSearchParams();
-                  params.append('user_no', window.atob(this.$cookies.get('user_no')));
-                  params.append('backoffice_no', this.$route.params.parameters.split('backoffice_no=')[1]);
-                  params.append('room_no', $('#question-select-choice').attr('choice_idx'));
-                  params.append('comment_content', $('#question-write').val().trim());
-                  params.append('is_secret', is_secret);
+                  let params = `?user_no=${window.atob(this.$cookies.get('user_no'))}`;
+                  params += `&backoffice_no=${this.$route.params.parameters.split('backoffice_no=')[1]}`;
+                  params += `&room_no=${$('#question-select-choice').attr('choice_idx')}`;
+                  params += `&comment_content=${$('#question-write').val().trim()}`;
+                  params += `&is_secret=${is_secret}`;
 
-                  axios.get('http://localhost:8800/office/insert_question', params)
+                  axios.get(`http://localhost:8800/office/insert_question${params}`)
                     .then((res) => {
+                      console.log(res.data);
+
                       this.question_flag = true;
 
                       // 로딩 화면 닫기

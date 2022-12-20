@@ -71,7 +71,6 @@
                 </section>
             </router-link>
         </div>
-        {{ this.$store.state.is_officeLogin }}
     </div>
 </div>
 </template>
