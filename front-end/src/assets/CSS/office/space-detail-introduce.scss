@@ -689,6 +689,11 @@
 	display: flex;
 	z-index:100;
 	flex-direction: column;
+	max-height: 200px;
+	overflow-y: overlay;
+}
+.custom-select-type::-webkit-scrollbar {
+	width: 0px;
 }
 .custom-select-type-list {
 	width: 100%;
