@@ -43,4 +43,7 @@ public class OfficeRoomEntity {
 	@Column(name="room_price")
 	private String room_price;
 	
+	@Column(name="room_state")
+	private String room_state;
+	
 }//end class

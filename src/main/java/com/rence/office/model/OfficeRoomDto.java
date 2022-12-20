@@ -24,4 +24,6 @@ public class OfficeRoomDto {
 	
 	private String room_price;
 	
+	private String room_state;
+	
 }//end class
