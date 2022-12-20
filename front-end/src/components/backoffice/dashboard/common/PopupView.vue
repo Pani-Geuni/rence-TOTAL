@@ -904,7 +904,7 @@ export default {
         $('.popup-background:eq(1)').removeClass('blind');
         $('#spinner-section').removeClass('blind');
 
-        axios.get('http://localhost:8800/backoffice/update_pw', {
+        axios.get('http://localhost:8800/backoffice/dash/update_pw', {
           params: {
             backoffice_no: this.backoffice_no,
             backoffice_pw: $('.input-check-pw').val().trim(),
@@ -916,7 +916,7 @@ export default {
             $('#spinner-section').addClass('blind');
 
             if (res.data.result === '1') {
-              this.$router.replace(`/backoffice/dash/setting_pw?backoffice_no=${this.backoffice_no}`);
+              this.$router.replace(`/backoffice/setting_pw?backoffice_no=${this.backoffice_no}`);
             } else if (res.data.result === '0') {
               $('.popup-background:eq(1)').removeClass('blind');
               $('#common-alert-popup').removeClass('blind');
@@ -1003,8 +1003,8 @@ export default {
       axios.get('http://localhost:8800/backoffice/logoutOK').then((res) => {
         console.log(res.data);
         if (res.data.result === '1') {
-          // this.$cookies.remove('backoffice_no');
-          // this.$cookies.remove('host_image');
+          this.$cookies.remove('backoffice_no');
+          this.$cookies.remove('host_image');
           // this.$cookies.remove('JSESSIONID');
 
           $('#logout-popup').addClass('blind');

@@ -302,8 +302,8 @@ export default {
       axios.get('http://localhost:8800/backoffice/logoutOK').then((res) => {
         console.log(res.data);
         if (res.data.result === '1') {
-          // this.$cookies.remove('backoffice_no');
-          // this.$cookies.remove('host_image');
+          this.$cookies.remove('backoffice_no');
+          this.$cookies.remove('host_image');
           // this.$cookies.remove('JSESSIONID');
 
           $('#logout-popup').addClass('blind');
