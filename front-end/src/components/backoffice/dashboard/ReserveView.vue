@@ -96,30 +96,26 @@
         </div>
         <!-- END ct-body -->
 
-        <section class="paging-section reserve_search_paging" v-if="res.masPage > 0">
+        <section :class="{ 'paging-section': maxPage > 0, 'paging-section blind': maxPage === 0 }">
           <section class="paging-section">
             <div class="paging-wrap">
-              <span th:if="${res.maxPage} <= 5" class="paging-box before-page-btn hide"> &lt;&lt; </span>
-              <span th:unless="${res.maxPage} <= 5" class="paging-box before-page-btn"> &lt;&lt; </span>
+              <span @click="prev_paging_list"
+                :class="{ 'paging-box before-page-btn hide': maxPage <= 5, 'paging-box before-page-btn': maxPage > 5 }">
+                &lt;&lt;
+              </span>
 
-              <!-- <th:block th:with="ceil=${#numbers.formatInteger(T(java.lang.Math).ceil((res.nowPage)/5.0),1)}">
-                  <th:block th:with="start=(5 * (${ceil} - 1) + 1)">
-                    <div class="paging-num-wrap paging-wrap">
-                      <th:block th:each="num : ${#numbers.sequence(start, res.maxPage)}">
-                        <span th:if="${num} == ${res.nowPage}" th:attr="idx=${num}"
-                          class="paging-box paging-num choice">[[${num}]]</span>
-                        <span th:if="${num} != ${res.nowPage}" th:attr="idx=${num}"
-                          class="paging-box paging-num un-choice">[[${num}]]</span>
-                      </th:block>
-                    </div>
-                  </th:block>
-                </th:block> -->
+              <div class="paging-num-wrap paging-wrap">
+                <!-- <div th:each="num : ${#numbers.sequence(start, res.maxPage)}"> -->
+                <span @click="paging_list($event.currentTarget)" v-for="num in totalPageCnt" :key="num" :idx="num"
+                  :class="{ 'paging-box paging-num choice': num === nowPage, 'paging-box paging-num un-choice': num !== nowPage }">{{
+                      num
+                  }}</span>
+              </div>
 
-              <span v-if="res.totalPageCnt > 5 && re.maxPage < res.totalPageCnt"
+              <span @click="next_paging_list" v-if="totalPageCnt > 5 && maxPage < totalPageCnt"
                 class="paging-box next-page-btn">>></span>
-              <span v-if="res.totalPageCnt <= 5 && res.maxPage >= res.totalPageCnt"
-                class="paging-box next-page-btn hide">>></span>
-              <input type="hidden" id="totalPageCnt" :value="res.totalPageCnt">
+              <span v-else class="paging-box next-page-btn hide">>></span>
+              <input type="hidden" id="totalPageCnt" :value="totalPageCnt">
             </div>
           </section>
         </section>
@@ -148,6 +144,11 @@ export default {
       reserve_state: 'all',
       r_vos: [],
       res: [],
+      cnt: 0,
+      maxPage: 0,
+      nowPage: 0,
+      nowCnt: 0,
+      totalPageCnt: 0,
     };
   },
 
@@ -247,6 +248,11 @@ export default {
       axios.get(url).then((res) => {
         console.log(res.data);
         this.r_vos = res.data.r_vos;
+        this.cnt = res.data.cnt;
+        this.maxPage = res.data.maxPage;
+        this.nowCnt = res.data.nowCnt;
+        this.nowPage = res.data.nowPage;
+        this.totalPageCnt = res.data.totalPageCnt;
       });
     },
 
@@ -254,11 +260,11 @@ export default {
       $('.popup-background:eq(0)').removeClass('blind');
       $('#reserve-delete-one-popup').removeClass('blind');
 
-      const reserve_no = e.target.getAttribute('reserve_no')
-      const user_no = e.target.getAttribute('user_no')
-      const user_email = e.target.getAttribute('user_email')
-      const reserve_stime = e.target.getAttribute('reserve_stime')
-      const reserve_etime = e.target.getAttribute('reserve_etime')
+      const reserve_no = e.target.getAttribute('reserve_no');
+      const user_no = e.target.getAttribute('user_no');
+      const user_email = e.target.getAttribute('user_email');
+      const reserve_stime = e.target.getAttribute('reserve_stime');
+      const reserve_etime = e.target.getAttribute('reserve_etime');
 
       console.log(e.target.getAttribute('reserve_no'));
       console.log(e.target.getAttribute('user_no'));
@@ -271,6 +277,75 @@ export default {
       $('#reserve-delete-one-btn').attr('user_email', user_email);
       $('#reserve-delete-one-btn').attr('reserve_stime', reserve_stime);
       $('#reserve-delete-one-btn').attr('reserve_etime', reserve_etime);
+    },
+
+    paging_list(e) {
+      this.nowPage = $(e).text();
+
+      const params = new URLSearchParams();
+      params.append('backoffice_no', this.backoffice_no);
+      params.append('reserve_state', this.reserve_state);
+      params.append('page', this.nowPage);
+
+      axios.get(`http://localhost:8800/backoffice/dash/reserve?${params}`)
+        .then((res) => {
+          console.log(res.data);
+          this.r_vos = res.data.r_vos;
+        });
+    },
+
+    next_paging_list() {
+      const start = Number($($('.paging-box.paging-num')[0]).text()) + 5;
+      let last = Number($($('.paging-box.paging-num')[4]).text()) + 5;
+      const totalPageCnt = Number($('#totalPageCnt').val());
+
+      if ($('.before-page-btn').hasClass('hide')) {
+        $('.before-page-btn').removeClass('hide');
+      }
+
+      if (last >= totalPageCnt) {
+        last = totalPageCnt;
+        $('.next-page-btn').addClass('hide');
+      }
+
+      const params = new URLSearchParams();
+      params.append('backoffice_no', this.backoffice_no);
+      params.append('reserve_state', this.reserve_state);
+      params.append('page', start);
+
+      axios.get(`http://localhost:8800/backoffice/dash/reserve?${params}`)
+        .then((res) => {
+          console.log(res.data);
+          this.r_vos = res.data.r_vos;
+        });
+    },
+
+    prev_paging_list() {
+      const start = Number($($('.paging-box.paging-num')[0]).text()) - 5;
+      let last = Number($('.paging-box.paging-num:last').text()) - 5;
+
+      if (last % 5 !== 0) {
+        last += 5 - (last % 5);
+      }
+
+      if ($('.next-page-btn').hasClass('hide')) {
+        $('.next-page-btn').removeClass('hide');
+      }
+
+      if (start === 1) {
+        $('.before-page-btn').addClass('hide');
+      }
+
+      const params = new URLSearchParams();
+      params.append('backoffice_no', this.backoffice_no);
+      params.append('reserve_state', this.reserve_state);
+      params.append('page', start);
+
+      axios.get(`http://localhost:8800/backoffice/dash/reserve?${params}`)
+        .then((res) => {
+          console.log(res.data);
+          this.r_vos = res.data.r_vos;
+        });
     },
   },
 
