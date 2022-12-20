@@ -16,22 +16,6 @@ import com.rence.office.model.ListViewEntity;
 
 public interface OfficeInfoRepository extends JpaRepository<ListViewEntity, Object> {
 
-
-//	public List<OfficeQuestionVO> select_all_comment(String backoffice_no);
-//	
-//	public OfficeQuestionVO select_one_answer(String mother_no);
-//	
-//	public List<OfficeReviewVO> select_all_review(String backoffice_no);
-//	
-//	public int check_reserve(OfficeReserveVO vo) throws ParseException;
-//	
-//	public String select_one_last_reserve(String user_no);
-//	
-//	public PaymentInfoVO select_one_final_payment_info(String reserve_no);
-//	
-//	public int reserve_paymentOK(OfficePaymentVO pvo);
-//
-
 	@Transactional
 	@Modifying
 	@Query(nativeQuery = true, value = 

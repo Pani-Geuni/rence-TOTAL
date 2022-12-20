@@ -1,0 +1,61 @@
+.asideWrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  width: 240px !important;
+  height: 100vh;
+  background-color: #ffffff;
+  box-shadow: 4px 0px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 0px 15px 15px 0px;
+  font-family: 'MICEGothic';
+}
+
+
+.logo-section {
+  margin-top: 60px;
+  margin-bottom: 32px;
+  cursor: pointer;
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+  cursor: pointer;
+
+  img {
+    width: 24px;
+    height: 24px;
+    margin-right: 4px;
+  }
+
+  p {
+    margin: 0;
+    padding-top: 3.5px;
+    font-size: 17px;
+    color: #808080;
+  }
+
+  &.active {
+    img {
+      filter: invert(76%) sepia(19%) saturate(5956%) hue-rotate(202deg) brightness(101%) contrast(103%);
+    }
+
+    p {
+      font-weight: 700;
+      color: #000000;
+    }
+  }
+}
+
+.etcWrap {
+  padding-bottom: 60px;
+
+  p {
+    color: #808080;
+    font-size: 12px;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+}
