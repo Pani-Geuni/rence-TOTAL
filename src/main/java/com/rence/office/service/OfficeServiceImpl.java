@@ -775,8 +775,8 @@ public class OfficeServiceImpl implements OfficeService {
 
 		List<OfficeQuestionDto> cdtos = dao.select_all_comment(backoffice_no, page);
 
-//		String is_login = (String) session.getAttribute("user_id");
-		String is_login = null;
+		String is_login = (String) session.getAttribute("user_id");
+//		String is_login = null;
 
 		if (cdtos != null) {
 			for (OfficeQuestionDto dto : cdtos) {
