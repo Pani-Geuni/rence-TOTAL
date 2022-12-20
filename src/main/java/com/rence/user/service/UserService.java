@@ -28,13 +28,11 @@ public interface UserService {
 	//회원가입 아이디 중복체크
 	String idCheckOK(UserDto udto);
 	
-	
-
 	//아이디 찾기
-	String user_find_Id(UserDto udto, EmailVO evo);
+	Map<String, String> user_find_Id(UserDto udto, EmailVO evo);
 
 	//비밀번호 찾기
-	String user_find_pw(UserDto udto, EmailVO evo);
+	Map<String, String> user_find_pw(UserDto udto, EmailVO evo);
 
 	
 

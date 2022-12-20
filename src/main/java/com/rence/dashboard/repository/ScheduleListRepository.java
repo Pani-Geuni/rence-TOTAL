@@ -25,7 +25,7 @@ public interface ScheduleListRepository extends JpaRepository<ScheduleListViewEn
 			+ "select room_no, backoffice_no, room_type, room_name, reserve_cnt  from( "
 			+ "select rm.room_no, rm.backoffice_no, rm.room_type, rm.room_name, 0 as reserve_cnt  from roominfo rm left outer join reserveinfo rv  "
 			+ "on rm.room_no=rv.room_no where rm.room_no in ( "
-			+ "select room_no from roominfo where backoffice_no=?1  "
+			+ "select room_no from roominfo where backoffice_no=?1 and room_state!='F' "
 			+ "minus "
 			+ "select room_no from roomschedule where backoffice_no=?1  and (not_stime <= TO_DATE(?2,'YYYY-MM-DD HH24:MI:SS')) and (not_etime >= TO_DATE(?3,'YYYY-MM-DD HH24:MI:SS'))) ) "
 			+ ")A )B where B.no=1 and rownum between ?4 and ?5")

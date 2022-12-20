@@ -211,11 +211,11 @@ public class UserServiceImpl implements UserService {
 
 	// 아이디 찾기
 	@Override
-	public String user_find_Id(UserDto udto, EmailVO evo) {
+	public Map<String, String> user_find_Id(UserDto udto, EmailVO evo) {
 		log.info("user_find_Id()...");
 		log.info("udto: {}", udto);
-
-		String findId_res = null;
+			
+		Map<String, String> map = new HashMap<String, String>();
 
 		UserDto udto2 = dao.user_email_select(udto);
 		log.info("udto2: {}", udto2);
@@ -224,21 +224,23 @@ public class UserServiceImpl implements UserService {
 
 			if (udto2 != null) {
 				log.info("user_fine_id successed...");
-				findId_res = "1";
+				map.put("result", "1");
 
 			} else {
 				log.info("user_fine_id failed...");
-				findId_res = "0";
+				map.put("result", "0");
 			}
 		}
-		return findId_res;
+		return map;
 	}
 
 	// 비밀번호 찾기
 	@Override
-	public String user_find_pw(UserDto udto, EmailVO evo) {
+	public Map<String, String> user_find_pw(UserDto udto, EmailVO evo) {
 		log.info("user_find_pw()...");
 		log.info("udto: {}", udto);
+		
+		Map<String, String> map = new HashMap<String, String>();
 
 		String findPw_res = null;
 
@@ -253,14 +255,16 @@ public class UserServiceImpl implements UserService {
 
 			if (result != 0) {
 				log.info("user_fine_pw successed...");
-				findPw_res = "1";
+				map.put("result", "1");
 			} else {
 				log.info("user_fine_pw failed...");
-				findPw_res = "0";
+				map.put("result", "0");
 			}
-
+		} else {
+			map.put("result", "0");
+			log.info("No user info...");
 		}
-		return findPw_res;
+		return map;
 	}
 
 }// end class

@@ -17,7 +17,7 @@
         </span>
       </section>
       <section class="confirm-btn-section">
-        <div id="logout-btn" class="confirm-yesBtn">로그아웃</div>
+        <div @click="clickLogout" id="logout-btn" class="confirm-yesBtn">로그아웃</div>
         <div @click="closeLogoutPopup" id="logout-closeBtn" class="confirm-noBtn">닫기</div>
       </section>
     </div>
@@ -236,8 +236,23 @@
         </span>
       </section>
       <section class="confirm-btn-section">
-        <div id="reserve-delete-btn" class="confirm-yesBtn">취소</div>
-        <div id="reserve-delete-closeBtn" class="confirm-noBtn">닫기</div>
+        <div @click="clickReserveDeleteBtn" id="reserve-delete-btn" class="confirm-yesBtn">취소</div>
+        <div @click="closeReserveDeleteBtn" id="reserve-delete-closeBtn" class="confirm-noBtn">닫기</div>
+      </section>
+    </div>
+    <!-- END DELETE FONFIRM POPUP -->
+
+    <!-- START DELETE CONFIRM POPUP -->
+    <div id="reserve-delete-one-popup" class="confirm-popup blind">
+      <section class="confirm-txt-section">
+        <span class="delete-txt">
+          해당 예약을 취소하시겠습니까?<br>
+          취소 후 변경은 불가능합니다.aa
+        </span>
+      </section>
+      <section class="confirm-btn-section">
+        <div @click="clickReserveDeleteOneBtn" id="reserve-delete-one-btn" class="confirm-yesBtn">취소</div>
+        <div @click="closeReserveDeleteOneBtn" id="reserve-delete-one-closeBtn" class="confirm-noBtn">닫기</div>
       </section>
     </div>
     <!-- END DELETE FONFIRM POPUP -->
@@ -298,8 +313,8 @@
     <!-- START dayoff-calendar-wrap -->
     <div class="dayoff-calendar-wrap blind">
       <section class="dayoff-calendar-title">
-        <h1 id="month"></h1>
-        <span class="calendar-close-btn">
+        <h1 id="month">{{ month }}월</h1>
+        <span @click="closeCalendar" class="calendar-close-btn">
           <img src="@/assets/IMG/dash-board/ico-close.svg" alt="닫기 버튼" />
         </span>
       </section>
@@ -309,15 +324,23 @@
           <p class="dayoff-calendar-content-title">이번 달의 임시 휴무를 보여드려요.</p>
         </div>
         <ul class="dayoff-list">
-          <li class="dayoff-list-item blind">
+          <li class="dayoff-list-item" v-for="vos in calendar_vos" :key="vos">
             <div class="dayoff-list-item-top">
-              <p class="dayoff-list-item-title"></p>
-              <p class="dayoff-list-item-date"></p>
-              <p class="dayoff-list-item-time"></p>
+              <p class="dayoff-list-item-title">{{ vos.room_name }}</p>
+              <p class="dayoff-list-item-date" v-if="vos.schedule_type === 'dayoff'">{{ vos.sdate }} ~ {{ vos.edate }}
+              </p>
+              <p class="dayoff-list-item-date" v-if="vos.schedule_type === 'breaktime'">{{ vos.sdate }} ~ {{ vos.edate
+              }}
+              </p>
+              <p class="dayoff-list-item-time" v-if="vos.schedule_type === 'breaktime'"> {{ vos.stime }} ~ {{ vos.etime
+              }}
+              </p>
             </div>
             <div class="dayoff-list-item-bottom">
-              <span class="badge"></span>
-              <button class="dayoff-cancel-btn">일정 취소</button>
+              <span @click="clickDayoffCancelBtn" v-if="vos.schedule_type === 'dayoff'" class="badge">임시 휴무</span>
+              <span @click="clickDayoffCancelBtn" v-if="vos.schedule_type === 'breaktime'" class="badge">브레이크 타임</span>
+              <button @click="clickDayoffCancelBtn" class="dayoff-cancel-btn" :schedule_no="vos.schedule_no"
+                :room_no="vos.room_no">일정 취소</button>
             </div>
           </li>
         </ul>
@@ -353,8 +376,8 @@
         </span>
       </section>
       <section class="confirm-btn-section">
-        <div id="dayoff-cancel-confirm-btn" class="confirm-yesBtn">예</div>
-        <div id="dayoff-cancel-confirm-closeBtn" class="confirm-noBtn">아니오</div>
+        <div @click="clickDayoffCancelConfirm" id="dayoff-cancel-confirm-btn" class="confirm-yesBtn">예</div>
+        <div @click="closeDayoffCancelConfirm" id="dayoff-cancel-confirm-closeBtn" class="confirm-noBtn">아니오</div>
       </section>
     </div>
     <!-- END DAYOFF CANCEL POPUP -->
@@ -367,7 +390,7 @@
         </span>
       </section>
       <section class="confirm-btn-section">
-        <div id="dayoff-cancel-confirmOK-btn" class="confirm-yesBtn">확인</div>
+        <div @click="clickDayoffCancelConfirmOK" id="dayoff-cancel-confirmOK-btn" class="confirm-yesBtn">확인</div>
       </section>
     </div>
     <!-- END DAYOFF CANCEL POPUP -->
@@ -380,7 +403,7 @@
         </span>
       </section>
       <section class="confirm-btn-section">
-        <div id="dayoff-cancel-fail-btn" class="confirm-yesBtn">확인</div>
+        <div @click="clickDayoffCancelFail" id="dayoff-cancel-fail-btn" class="confirm-yesBtn">확인</div>
       </section>
     </div>
     <!-- END DAYOFF CANCEL FAIL POPUP -->
@@ -420,6 +443,16 @@ export default {
       input_price_name: '',
       m_input_price_name: '',
       room_no: '',
+
+      // Calendar
+      month: '',
+      sdate: '',
+      edate: '',
+      stime: '',
+      etime: '',
+      date_duration: '',
+      time_duration: '',
+      calendar_vos: [],
     };
   },
 
@@ -820,8 +853,8 @@ export default {
 
         const params = new URLSearchParams();
         params.append('backoffice_no', this.backoffice_no);
-        params.append('payment_no', e.target.getAttribute('payment_no'));
         params.append('room_no', e.target.getAttribute('room_no'));
+        params.append('payment_no', e.target.getAttribute('payment_no'));
 
         axios.post('http://localhost:8800/backoffice/dash/updateOK_sales', params)
           .then((res) => {
@@ -966,9 +999,214 @@ export default {
       $('.popup-background:eq(0)').addClass('blind');
     },
 
+    clickLogout() {
+      axios.get('http://localhost:8800/backoffice/logoutOK').then((res) => {
+        console.log(res.data);
+        if (res.data.result === '1') {
+          // this.$cookies.remove('backoffice_no');
+          // this.$cookies.remove('host_image');
+          // this.$cookies.remove('JSESSIONID');
+
+          $('#logout-popup').addClass('blind');
+          $('.popup-background:eq(0)').addClass('blind');
+          this.$router.replace('/backoffice/landing');
+        }
+      });
+    },
+
     closeLogoutPopup() {
       $('#logout-popup').addClass('blind');
       $('.popup-background:eq(0)').addClass('blind');
+    },
+
+    clickReserveDeleteBtn() {
+      // START FOR문
+      for (let i = 0; i < check_arr.length; i++) {
+        var stop_flag = false;
+
+        const reserve_no = $(check_arr[i]).find('#reserve_no').attr('reserve_no');
+        const user_no = $(check_arr[i]).find('.user_no').attr('user_no');
+        const user_email = $(check_arr[i]).find('.reserve_user_email').text().trim();
+        const reserve_stime = $(check_arr[i]).find('.reserve_date_set').text().trim()
+          .split(' ~ ')[0].trim();
+        const reserve_etime = $(check_arr[i]).find('.reserve_date_set').text().trim()
+          .split(' ~ ')[1].trim();
+
+        // 로딩 화면
+        $('.popup-background:eq(1)').removeClass('blind');
+        $('#spinner-section').removeClass('blind');
+
+        // ajax 통신
+        $.ajax({
+          url: '/backoffice/reservation_cancel',
+          type: 'POST',
+          dataType: 'json',
+          data: {
+            backoffice_no: $.cookie('backoffice_no'),
+            reserve_no,
+            user_no,
+            user_email,
+            reserve_stime,
+            reserve_etime,
+          },
+          success(res) {
+            if (res.result != 1) {
+              stop_flag = true;
+            }
+          },
+          error() {
+            stop_flag = true;
+          },
+        });
+
+        if (stop_flag) {
+          break;
+        }
+      }
+      // END FOR문
+
+      $('.popup-background:eq(0)').addClass('blind');
+      $('#reserve-delete-popup').addClass('blind');
+
+      if (stop_flag) {
+        $('.popup-background:eq(1)').removeClass('blind');
+        $('#common-alert-popup').removeClass('blind');
+        $('.common-alert-txt').text('예약 취소에 실패하셨습니다.');
+      } else {
+        // 로딩 화면 닫기
+        $('.popup-background:eq(1)').addClass('blind');
+        $('#spinner-section').addClass('blind');
+
+        $('.popup-background:eq(1)').removeClass('blind');
+        $('#common-alert-popup').removeClass('blind');
+        $('.common-alert-txt').text('예약이 취소되었습니다.');
+        $('#common-alert-btn').attr('is_reload', true);
+      }
+    },
+
+    clickReserveDeleteOneBtn(e) {
+      // 로딩 화면
+      $('.popup-background:eq(1)').removeClass('blind');
+      $('#spinner-section').removeClass('blind');
+
+      const params = new URLSearchParams();
+      params.append('backoffice_no', this.backoffice_no);
+      params.append('reserve_no', e.target.getAttribute('reserve_no'));
+      params.append('user_no', e.target.getAttribute('user_no'));
+      params.append('user_email', e.target.getAttribute('user_email'));
+      params.append('reserve_stime', e.target.getAttribute('reserve_stime'));
+      params.append('reserve_etime', e.target.getAttribute('reserve_etime'));
+
+      axios.post('http://localhost:8800/backoffice/dash/reservation_cancel', params)
+        .then((res) => {
+          // 로딩 화면 닫기
+          $('#spinner-section').addClass('blind');
+
+          $('.popup-background:eq(0)').addClass('blind');
+          $('#reserve-delete-popup').addClass('blind');
+
+          if (res.data.result === '1') {
+            $('.popup-background:eq(1)').removeClass('blind');
+            $('#common-alert-popup').removeClass('blind');
+            $('.common-alert-txt').text('예약이 취소되었습니다.');
+            $('#common-alert-btn').attr('is_reload', true);
+          } else {
+            $('.popup-background:eq(1)').removeClass('blind');
+            $('#common-alert-popup').removeClass('blind');
+            $('.common-alert-txt').text('예약 취소에 실패하셨습니다.');
+          }
+        })
+        .catch(() => {
+          // 로딩 화면 닫기
+          $('.popup-background:eq(1)').addClass('blind');
+          $('#spinner-section').addClass('blind');
+        });
+    },
+
+    closeReserveDeleteBtn() {
+      $('.popup-background:eq(0)').addClass('blind');
+      $('#reserve-delete-popup').addClass('blind');
+      $('#reserve-delete-btn').attr('reserve_no', '');
+    },
+
+    closeReserveDeleteOneBtn() {
+      $('.popup-background:eq(0)').addClass('blind');
+      $('#reserve-delete-popup').addClass('blind');
+      $('#reserve-delete-btn').attr('reserve_no', '');
+    },
+
+    closeCalendar() {
+      $('.popup-background:eq(0)').addClass('blind');
+      $('.dayoff-calendar-wrap').addClass('blind');
+    },
+
+    getDayoffCalendar() {
+      axios.get(`http://localhost:8800/backoffice/dash/schedule_calendar?backoffice_no=${this.backoffice_no}`)
+        .then((res) => {
+          console.log('getDayoffCalendar -------');
+          console.log(res.data);
+          console.log('--------------');
+          this.month = res.data.month;
+          this.calendar_vos = res.data.vos;
+        });
+    },
+
+    clickDayoffCancelBtn(e) {
+      console.log('clickDayoffCancelBtn');
+      $('.popup-background:eq(1)').removeClass('blind');
+      $('#dayoff-cancel-popup').removeClass('blind');
+
+      $('#dayoff-cancel-confirm-btn').attr('schedule_no', e.target.getAttribute('schedule_no'));
+    },
+
+    clickDayoffCancelConfirm(e) {
+      // 로딩 화면 열기
+      $('.popup-background:eq(1)').removeClass('blind');
+      $('#spinner-section').removeClass('blind');
+
+      $('.popup-background:eq(1)').addClass('blind');
+      $('#dayoff-cancel-popup').addClass('blind');
+
+      const params = new URLSearchParams();
+      params.append('backoffice_no', this.backoffice_no);
+      params.append('schedule_no', e.target.getAttribute('schedule_no'));
+
+      axios.post('http://localhost:8800/backoffice/dash/schedule_cancel', params)
+        .then((res) => {
+          if (res.data.result === '1') {
+            // 로딩 닫기
+            $('.popup-background:eq(1)').addClass('blind');
+            $('#spinner-section').addClass('blind');
+
+            $('.popup-background:eq(1)').removeClass('blind');
+            $('#dayoff-cancel-confirmOK-popup').removeClass('blind');
+
+            this.calendar_vos = res.data.vos;
+          } else {
+            // 로딩 닫기
+            $('.popup-background:eq(1)').addClass('blind');
+            $('#spinner-section').addClass('blind');
+
+            $('.popup-background:eq(1)').removeClass('blind');
+            $('#dayoff-cancel-fail-popup').removeClass('blind');
+          }
+        });
+    },
+
+    closeDayoffCancelConfirm() {
+      $('.popup-background:eq(1)').addClass('blind');
+      $('#dayoff-cancel-popup').addClass('blind');
+      $('#dayoff-cancel-confirm-btn').attr('schedule_no', '');
+    },
+
+    clickDayoffCancelConfirmOK() {
+      $('#dayoff-cancel-confirmOK-popup').addClass('blind');
+      $('.popup-background:eq(1)').addClass('blind');
+    },
+
+    clickDayoffCancelFail() {
+      $('#dayoff-cancel-fail-popup').addClass('blind');
+      $('.popup-background:eq(1)').addClass('blind');
     },
 
     // **************************************************
@@ -1114,6 +1352,7 @@ export default {
   mounted() {
     this.$nextTick(() => {
       this.getRoomType();
+      this.getDayoffCalendar();
     });
   },
 };

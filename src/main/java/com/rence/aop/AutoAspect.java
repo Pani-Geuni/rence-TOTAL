@@ -76,34 +76,34 @@ public class AutoAspect {
 	//*******************************************//
 	//**********예약 상태 false 30분 뒤 삭제***********//
 	//******************************************//
-//	@Pointcut("execution(* com.rence.office.controller.OfficeController.reserve_rsu(..))")
-//	public void falsePointcut() {
-//		log.info("falsePointcut()...");
-//	}
-//	
-//	@After("falsePointcut()")
-//	public void reserveFalse(JoinPoint jp) {
-//		log.info("reserveFalse()...");
-//		Object [] params = jp.getArgs(); 
-//		OfficeReserveVO reserve = (OfficeReserveVO)params[0];
-//		
-//		new Thread() {
-//			public void run() {
-//				try {
-//					log.info("sleep-----------start-------------");
-//					Thread.sleep(600000);
-//					log.info("sleep-------------end-----------");
-//					log.info("reserve::{}",reserve);
-//					ReserveUpdateDTO reserve_no = service.select_one_false_reserve(reserve.getReserve_stime(), reserve.getReserve_etime(), reserve.getRoom_no());
-//					log.info("reserve::{}",reserve_no);
-//					if (reserve_no!=null) {
-//						service.reserve_auto_delete(reserve_no.getReserve_no());
-//					}
-//				} catch (InterruptedException e) {
-//					e.printStackTrace();
-//				}
-//			};
-//		}.start();
-//	}
+	@Pointcut("execution(* com.rence.office.controller.OfficeController.reserve_rsu(..))")
+	public void falsePointcut() {
+		log.info("falsePointcut()...");
+	}
+	
+	@After("falsePointcut()")
+	public void reserveFalse(JoinPoint jp) {
+		log.info("reserveFalse()...");
+		Object [] params = jp.getArgs(); 
+		OfficeReserveDto reserve = (OfficeReserveDto)params[0];
+		
+		new Thread() {
+			public void run() {
+				try {
+					log.info("sleep-----------start-------------");
+					Thread.sleep(600000);
+					log.info("sleep-------------end-----------");
+					log.info("reserve::{}",reserve);
+					ReserveUpdateDTO reserve_no = service.select_one_false_reserve(reserve.getReserve_stime(), reserve.getReserve_etime(), reserve.getRoom_no());
+					log.info("reserve::{}",reserve_no);
+					if (reserve_no!=null) {
+						service.reserve_auto_delete(reserve_no.getReserve_no());
+					}
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			};
+		}.start();
+	}
 	
 }
