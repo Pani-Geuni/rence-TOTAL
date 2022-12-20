@@ -597,7 +597,7 @@ export default {
                 // 아이디 찾기 실패
                 $('.popup-background:eq(1)').removeClass('blind');
                 $('#common-alert-popup').removeClass('blind');
-                $('.common-alert-txt').text('해당 아이디로 가입된 회원이 없습니다.');
+                $('.common-alert-txt').text('해당 이메일로 가입된 회원이 없습니다.');
               }
             })
             .catch(() => {

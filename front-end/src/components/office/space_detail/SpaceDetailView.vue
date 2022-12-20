@@ -468,7 +468,7 @@
 						<label class="fixed-section-label"> 예상 결제 금액 </label>
 						<span class="fixed-section-label"> 40,000원 </span>
 					</section>
-					<section id="check_available" @click="reset_choice_time" class="btn-section">
+					<section id="check_available" @click="check_useable_time" class="btn-section">
 						<span>예약 가능 여부 확인하기</span>
 					</section>
 					<section @click="do_reservation" id="go_reserve" class="btn-section blind">
@@ -951,9 +951,147 @@ export default {
       $('#go_reserve').addClass('blind');
       $('.time-boundary-list li').css('display', 'none');
     },
-    /** 선택한 시간 초기화 */
-    reset_choice_time() {
+    /** 가능한 시간 가져오기 */
+    check_useable_time() {
       this.pick_time_list = [];
+
+      if (this.axiosFlag) {
+        this.axiosFlag = false;
+
+        // 로그인 여부 체크 -> 헤더를 위해
+        axios.get('http://localhost:8800/loginCheck')
+          .then((response) => {
+            this.axiosFlag = true;
+
+            // 로그인 되어 있음
+            if (response.data.result === '1') {
+              this.$store.commit('office_setLogin_true');
+
+              // 예약 타입 선택 O
+              if ($('.type-border-txt').prop('check') == true) {
+                // 예약 가능 확인 로직
+                const backoffice_no = window.location.href.split('backoffice_no=')[1];
+                const room_no = $('#type-choice-value').attr('room_no');
+
+                // 로딩 화면
+                $('.popup-background:eq(1)').removeClass('blind');
+                $('#spinner-section').removeClass('blind');
+
+                axios.get(`http://localhost:8800/office/reserve_check?backoffice_no=${backoffice_no}&room_no=${room_no}&reserve_date=${this.time}`)
+                  .then((res) => {
+                    console.log(res.data);
+
+                    // 로딩 화면 닫기
+                    $('.popup-background:eq(1)').addClass('blind');
+                    $('#spinner-section').addClass('blind');
+
+                    const { reserve_list } = res;
+                    let pickerDate = '';
+                    let temp_stime = '';
+                    const now = new Date();
+                    const year = now.getFullYear();
+                    let month = now.getMonth() + 1;
+                    if (month < 10) month = `0${month}`;
+                    let date = now.getDate();
+                    if (date < 10) date = `0${date}`;
+
+                    const today = `${year}/${month}/${date}`;
+                    const now_hours = now.getHours();
+
+                    // 선택 날짜 요일 구하기
+                    pickerDate = $('.type-border-txt.time-input').val().trim();
+                    const dayOfWeek = getDayOfWeek(pickerDate);
+
+                    $('#check_available').addClass('blind');
+                    $('#go_reserve').removeClass('blind');
+
+                    let running_stime = '';
+                    let running_etime = '';
+
+                    $('.running-time-li-wrap li').each(function (index, item) {
+                      if (index === dayOfWeek) {
+                        const running_time = $(this).children('span').text().trim();
+
+                        if (running_time !== '휴무') {
+                          const split_time = running_time.split(' ~ ');
+
+                          running_stime = parseInt(split_time[0].split(':')[0]);
+                          running_etime = parseInt(split_time[1].split(':')[0]);
+
+                          $('#reserve-time-boundary').css('display', 'flex');
+                          const running_time_list = [];
+
+                          temp_stime = '';
+
+                          if (pickerDate == today) {
+                            if (running_stime <= now_hours) {
+                              temp_stime = now_hours + 1;
+                            } else {
+                              temp_stime = running_stime;
+                            }
+                          } else if (pickerDate > today) {
+                            temp_stime = running_stime;
+                          }
+
+                          for (let t = temp_stime; t < running_etime; t++) {
+                            if (!reserve_list.includes(t)) {
+                              running_time_list.push(t);
+                            }
+                          }
+
+                          // 운영 시간 display 표시
+                          $('.time-boundary-list li').each(function (index, item) {
+                            // 이전 운영 시간 display 초기화
+                            $(this).css('display', 'none');
+                            $(this).removeAttr('display');
+
+                            if (running_time_list.includes(index)) {
+                              $(this).css('display', 'flex');
+                              $(this).attr('display', 'selected');
+                            }
+                          });
+                        } else {
+                          $('.time-boundary-list li').each(function (index, item) {
+                            $(this).css('display', 'none');
+                            $(this).removeAttr('display');
+                          });
+                        }
+                      }
+                    });
+                    // END runnint-time-li-wrap li each
+                  })
+                  .catch(() => {
+                    // 로딩 화면 닫기
+                    $('.popup-background:eq(1)').addClass('blind');
+                    $('#spinner-section').addClass('blind');
+
+                    $('.popup-background:eq(1)').removeClass('blind');
+                    $('#common-alert-popup').removeClass('blind');
+                    $('.common-alert-txt').html('오류 발생으로 인해 예약가능한<br>시간을 불러오는데 실패하였습니다.');
+                  });
+              }
+              // 예약 타입 선택 X
+              else {
+                $('.fixed-popup').removeClass('blind');
+                $('.using-time-fail-txt:eq(0)').html('예약 타입을 선택하여 주십시오.');
+              }
+            }
+            // 로그인 되어 있지 않음(or 세션 만료)
+            else {
+              this.$store.commit('office_setLogin_false');
+
+              $('.popup-background:eq(1)').removeClass('blind');
+              $('#common-alert-popup').removeClass('blind');
+              $('.common-alert-txt').text('로그인 후 이용가능한 기능입니다.');
+            }
+          }).catch(() => {
+            this.axiosFlag = true;
+
+            $('.popup-background:eq(1)').removeClass('blind');
+            $('#common-alert-popup').removeClass('blind');
+            $('.common-alert-txt').text('오류 발생으로 인해 로그인 여부를 불러오는데에 실패하였습니다.');
+          });
+      }
     },
     /** 예약하려는 시간 선택 */
     // pick_time_list에 시간이 하나만 들어가 있으면 1시간 대여
@@ -1048,9 +1186,7 @@ export default {
 
               if (this.pick_time_list.length === 0) {
                 $('.fixed-popup').removeClass('blind');
-                $('.using-time-fail-txt:eq(0)').html(
-                  '시간을 선택해 주세요.<br><br> 표시가 안 된 시간은 예약이 불가합니다.',
-                );
+                $('.using-time-fail-txt:eq(0)').html('시간을 선택해 주세요.<br><br> 표시가 안 된 시간은 예약이 불가합니다.');
 
                 $('#check_available').removeClass('blind');
                 $('#go_reserve').addClass('blind');

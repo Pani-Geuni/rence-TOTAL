@@ -81,7 +81,7 @@
         <section id="after_login" :class="{'blind' : this.$store.state.is_officeLogin === 'false', '' : this.$store.state.is_officeLogin === 'true'}">
             <div id = "after_userMenu" class ="userMenu" @click="user_menu_select('after_login')">
               <img src="@/assets/IMG/header/user_menu.svg" alt="user_menu_img" class="user_menu_img"/>
-              <img alt="user_profile_img" class="user_profile_img"/>
+              <img :src="this.image" alt="user_profile_img" class="user_profile_img"/>
             </div>
 
           <!-- CUSTOM SELECT -->
@@ -120,6 +120,7 @@ export default {
       town: '',
       type: '',
       location: '',
+      image: window.atob(this.$cookies.get('user_image')),
     };
   },
   methods: {
@@ -188,7 +189,7 @@ export default {
         } else {
           window.location.href = `http://localhost:${port}/list/search_list/type=${this.type}&location=${this.location}&searchWord=${$('#input_searchBar').val().trim()}&condition=date&page=1`;
         }
-        console.log(port);
+        window.location.reload();
       } else {
         $('.popup-background:eq(1)').removeClass('blind');
         $('#common-alert-popup').removeClass('blind');
