@@ -67,7 +67,7 @@ export default {
 
       console.log(backoffice_no);
       // eslint-disable-next-line camelcase
-      window.location.href = `/master/backoffice_apply_detail?backoffice_no=${backoffice_no}&page=delete`;
+      this.$router.push(`/master/backoffice_apply_detail?backoffice_no=${backoffice_no}&page=delete`);
     },
 
     clickDeletePopup(e) {

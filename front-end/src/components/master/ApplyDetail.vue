@@ -30,7 +30,8 @@
           <div class="window">
             <ul class="container">
               <li class="img" v-for="backoffice_img in backoffice_image" :key="backoffice_img">
-                <img :src="backoffice_img" alt="" class="company-img" />
+                <img :src='`https://rence.s3.ap-northeast-2.amazonaws.com/space/${backoffice_img}`' alt=""
+                  class="company-img" />
               </li>
             </ul>
 
