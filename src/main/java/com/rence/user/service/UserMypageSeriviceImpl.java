@@ -255,11 +255,13 @@ public class UserMypageSeriviceImpl implements UserMypageSerivice {
 
 		// 총 마일리지 부분
 		UserMileageDto umdto = dao.totalMileage_selectOne(udto);
+				
 		log.info("umdto: {}", umdto);
 
 		// 마일리지 콤마단위로 변환
 		DecimalFormat dc = new DecimalFormat("###,###,###,###,###");
 		String mileage_total = dc.format(umdto.getMileage_total());
+		
 		log.info("mileage_total: " + mileage_total);
 
 		// 페이징 처리 로직(마일리지 리스트 전용!!!!)
@@ -307,6 +309,7 @@ public class UserMypageSeriviceImpl implements UserMypageSerivice {
 		}
 		log.info("Type change vos: {}" + vos);
 
+		map.put("mileage_total", mileage_total);
 		map.put("list", vos);
 		map.put("page", "mileage");
 		
@@ -329,6 +332,7 @@ public class UserMypageSeriviceImpl implements UserMypageSerivice {
 		// 마일리지 콤마단위로 변환
 		DecimalFormat dc = new DecimalFormat("###,###,###,###,###");
 		String mileage_total = dc.format(umdto.getMileage_total());
+		
 		log.info("mileage_total: " + mileage_total);
 
 		// 페이징 처리 로직(이거는 마일리지 전용임!!!)
@@ -377,6 +381,7 @@ public class UserMypageSeriviceImpl implements UserMypageSerivice {
 		}
 		log.info("Type change vos: {}" + vos);
 
+		map.put("mileage_total", mileage_total);
 		map.put("list", vos);
 		map.put("page", "mileage");
 
