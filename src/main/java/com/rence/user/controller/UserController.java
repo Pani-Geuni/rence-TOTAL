@@ -8,6 +8,8 @@ package com.rence.user.controller;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -92,6 +94,24 @@ public class UserController {
 	
 		String jsonObject = gson.toJson(map);
 		return jsonObject;
+	}
+	
+	
+	/**
+	 * 로그아웃 처리
+	 */
+	@ApiOperation(value = "로그아웃", notes = "로그아웃")
+//	@GetMapping("/user_logoutOK")
+	@GetMapping("/user_logoutSucess")
+	public String backoffice_logoutOK(HttpServletRequest request, HttpServletResponse response) {
+
+		Map<String, String> map = service.user_logoutOK(request,response,session);
+		
+		log.info("===map: {}==========", map);
+		
+		String json = gson.toJson(map);
+
+		return json;
 	}
 
 	// **********************
