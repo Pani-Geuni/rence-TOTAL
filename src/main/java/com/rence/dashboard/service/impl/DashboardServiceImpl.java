@@ -144,15 +144,16 @@ public class DashboardServiceImpl implements DashboardService {
 	public Map<String, Object> backoffice_insert_room(String backoffice_no) {
 		Map<String, Object> map = new HashMap<String, Object>();
 
+		log.info("backoffice_no::{}",backoffice_no);
 		BackOfficeDTO bvo = dao.select_one_backoffice_info(backoffice_no);
 		log.info("bvo : {}", bvo);
 
 		RoomDTO rmvo = new RoomDTO();
 
 		String type = bvo.getBackoffice_type();
-		if (type.contains("meeting_room")) {
+//		if (type.contains("meeting_room")) {
 			type = bvo.getBackoffice_type().replace("meeting_room", "meeting_04,meeting_06,meeting_10");
-		}
+//		}
 		rmvo.setRoom_type(type);
 
 		List<String> type_list = new ArrayList<String>();

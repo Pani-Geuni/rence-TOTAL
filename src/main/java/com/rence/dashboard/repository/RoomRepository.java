@@ -28,7 +28,7 @@ public interface RoomRepository extends JpaRepository<RoomEntity, Object> {
 	// 공간 관리 - 추가
 	@Modifying
 	@Transactional
-	@Query(nativeQuery = true, value = "INSERT INTO roominfo(room_no, room_name, room_type, backoffice_no, room_price) VALUES('RM'||SEQ_ROOM.NEXTVAL, :#{#rvo?.room_name}, :#{#rvo?.room_type}, :#{#rvo?.backoffice_no}, :#{#rvo?.room_price}, :#{#rvo?.room_state})")
+	@Query(nativeQuery = true, value = "INSERT INTO roominfo(room_no, room_name, room_type, backoffice_no, room_price, room_state) VALUES('RM'||SEQ_ROOM.NEXTVAL, :#{#rvo?.room_name}, :#{#rvo?.room_type}, :#{#rvo?.backoffice_no}, :#{#rvo?.room_price}, :#{#rvo?.room_state})")
 	public int backoffice_insertOK_room(@Param("rvo") RoomEntity rvo);
 
 	// 공간 수정 - 팝업

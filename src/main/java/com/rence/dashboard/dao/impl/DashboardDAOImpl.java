@@ -297,8 +297,6 @@ public class DashboardDAOImpl implements DashboardDAO {
 		}
 		re.setBackoffice_no(backoffice_no);
 		
-		log.info("re :: {}", re);
-
 		return rm_repository.backoffice_updateOK_room(re);
 	}
 
