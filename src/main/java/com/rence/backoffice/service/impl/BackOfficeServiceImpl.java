@@ -197,20 +197,20 @@ public class BackOfficeServiceImpl implements BackOfficeService {
 
 		Map<String, String> map = new HashMap<String, String>();
 
-		session.removeAttribute("backoffice_id");
+//		session.removeAttribute("backoffice_id");
 		
-		Cookie[] cookies = request.getCookies();
-		if (cookies != null) {
-
-			for (int i = 0; i < cookies.length; i++) {
-
-				cookies[i].setMaxAge(0);
-
-				response.addCookie(cookies[i]);
-
-			}
-
-		}
+//		Cookie[] cookies = request.getCookies();
+//		if (cookies != null) {
+//
+//			for (int i = 0; i < cookies.length; i++) {
+//
+//				cookies[i].setMaxAge(0);
+//
+//				response.addCookie(cookies[i]);
+//
+//			}
+//
+//		}
 		map.put("result", "1");
 
 		return map;
