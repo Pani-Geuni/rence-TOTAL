@@ -53,6 +53,7 @@ public class UserSecurityConfig {
 		http.authenticationProvider(authenticationProvider1());
 
 		http.authorizeRequests().antMatchers("/").permitAll()
+				.antMatchers("/rence/go_my_page").permitAll() // 백오피스 홈페이지
 				.antMatchers("/backoffice/landing").permitAll() // 백오피스 홈페이지
 				.antMatchers("/rence/user_auth").permitAll() // 회원가입 - 이메일 인증
 				.antMatchers("/rence/user_authOK").permitAll() // 회원가입 - 이메일 완료
@@ -62,6 +63,7 @@ public class UserSecurityConfig {
 				.antMatchers("/rence/find_pw").permitAll() // 비밀번호 찾기
 				.antMatchers("/office/**").permitAll()
 				.antMatchers("/**/loginCheck").permitAll()
+				
 				.antMatchers("/rence/user_logoutOK").permitAll()
 				.antMatchers("/", "/test/", "/api/v2/**", "/v3/api-docs", "/static/**", "/swagger*/**",
 						"/api/v1/auth/**", "/h2-console/**", "/favicon.ico", "/swagger-ui.html", "/swagger/**",
@@ -74,7 +76,7 @@ public class UserSecurityConfig {
 		.authenticated()
 		.and()
 		.formLogin() // 로그인 폼은
-				.loginPage("/") // 해당 주소로 로그인 페이지를 호출한다.
+				.loginPage("/static/index.html#/") // 해당 주소로 로그인 페이지를 호출한다.
 				.loginProcessingUrl("/rence/loginOK") // 해당 URL로 요청이 오면 스프링 시큐리티가 가로채서 로그인처리를 한다. -> loadUserByName
 				.successForwardUrl("/rence/loginSuccess") // 성공시 요청을 처리할 핸들러
 				.failureForwardUrl("/rence/loginFail") // 실패시 요청을 처리할 핸들러

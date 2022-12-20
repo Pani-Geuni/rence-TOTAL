@@ -164,7 +164,7 @@ public class MypageController {
 	// **********************
 	@ApiOperation(value = "마일리지 리스트", notes = "마일리지 리스트 페이지입니다.")
 	@GetMapping("/mileage")
-	public String go_mileage(UserDto udto, Model model, HttpServletRequest request,
+	public String go_mileage(UserDto udto, HttpServletRequest request,
 			@RequestParam(value = "page", defaultValue = "1") Integer page) {
 	
 		log.info("go_mileage()...");
