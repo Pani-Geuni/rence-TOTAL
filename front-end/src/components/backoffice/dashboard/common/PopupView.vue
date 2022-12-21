@@ -1039,11 +1039,11 @@ export default {
           .split(' ~ ')[1].trim();
 
         console.log('==========');
-        console.log(decodeURIComponent(this.$cookies.get('backoffice_no')));
+        console.log(decodeURIComponent(window.atob(this.$cookies.get('backoffice_no'))));
         console.log('==========');
 
         const params = new URLSearchParams();
-        params.append('backoffice_no', decodeURIComponent(this.$cookies.get('backoffice_no')));
+        params.append('backoffice_no', decodeURIComponent(window.atob(this.$cookies.get('backoffice_no'))));
         params.append('reserve_no', reserve_no);
         params.append('user_no', user_no);
         params.append('user_email', user_email);
@@ -1073,13 +1073,13 @@ export default {
       $('.popup-background:eq(0)').addClass('blind');
       $('#reserve-delete-popup').addClass('blind');
 
-      $('.popup-background:eq(1)').addClass('blind');
-      $('#spinner-section').addClass('blind');
-
       if (this.stop_flag) {
+        $('.popup-background:eq(1)').addClass('blind');
+        $('#spinner-section').addClass('blind');
+
         $('.popup-background:eq(1)').removeClass('blind');
         $('#common-alert-popup').removeClass('blind');
-        $('.common-alert-txt').text('예약 취소에 실패하셨습니다.');
+        $('.common-alert-txt').text('예약이 취소되었습니다.');
       } else {
         // 로딩 화면 닫기
         $('.popup-background:eq(1)').addClass('blind');
@@ -1087,7 +1087,7 @@ export default {
 
         $('.popup-background:eq(1)').removeClass('blind');
         $('#common-alert-popup').removeClass('blind');
-        $('.common-alert-txt').text('예약이 취소되었습니다.');
+        $('.common-alert-txt').text('예약 취소에 실패하셨습니다.');
         $('#common-alert-btn').attr('is_reload', true);
       }
     },
