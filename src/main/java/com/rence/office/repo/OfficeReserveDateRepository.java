@@ -15,7 +15,7 @@ public interface OfficeReserveDateRepository extends JpaRepository<OfficeReserve
 	@Transactional
 	@Query(nativeQuery = true, value = "insert into "
 			+ "reserveinfo(reserve_no, reserve_stime, reserve_etime, reserve_sdate, reserve_edate, reserve_state, room_no, user_no, backoffice_no, room_type) "
-			+ "values('RV'||seq_reserve.nextval, :#{#rdto?.reserve_stime}, :#{#rdto?.reserve_etime}, :#{#rdto?.reserve_sdate}, :#{#rdto?.reserve_edate}, 'false', :#{#rdto?.room_no}, :#{#rdto?.user_no}, :#{#rdto?.backoffice_no}, :#{#rdtos?.room_type})")
+			+ "values('RV'||seq_reserve.nextval, :#{#rdto?.reserve_stime}, :#{#rdto?.reserve_etime}, :#{#rdto?.reserve_sdate}, :#{#rdto?.reserve_edate}, 'false', :#{#rdto?.room_no}, :#{#rdto?.user_no}, :#{#rdto?.backoffice_no}, :#{#rdto?.room_type})")
 	public int insert_reserve(@Param("rdto") OfficeReserveDto_date rdto);
 
 	
