@@ -205,23 +205,23 @@
 	            <section class="popup-star-section">
 	                <span class="popup-star-title">별점</span>
 	                <ul class="popup-star-wrap">
-	                    <li id="star_1" class="popup-star-li" @click="set_review_star($event.target)">
+	                    <li id="star_1" class="popup-star-li" @click="set_review_star($event.currentTarget)">
                         <img src="@/assets/IMG/common/y-star.svg" alt="후기 리뷰 별점 이미지" class="y-star r-star blind"/>
                         <img src="@/assets/IMG/common/star.svg" alt="후기 리뷰 별점 이미지" class="g-star r-star"/>
 	                    </li>
-	                    <li id="star_2" class="popup-star-li" @click="set_review_star($event.target)">
+	                    <li id="star_2" class="popup-star-li" @click="set_review_star($event.currentTarget)">
                         <img src="@/assets/IMG/common/y-star.svg" alt="후기 리뷰 별점 이미지" class="y-star r-star blind"/>
                         <img src="@/assets/IMG/common/star.svg" alt="후기 리뷰 별점 이미지" class="g-star r-star"/>
 	                    </li>
-	                    <li id="star_3" class="popup-star-li" @click="set_review_star($event.target)">
+	                    <li id="star_3" class="popup-star-li" @click="set_review_star($event.currentTarget)">
                         <img src="@/assets/IMG/common/y-star.svg" alt="후기 리뷰 별점 이미지" class="y-star r-star blind"/>
                         <img src="@/assets/IMG/common/star.svg" alt="후기 리뷰 별점 이미지" class="g-star r-star"/>
 	                    </li>
-	                    <li id="star_4" class="popup-star-li" @click="set_review_star($event.target)">
+	                    <li id="star_4" class="popup-star-li" @click="set_review_star($event.currentTarget)">
                         <img src="@/assets/IMG/common/y-star.svg" alt="후기 리뷰 별점 이미지" class="y-star r-star blind"/>
                         <img src="@/assets/IMG/common/star.svg" alt="후기 리뷰 별점 이미지" class="g-star r-star"/>
 	                    </li>
-	                    <li id="star_5" class="popup-star-li" @click="set_review_star($event.target)">
+	                    <li id="star_5" class="popup-star-li" @click="set_review_star($event.currentTarget)">
                         <img src="@/assets/IMG/common/y-star.svg" alt="후기 리뷰 별점 이미지" class="y-star r-star blind"/>
                         <img src="@/assets/IMG/common/star.svg" alt="후기 리뷰 별점 이미지" class="g-star r-star"/>
 	                    </li>
@@ -374,7 +374,7 @@ export default {
 
       // 클릭한 별 파악
       const lastIdx = $(param).attr('id');
-      const arr = $('.popup-star-li');
+      const arr = $('.popup-star-li').slice();
 
       for (let i = 0; i < arr.length; i++) {
         $(arr[i]).children('.y-star').removeClass('blind');
@@ -411,13 +411,6 @@ export default {
                   for (let i = 0; i < 5; i++) {
                     if ($('.g-star').hasClass('blind')) point++;
                   }
-
-                  // const params = new URLSearchParams();
-                  // params.append('user_no', window.atob(this.$cookies.get('user_no')));
-                  // params.append('backoffice_no', $(param).attr('backoffice_no'));
-                  // params.append('room_no', $(param).attr('room_no'));
-                  // params.append('review_point', point);
-                  // params.append('review_content', $('#review-write').val().trim());
 
                   axios.get('http://localhost:8800/rence/insert_review', {
                     params: {
