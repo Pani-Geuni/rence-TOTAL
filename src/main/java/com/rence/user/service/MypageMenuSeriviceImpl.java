@@ -19,12 +19,12 @@ import com.google.gson.Gson;
 import com.rence.office.common.OfficeInfoMap;
 import com.rence.office.model.OfficeMileageDto;
 import com.rence.office.model.OfficePaymentDto;
-import com.rence.user.controller.UserInfoDto;
 import com.rence.user.dao.MypageMenuDAO;
 import com.rence.user.dao.PaymentCancelDAO;
 import com.rence.user.model.ReserveInfo_ViewDto;
 import com.rence.user.model.ReserveMileageDto;
 import com.rence.user.model.ReviewDto;
+import com.rence.user.model.UserInfoDto;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -95,6 +95,7 @@ public class MypageMenuSeriviceImpl implements MypageMenuSerivice {
 					mdto.setMileage_change(
 							Integer.toString((int) Math.round(Integer.parseInt(mdto.getActual_payment()) * 0.05)));
 				}
+				
 
 				String ch1 = dc.format(Integer.parseInt(mdto.getActual_payment()));
 				mdto.setActual_payment(ch1);
@@ -268,16 +269,17 @@ public class MypageMenuSeriviceImpl implements MypageMenuSerivice {
 			if (mdto != null) {
 				DecimalFormat dc = new DecimalFormat("###,###,###,###");
 
+				if (mdto.getMileage_state().equals("F")) {
+					mdto.setMileage_change(
+							Integer.toString((int) Math.round(Integer.parseInt(mdto.getActual_payment()) * 0.05)));
+				}
+				
 				String ch1 = dc.format(Integer.parseInt(mdto.getActual_payment()));
 				mdto.setActual_payment(ch1);
 
 				String ch2 = dc.format(Integer.parseInt(mdto.getPayment_total()));
 				mdto.setPayment_total(ch2);
 
-				if (mdto.getMileage_state().equals("F")) {
-					mdto.setMileage_change(
-							Integer.toString((int) Math.round(Integer.parseInt(mdto.getActual_payment()) * 0.05)));
-				}
 
 				String ch3 = dc.format(Integer.parseInt(mdto.getMileage_change()));
 				mdto.setMileage_change(ch3);

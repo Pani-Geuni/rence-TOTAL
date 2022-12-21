@@ -38,7 +38,7 @@ public class UserMypageDto {
 	
 	private String user_tel; //전화번호
 	
-	private Date user_birth; //생년월일
+	private String user_birth; //생년월일
 	
 	private String mileage_total; // 총 마일리지
 

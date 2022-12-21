@@ -48,7 +48,7 @@ public class UserMypageEntity {
 	private String user_tel; //전화번호
 	
 	@Column(name="user_birth")
-	private Date user_birth; //생년월일
+	private String user_birth; //생년월일
 	
 	@Column(name="mileage_total")
 	private String mileage_total; // 총 마일리지

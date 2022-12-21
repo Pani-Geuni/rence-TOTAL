@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import com.rence.user.model.UserEntity;
+import com.rence.user.model.UserInfoDto;
 
 public interface UserRepository extends JpaRepository<UserEntity, Object> {
 
@@ -68,5 +69,14 @@ public interface UserRepository extends JpaRepository<UserEntity, Object> {
 	// 현재 비밀번호 확인
 	@Query(nativeQuery = true, value = "SELECT * from userinfo where user_no=?1")
 	UserEntity check_now_pw_selectOne(String user_no);
+
+	
+	
+	@Query(nativeQuery = true, value = 
+			"SELECT * "
+			+ "FROM userinfo "
+			+ "where user_no = ?1")
+	UserEntity select_one_user_info(String user_no);
+
 
 }// end class

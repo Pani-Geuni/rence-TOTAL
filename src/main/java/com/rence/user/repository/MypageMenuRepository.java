@@ -9,7 +9,7 @@ import org.springframework.data.repository.query.Param;
 
 import com.rence.user.model.ReserveInfo_ViewEntity;
 import com.rence.user.model.ReviewDto;
-import com.rence.user.model.UserEntity;
+import com.rence.user.model.UserInfoDto;
 
 
 
@@ -30,7 +30,7 @@ public interface MypageMenuRepository extends JpaRepository<ReserveInfo_ViewEnti
 			"SELECT user_no, user_name, user_tel, user_email "
 			+ "FROM userinfo "
 			+ "where user_no = ?1")
-	public UserEntity select_one_user_info(String user_no);
+	public UserInfoDto select_one_user_info(@Param("user_no") String user_no);
 
 	@Query(nativeQuery = true, value = 
 			"SELECT count(review_no) FROM review "
