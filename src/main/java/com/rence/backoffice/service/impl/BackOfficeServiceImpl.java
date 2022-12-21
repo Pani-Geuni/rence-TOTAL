@@ -40,9 +40,12 @@ public class BackOfficeServiceImpl implements BackOfficeService {
 
 	@Autowired
 	BackOfficeSendEmail authSendEmail;
+	
+	@Autowired
+	HttpSession session;
 
 	@Override
-	public Map<String, Object> login_check(HttpSession session) {
+	public Map<String, Object> login_check() {
 
 		Map<String, Object> map = new HashMap<String, Object>();
 
@@ -155,7 +158,7 @@ public class BackOfficeServiceImpl implements BackOfficeService {
 	 * @throws UnsupportedEncodingException
 	 */
 	@Override
-	public Map<String, String> backoffice_loginOK(String username, HttpSession session, HttpServletResponse response)
+	public Map<String, String> backoffice_loginOK(String username, HttpServletResponse response)
 			throws UnsupportedEncodingException {
 
 		BackOfficeDTO bvo = dao.backoffice_login_info(username);
@@ -192,8 +195,7 @@ public class BackOfficeServiceImpl implements BackOfficeService {
 	 * 로그아웃 성공 처리
 	 */
 	@Override
-	public Map<String, String> backoffice_logoutOK(HttpServletRequest request, HttpServletResponse response,
-			HttpSession session) {
+	public Map<String, String> backoffice_logoutOK(HttpServletRequest request, HttpServletResponse response) {
 
 		Map<String, String> map = new HashMap<String, String>();
 
@@ -241,7 +243,7 @@ public class BackOfficeServiceImpl implements BackOfficeService {
 	 */
 	@Override
 	public Map<String, String> backoffice_settingOK_pw(BackOfficeDTO bvo, HttpServletRequest request,
-			HttpServletResponse response, HttpSession session) throws UnsupportedEncodingException {
+			HttpServletResponse response) throws UnsupportedEncodingException {
 
 		/* base64 decoding */
 		Decoder decoder = Base64.getDecoder();

@@ -971,7 +971,6 @@ public class DashboardDAOImpl implements DashboardDAO {
 		List<ReserveUpdateEntity> rv = reserveAutoUpdateRepository.selectAll_reserve();
 		List<ReserveUpdateDTO> rvs = rv.stream().map(rvo -> modelMapper.map(rvo, ReserveUpdateDTO.class)).collect(Collectors.toList());
 
-
 		Date sysdate = new Date();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
