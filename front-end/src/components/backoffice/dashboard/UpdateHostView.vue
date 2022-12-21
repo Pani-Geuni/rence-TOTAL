@@ -33,9 +33,9 @@
             <p>사업체 소개</p>
             <div class="check_wrap">
               <textarea id="backoffice_info" name="backoffice_info" v-model="backoffice_info"
-                placeholder="공간 소개를 입력해 주세요"> </textarea>
+                placeholder="공간 소개를 입력해 주세요" @keyup="checkTextLength" @keydown="checkTextLength"> </textarea>
               <div class="b_info_txt_length_wrap">
-                <span class="b_info_txt_length">0</span>
+                <span class="b_info_txt_length">{{ b_info_txt_length }}</span>
                 <span>&nbsp;/ 500</span>
               </div>
             </div>
@@ -539,6 +539,7 @@ export default {
       backoffice_option: [],
       backoffice_around: [],
       backoffice_info: '',
+      b_info_txt_length: 0,
 
       tagValue: '',
       tag: {},
@@ -571,6 +572,7 @@ export default {
           this.ovo = res.data.ovo;
           this.backoffice_tag = res.data.backoffice_tag;
           this.backoffice_info = res.data.vo.backoffice_info;
+          this.b_info_txt_length = res.data.vo.backoffice_info.length;
           this.backoffice_type = res.data.vo.backoffice_type.split(',');
           this.backoffice_option = res.data.vo.backoffice_option.split(',');
           this.backoffice_around = res.data.vo.backoffice_around.split(',');
@@ -606,6 +608,15 @@ export default {
 
           this.img_name = res.data.vo.backoffice_image;
         });
+    },
+
+    checkTextLength(e) {
+      $('.b_info_txt_length').text(e.target.value.length);
+
+      const targetValue = e.target.value;
+      if (e.target.value.length > 500) {
+        e.target.value = targetValue.substring(0, 500);
+      }
     },
 
     addTag(value) {
@@ -885,7 +896,7 @@ export default {
         .then((res) => {
           if (res.data.result === '1') {
             console.log('변경 성공');
-            this.$router.replace(`/backoffice/dash/settings?backoffice_no=${this.$cookies.get('backoffice_no')}`);
+            this.$router.replace(`/backoffice/dash/main?backoffice_no=${this.$cookies.get('backoffice_no')}`);
           } else {
             console.log('변경 실패');
           }

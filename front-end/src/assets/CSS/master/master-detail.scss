@@ -99,12 +99,19 @@
 /* ****************** */
 /* spage-imgs-section */
 /* ****************** */
-.space-imgs-section {
+.space-imgs-section-wrap {
   width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.space-imgs-section {
+  width: 960px;
 
   display: flex;
   justify-content: center;
-
+  align-items: center;
   margin-bottom: 35px;
 }
 
