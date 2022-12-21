@@ -693,7 +693,16 @@
 	overflow-y: overlay;
 }
 .custom-select-type::-webkit-scrollbar {
-	width: 0px;
+	width: 2px;
+}
+.custom-select-type::-webkit-scrollbar-thumb {
+	background-color: #73777B;
+	height: 10px;
+	border-radius: 10px;
+}
+.custom-select-type::-webkit-scrollbar-track {
+	background-color: #EEEEEE;
+	border-radius: 10px;
 }
 .custom-select-type-list {
 	width: 100%;

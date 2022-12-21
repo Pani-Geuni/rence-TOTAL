@@ -296,16 +296,14 @@
     <!-- END RESERVE-CANCLE-FAIL CONFIRM POPUP -->
 
     <!-- START RESERVE-CANCLE CONFIRM POPUP -->
-    <div id ="disconnect-session-popup" class="confirm-popup blind">
+    <div id ="disconnect-session-popup" class="alert-popup blind">
         <section class="confirm-txt-section">
             <span class="reserve-cancle-txt">
                 세션이 만료되어 홈으로 이동합니다.
             </span>
         </section>
         <router-link to="/">
-        <section @click="close_disconnect_session_popup" class="confirm-btn-section">
-            <div class="confirm-yesBtn">확인</div>
-          </section>
+            <div @click="close_disconnect_session_popup" class="alert-btn-section">확인</div>
         </router-link>
     </div>
     <!-- END RESERVE-CANCLE-CONFIRM CONFIRM POPUP -->
@@ -444,7 +442,6 @@ export default {
         params.append('password', $('#login-pw').val().trim());
 
         axios.post('http://localhost:8800/rence/loginOK', params).then((res) => {
-          console.log(res);
           // 로그인 성공
           if (res.data.result === '1') {
             this.$store.commit('office_setLogin_true');
@@ -621,7 +618,6 @@ export default {
 
           axios.post('http://localhost:8800/rence/find_id', params)
             .then((res) => {
-              console.log(res.data.result);
               this.find_id_flag = true;
 
               // 로딩 화면 닫기
@@ -992,7 +988,6 @@ export default {
 
             axios.post('http://localhost:8800/rence/user_authOK', params)
               .then((res) => {
-                console.log(res.data);
                 this.code_flag = true;
 
                 // 로딩 화면 닫기
@@ -1312,7 +1307,7 @@ export default {
                 // 성공 알림창
                 $('.popup-background:eq(1)').removeClass('blind');
                 $('#common-alert-popup').removeClass('blind');
-                $('.common-alert-txt').text('비밀번호가 변경되어 로그아웃 처리되고<br>홈으로 이동합니다!');
+                $('.common-alert-txt').html('비밀번호가 변경되어 로그아웃 처리되고<br>홈으로 이동합니다!');
                 $('#common-alert-btn').attr('logout', 'true');
               } else {
                 $('.popup-background:eq(0)').addClass('blind');

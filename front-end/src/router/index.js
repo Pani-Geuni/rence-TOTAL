@@ -84,7 +84,7 @@ const routes = [
       },
       {
         path: 'reviews',
-        name: 'ReviewView',
+        name: 'OfficeReviewView',
         component: ReviewView,
       },
     ],
