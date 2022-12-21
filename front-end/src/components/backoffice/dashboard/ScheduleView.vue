@@ -237,7 +237,7 @@ export default {
         $('.popup-background:eq(1)').addClass('blind');
         $('#spinner-section').addClass('blind');
 
-        this.$router.push(`/backoffice/dash/reservation?backoffice_no=${this.backoffice_no}&room_no=${room_no}&not_sdate=${not_sdate}&not_edate=${not_edate}&not_stime=${not_stime}&not_etime=${not_etime}&off_type=${off_type}&page=1`);
+        this.$router.push(`/backoffice/dash/reservation?backoffice_no=${this.$cookies.get('backoffice_no')}&room_no=${room_no}&not_sdate=${not_sdate}&not_edate=${not_edate}&not_stime=${not_stime}&not_etime=${not_etime}&off_type=${off_type}&page=1`);
       } else {
         // 로딩 화면 닫기
         $('.popup-background:eq(1)').addClass('blind');

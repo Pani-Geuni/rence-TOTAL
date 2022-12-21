@@ -453,6 +453,9 @@ export default {
       date_duration: '',
       time_duration: '',
       calendar_vos: [],
+
+      check_arr: '',
+      stop_flag: true,
     };
   },
 
@@ -1020,46 +1023,48 @@ export default {
     },
 
     clickReserveDeleteBtn() {
+      console.log('reserve delete');
+      this.check_arr = $('input[type=checkbox]:checked').parents('.ct-body-row');
+      console.log('-----------');
+      console.log(this.check_arr);
+      console.log('-----------');
       // START FOR문
-      for (let i = 0; i < check_arr.length; i++) {
-        var stop_flag = false;
-
-        const reserve_no = $(check_arr[i]).find('#reserve_no').attr('reserve_no');
-        const user_no = $(check_arr[i]).find('.user_no').attr('user_no');
-        const user_email = $(check_arr[i]).find('.reserve_user_email').text().trim();
-        const reserve_stime = $(check_arr[i]).find('.reserve_date_set').text().trim()
+      for (let i = 0; i < this.check_arr.length; i++) {
+        const reserve_no = $(this.check_arr[i]).find('#reserve_no').attr('reserve_no');
+        const user_no = $(this.check_arr[i]).find('.user_no').attr('user_no');
+        const user_email = $(this.check_arr[i]).find('.reserve_user_email').text().trim();
+        const reserve_stime = $(this.check_arr[i]).find('.reserve_date_set').text().trim()
           .split(' ~ ')[0].trim();
-        const reserve_etime = $(check_arr[i]).find('.reserve_date_set').text().trim()
+        const reserve_etime = $(this.check_arr[i]).find('.reserve_date_set').text().trim()
           .split(' ~ ')[1].trim();
+
+        console.log('==========');
+        console.log(decodeURIComponent(this.$cookies.get('backoffice_no')));
+        console.log('==========');
+
+        const params = new URLSearchParams();
+        params.append('backoffice_no', decodeURIComponent(this.$cookies.get('backoffice_no')));
+        params.append('reserve_no', reserve_no);
+        params.append('user_no', user_no);
+        params.append('user_email', user_email);
+        params.append('reserve_stime', reserve_stime);
+        params.append('reserve_etime', reserve_etime);
 
         // 로딩 화면
         $('.popup-background:eq(1)').removeClass('blind');
         $('#spinner-section').removeClass('blind');
 
-        // ajax 통신
-        $.ajax({
-          url: '/backoffice/reservation_cancel',
-          type: 'POST',
-          dataType: 'json',
-          data: {
-            backoffice_no: $.cookie('backoffice_no'),
-            reserve_no,
-            user_no,
-            user_email,
-            reserve_stime,
-            reserve_etime,
-          },
-          success(res) {
-            if (res.data.result !== 1) {
-              stop_flag = true;
+        axios.post('http://localhost:8800/backoffice/dash/reservation_cancel', params)
+          .then((res) => {
+            if (res.data.result !== '1') {
+              this.stop_flag = true;
             }
-          },
-          error() {
-            stop_flag = true;
-          },
-        });
+          })
+          .catch(() => {
+            this.stop_flag = true;
+          });
 
-        if (stop_flag) {
+        if (this.stop_flag) {
           break;
         }
       }
@@ -1068,7 +1073,10 @@ export default {
       $('.popup-background:eq(0)').addClass('blind');
       $('#reserve-delete-popup').addClass('blind');
 
-      if (stop_flag) {
+      $('.popup-background:eq(1)').addClass('blind');
+      $('#spinner-section').addClass('blind');
+
+      if (this.stop_flag) {
         $('.popup-background:eq(1)').removeClass('blind');
         $('#common-alert-popup').removeClass('blind');
         $('.common-alert-txt').text('예약 취소에 실패하셨습니다.');
