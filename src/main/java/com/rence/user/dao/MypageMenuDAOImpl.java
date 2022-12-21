@@ -1,5 +1,6 @@
 package com.rence.user.dao;
 
+import java.util.Base64;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -14,15 +15,16 @@ import com.rence.office.model.OfficePaymentEntity;
 import com.rence.office.repo.OfficeMileageRepository;
 import com.rence.office.repo.OfficePaymentRepository;
 import com.rence.office.repo.OfficeReserveRepository;
-import com.rence.user.controller.UserInfoDto;
 import com.rence.user.model.ReserveInfo_ViewDto;
 import com.rence.user.model.ReserveInfo_ViewEntity;
 import com.rence.user.model.ReserveMileageDto;
 import com.rence.user.model.ReserveMileageEntity;
 import com.rence.user.model.ReviewDto;
 import com.rence.user.model.UserEntity;
+import com.rence.user.model.UserInfoDto;
 import com.rence.user.repository.MypageMenuRepository;
 import com.rence.user.repository.ReserveMileageRepository;
+import com.rence.user.repository.UserRepository;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -48,7 +50,10 @@ public class MypageMenuDAOImpl implements MypageMenuDAO {
 	@Autowired
 	OfficeMileageRepository mileage_repository;
 	
+	@Autowired
+	UserRepository userRepository;
 	
+
 	/** ******************* **/
 	/** 예약 상세 페이지 SECTION **/
 	/** ******************* **/
@@ -60,10 +65,10 @@ public class MypageMenuDAOImpl implements MypageMenuDAO {
 		log.info("reserve_no: {}", reserve_no);
 
 		ReserveInfo_ViewEntity entity = menuRepository.select_one_reserve_info(reserve_no);
-		
+
 		ReserveInfo_ViewDto dto = null;
-		if(entity != null) {
-			
+		if (entity != null) {
+
 			dto = modelmapper.map(entity, ReserveInfo_ViewDto.class);
 		}
 
@@ -77,8 +82,11 @@ public class MypageMenuDAOImpl implements MypageMenuDAO {
 		log.info("reserve_no: {}", reserve_no);
 
 		ReserveMileageEntity entity = reserve_mileage_repository.select_one_reserve_mileage(reserve_no);
-		ReserveMileageDto dto = modelmapper.map(entity, ReserveMileageDto.class);
 
+		ReserveMileageDto dto = null;
+		if (entity != null) {
+			dto = modelmapper.map(entity, ReserveMileageDto.class);
+		}
 		return dto;
 	}
 
@@ -88,19 +96,29 @@ public class MypageMenuDAOImpl implements MypageMenuDAO {
 		log.info("reserve_no: {}", reserve_no);
 
 		OfficePaymentEntity entity = payment_repository.select_one_cancel_payment(reserve_no);
-		OfficePaymentDto dto = modelmapper.map(entity, OfficePaymentDto.class);
-
+		OfficePaymentDto dto = null;
+		if (entity != null) {
+			dto = modelmapper.map(entity, OfficePaymentDto.class);
+		}
 		return dto;
 	}
 
 	@Override
 	public UserInfoDto select_one_user_info(String user_no) {
-		log.info("select_one_cancel_payment()...");
+		log.info("select_one_user_info()...");
+
+		// Base64 디코더 작업으로 userNo정보 가져오기
+		byte[] decodedBytes = Base64.getDecoder().decode(user_no);
+		user_no = new String(decodedBytes);
 		log.info("reserve_no: {}", user_no);
-
-		UserEntity entity = menuRepository.select_one_user_info(user_no);
-		UserInfoDto dto = modelmapper.map(entity, UserInfoDto.class);
-
+		
+		UserEntity entity = userRepository.select_one_user_info(user_no);
+		UserInfoDto dto = new UserInfoDto();
+		dto.setUser_no(entity.getUser_no());
+		dto.setUser_name(entity.getUser_name());
+		dto.setUser_email(entity.getUser_email());
+		dto.setUser_tel(entity.getUser_tel());
+		
 		return dto;
 	}
 
@@ -121,8 +139,11 @@ public class MypageMenuDAOImpl implements MypageMenuDAO {
 
 		List<OfficeMileageEntity> entity_list = mileage_repository.select_all_mileage_cancel(payment_no);
 
-		List<OfficeMileageDto> vos = entity_list.stream().map(source -> modelmapper.map(source, OfficeMileageDto.class))
-				.collect(Collectors.toList());
+		List<OfficeMileageDto> vos = null;
+		if (entity_list != null) {
+			vos = entity_list.stream().map(source -> modelmapper.map(source, OfficeMileageDto.class))
+					.collect(Collectors.toList());
+		}
 
 		return vos;
 	}
@@ -133,7 +154,10 @@ public class MypageMenuDAOImpl implements MypageMenuDAO {
 
 		OfficeMileageEntity entity = mileage_repository.select_one_mileage_cancel(payment_no, mileage_state);
 
-		OfficeMileageDto dto = modelmapper.map(entity, OfficeMileageDto.class);
+		OfficeMileageDto dto = null;
+		if (entity != null) {
+			dto = modelmapper.map(entity, OfficeMileageDto.class);
+		}
 
 		return dto;
 	}

@@ -4,10 +4,10 @@ import java.util.List;
 
 import com.rence.office.model.OfficeMileageDto;
 import com.rence.office.model.OfficePaymentDto;
-import com.rence.user.controller.UserInfoDto;
 import com.rence.user.model.ReserveInfo_ViewDto;
 import com.rence.user.model.ReserveMileageDto;
 import com.rence.user.model.ReviewDto;
+import com.rence.user.model.UserInfoDto;
 
 public interface MypageMenuDAO {
 

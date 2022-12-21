@@ -74,8 +74,8 @@ public class UserMypageSeriviceImpl implements UserMypageSerivice {
 		umdto.setUser_image("https://rence.s3.ap-northeast-2.amazonaws.com/user/" + umdto.getUser_image());
 		 
 		SimpleDateFormat sDate = new SimpleDateFormat("yyyy/MM/dd");
-		log.info("---{}",sDate.format(umdto.getUser_birth()));
-//		umdto.setUser_birth(Date.valueOf(sDate.format(umdto.getUser_birth())));
+//		log.info("---{}",sDate.format(umdto.getUser_birth()));
+//		umdto.setUser_birth((sDate.format(umdto.getUser_birth())));
 		
 		
 		return umdto;
