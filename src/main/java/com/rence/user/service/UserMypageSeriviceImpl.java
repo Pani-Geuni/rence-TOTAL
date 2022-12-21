@@ -418,7 +418,7 @@ public class UserMypageSeriviceImpl implements UserMypageSerivice {
 		log.info("total_rowCount_review: {}", total_rowCount_review);
 
 		// 총 페이징되는 수
-		long totalPageCnt = (long) Math.ceil(total_rowCount_review / 8.0);
+		long totalPageCnt = (long) Math.ceil(total_rowCount_review / 1.0);
 		log.info("totalPageCnt: {}", totalPageCnt);
 
 		// 현재페이지
