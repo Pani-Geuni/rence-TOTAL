@@ -89,7 +89,6 @@ export default {
     // 로그인 여부 체크 -> 헤더를 위해
     axios.get('http://localhost:8800/loginCheck')
       .then((res) => {
-        console.log(res.data);
         // 로그인 되어 있음
         if (res.data.result === '1') {
           this.$store.commit('office_setLogin_true');

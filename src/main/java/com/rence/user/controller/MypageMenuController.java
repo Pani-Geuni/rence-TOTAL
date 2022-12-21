@@ -67,6 +67,8 @@ public class MypageMenuController {
 	@PostMapping(value = "/payment_cancel")
 	public String payment_cancel_rsu(String reserve_no, Integer cancel_amount, String reason) throws IOException {
 		log.info("payment_cancel_rsu()...");
+		log.info("{}{}{}...", reserve_no, cancel_amount, reason);
+		
 
 		Map<String, String> map = service.payment_cancel_rsu(reserve_no, cancel_amount, reason);
 

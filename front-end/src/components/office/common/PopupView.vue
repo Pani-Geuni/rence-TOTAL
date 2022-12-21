@@ -202,7 +202,7 @@
 		<!-- END MODIFY-PW SECTION -->
 
 		<!-- START MODIFY PROFILE IMAGE -->
-    <form action="/rence/user_img_updateOK" method="post" enctype="multipart/form-data">
+    <!-- <form action="/rence/user_img_updateOK" method="post" enctype="multipart/form-data"> -->
       <div id="modify-img-section" class="confirm-popup blind">
 				<section class="review-upload-section">
 					<input type="text" class="review-upload-value" value="" readonly />
@@ -210,11 +210,11 @@
 					<input type="file" @change="select_user_img" class="file" name="multipartFile">
 				</section>
 				<section class="confirm-btn-section">
-					<input type="submit" @submit="before_submit_modify_user_img" id="modify-img-modifyBtn" class="confirm-yesBtn" value="수정">
+					<input type="button" @click="submit_modify_user_img" id="modify-img-modifyBtn" class="confirm-yesBtn" value="수정">
 					<div id="modify-img-closeBtn" @click="close_modify_img_popup" class="confirm-noBtn" >닫기</div>
 				</section>
       </div>
-    </form>
+    <!-- </form> -->
 		<!-- END MODIFY PROFILE IMAGE -->
 	
 		<!-- START USER_DELETE CUSTOM CONFIRM POPUP -->
@@ -263,7 +263,7 @@
         </span>
       </section>
       <section class="confirm-btn-section">
-        <div id="refund-btn" @click="do_refund" class="confirm-yesBtn">확인</div>
+        <div id="refund-btn" @click="do_refund($event.target)" class="confirm-yesBtn">확인</div>
         <div id="refund-closeBtn" @click="close_refund_popup" class="confirm-noBtn">취소</div>
       </section>
     </div>
@@ -372,7 +372,54 @@ export default {
 
       if ($('#common-alert-btn').attr('is_reload') === 'true') {
         window.location.reload();
-        $('#common-alert-btn').attr('is_reload', false);
+        $('#common-alert-btn').attr('is_reload', 'false');
+      }
+      if ($('#common-alert-btn').attr('logout') === 'true') {
+        // 로딩 화면 닫기
+        $('.popup-background:eq(1)').removeClass('blind');
+        $('#spinner-section').removeClass('blind');
+
+        axios.get('/rence/user_logoutOK')
+          .then((res) => {
+          // 로딩 화면 닫기
+            $('.popup-background:eq(1)').addClass('blind');
+            $('#spinner-section').addClass('blind');
+
+            // 로그아웃 성공 시
+            if (res.data.result === '1') {
+              this.$store.commit('office_setLogin_false');
+
+              const port = window.location.href.split('localhost:')[1].split('/static')[0];
+              if (port === '8800') {
+                window.location.href = 'http://localhost:8800/static/index.html#/';
+              } else {
+                window.location.href = `http://localhost:${port}/list/search_list/type=${this.type}&location=${this.location}&searchWord=${$('#input_searchBar').val().trim()}&condition=date&page=1`;
+              }
+            }
+            // 로그아웃 실패
+            else {
+            // 로딩 화면 닫기
+              $('.popup-background:eq(1)').addClass('blind');
+              $('#spinner-section').addClass('blind');
+
+              $('.popup-background:eq(1)').removeClass('blind');
+              $('#common-alert-popup').removeClass('blind');
+              $('.common-alert-txt').text('로그아웃에 실패하였습니다');
+            }
+          })
+          .catch(() => {
+          // 로딩 화면 닫기
+            $('.popup-background:eq(1)').addClass('blind');
+            $('#spinner-section').addClass('blind');
+
+            $('.popup-background:eq(0)').addClass('blind');
+            $('#logout-popup').addClass('blind');
+
+            $('.popup-background:eq(1)').removeClass('blind');
+            $('#common-alert-popup').removeClass('blind');
+            $('.common-alert-txt').text('오류 발생으로 인해 로그아웃 처리에 실패하였습니다.');
+          });
+        $('#common-alert-btn').attr('logout', 'false');
       }
     },
     /** input NULL값 경고 테두리 클릭 시 제거하는 함수 */
@@ -1331,11 +1378,40 @@ export default {
       $('.review-upload-value').val(fArr[fArr.length - 1]);
     },
     // 이미지 수정 제출 전 필수 조건 확인
-    before_submit_modify_user_img() {
+    submit_modify_user_img() {
       // 파일 선택안하고 시도
       if ($('.review-upload-value').val().length === 0) {
         $('.review-upload-value').addClass('null-input-border');
-        return false;
+      } else {
+        const formData = new FormData();
+
+        const image = $('.file').get(0).files;
+
+        for (let i = 0; i < image.length; i++) {
+          formData.append('multipartFile_user', image[i]);
+        }
+
+        // 로딩 화면
+        $('.popup-background:eq(1)').removeClass('blind');
+        $('#spinner-section').removeClass('blind');
+
+        axios.post('http://localhost:8800/rence/user_img_updateOK', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        })
+          .then((res) => {
+            if (res.data.result === '1') {
+              $('.popup-background:eq(1)').removeClass('blind');
+              $('#common-alert-popup').removeClass('blind');
+              $('.common-alert-txt').text('프로필 이미지가 성공적으로 변경되었습니다.');
+              $('#common-alert-btn').attr('is_reload', 'true');
+            } else {
+              $('.popup-background:eq(1)').removeClass('blind');
+              $('#common-alert-popup').removeClass('blind');
+              $('.common-alert-txt').text('프로필 이미지 변경에 실패하였습니다.');
+            }
+          });
       }
     },
     /** 비밀번호 수정 - 정규표현식을 이용해 입력한 값 조건에 맞는지 확인 * */
@@ -1465,6 +1541,7 @@ export default {
                   $('.popup-background:eq(1)').removeClass('blind');
                   $('#common-alert-popup').removeClass('blind');
                   $('.common-alert-txt').text('비밀번호가 변경되었습니다.');
+                  $('#common-alert-btn').attr('logout', 'true');
                 } else {
                   $('.popup-background:eq(1)').removeClass('blind');
                   $('#common-alert-popup').removeClass('blind');
@@ -1507,7 +1584,7 @@ export default {
 		 $('.popup-background:eq(0)').addClass('blind');
     },
     /** 환불 처리 로직 */
-    do_refund() {
+    do_refund(param) {
       if (this.refund_flag) {
         this.refund_flag = false;
         const reserve_no = window.location.href.split('reserve_no=')[1];
@@ -1522,9 +1599,14 @@ export default {
             console.log(res.data);
             if (res.data.result === '1') {
               const reserve_no = window.location.href.split('reserve_no=')[1];
-              const cancel_amount = parseInt($('#actual_payment').attr('actual_payment').replace(',', ''));
+              const cancel_amount = $(param).prop('refund_amount');
 
-              axios.get(`http://localhost:8800/rence/payment_cancel?reserve_no=${reserve_no}&cancel_amount=${cancel_amount}&reason=예약 취소로 인한 결제 환불`)
+              const params = new URLSearchParams();
+              params.append('reserve_no', reserve_no);
+              params.append('cancel_amount', cancel_amount);
+              params.append('reason', 'aa');
+
+              axios.post('http://localhost:8800/rence/payment_cancel', params)
                 .then((response) => {
                   this.refund_flag = true;
 
@@ -1536,7 +1618,7 @@ export default {
                     $('#reserve-cancel-popup').addClass('blind');
                     $('#reserve-cancel-confirm-popup').removeClass('blind');
 
-                    const port = window.location.href.split('localhost:')[1].split('/#')[0];
+                    const port = window.location.href.split('localhost:')[1].split('/static')[0];
 
                     if (port === '8800') {
                       window.location.href = 'http://localhost:8800/static/index.html#/reserve_list';
@@ -1554,7 +1636,7 @@ export default {
 
                   $('.popup-background:eq(1)').removeClass('blind');
                   $('#common-alert-popup').removeClass('blind');
-                  $('.common-alert-txt').text('오류 발생으로 인해 처리에 실패하였습니다.');
+                  $('.common-alert-txt').text('오류 발생으로 인해 환불 처리에 실패하였습니다.');
                 });
             } else {
               // 로딩 화면 닫기
@@ -1573,7 +1655,7 @@ export default {
 
             $('.popup-background:eq(1)').removeClass('blind');
             $('#common-alert-popup').removeClass('blind');
-            $('.common-alert-txt').text('오류 발생으로 인해 처리에 실패하였습니다.');
+            $('.common-alert-txt').html('오류 발생으로 인해 예약 취소<br>여부 확인처리에 실패하였습니다.');
           });
       }
     },
