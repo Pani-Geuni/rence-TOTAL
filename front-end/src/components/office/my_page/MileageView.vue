@@ -319,6 +319,11 @@ export default {
               $(param).addClass('choice');
               $(param).removeClass('un-choice');
 
+              if (!$('.paging-box.paging-num').hasClass('choice')) {
+                $('.paging-box.paging-num:eq(0)').addClass('choice');
+                $('.paging-box.paging-num:eq(0)').removeClass('un-choice');
+              }
+
               let URL = '';
               if (this.searchFlag) {
                 URL = `http://localhost:8800/rence/mileage_search_list?searchKey=${this.searchKey}&user_no=${window.atob(this.$cookies.get('user_no'))}&page=${$(param).attr('idx')}`;

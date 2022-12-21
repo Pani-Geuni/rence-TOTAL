@@ -61,7 +61,9 @@
             <span @click="prev_page" :class="{'paging-box before-page-btn hide': this.maxPage <= 5, 'paging-box before-page-btn' : this.maxPage > 5}"> &lt;&lt; </span>
             
             <div class="paging-num-wrap paging-wrap">
-              <span @click="do_select_page($event.target)" v-for="num in this.forRange" :key="num" :idx="num" :class="{'paging-box paging-num choice': num === this.nowPage, 'paging-box paging-num un-choice' :num !== this.nowPage}">{{num}}</span>
+              <span @click="do_select_page($event.target)" v-for="num in this.forRange" :key="num" :idx="num" :class="{'paging-box paging-num choice': num === this.nowPage, 'paging-box paging-num un-choice' :num !== this.nowPage}">
+                {{num}}
+              </span>
             </div>
             
             <span @click="next_page" v-if="this.totalPageCnt > 5 && this.maxPage < this.totalPageCnt" class="paging-box next-page-btn">>></span>
@@ -71,8 +73,8 @@
         </section>
       </section>
       <!-- END PAGING -->
-  </section>
-</div>
+    </section>
+  </div>
 </template>
 
 <style lang="scss" scoped>

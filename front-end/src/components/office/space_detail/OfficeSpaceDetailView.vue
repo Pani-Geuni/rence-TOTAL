@@ -15,7 +15,7 @@
 -->
 
 <template>
-  <section v-if="load === true" class="space-detail-introduce-section">
+  <section v-if="this.load === true" class="space-detail-introduce-section">
 		<div class="space-detail-introduce-wrap">
 			<section class="space-detail-title-section">
 				<span class="space-detail-company-name">
@@ -425,7 +425,7 @@
               </li>
 						</ul>
 					</section>
-					<section class="using-time-section">
+					<section class="using-time-sections">
 						<section class="time-boundary">
 							<label class="fixed-section-label">
 								체크인 시간
@@ -462,7 +462,7 @@
 						<label class="fixed-section-label"> 예상 결제 금액 </label>
 						<span class="fixed-section-label"> 40,000원 </span>
 					</section>
-					<section id="office_check_available" @click="reset_choice_time" class="btn-section">
+					<section id="office_check_available" @click="check_choice_time" class="btn-section">
 						<span>예약 가능 여부 확인하기</span>
 					</section>
 					<section id="office_go_reserve" @click="do_reservation" class="btn-section blind">
@@ -984,73 +984,88 @@ export default {
       this.checkout = '';
       $('.duration').addClass('blind');
     },
-    /** 선택한 시간 초기화 */
-    reset_choice_time() {
-      this.pick_time_list = [];
-    },
-    /** 예약하려는 시간 선택 */
-    // pick_time_list에 시간이 하나만 들어가 있으면 1시간 대여
-    // 2개 있으면 그 사이 시간을 대여하는 것.
-    choice_reserve_time(param) {
-      this.check_reserve_time = [];
+    /** 예약 가능한지 확인 */
+    check_choice_time() {
+      if (this.axiosFlag) {
+        this.axiosFlag = false;
 
-      if ($(param).hasClass('selected')) {
-        // 선택 취소 했을 때
-        this.pick_time_list.pop($(param).val());
-        $(param).removeClass('selected');
-      } else {
-        // 선택 되었을 때
-        if (this.pick_time_list.length < 2) {
-          this.pick_time_list.push($(param).val());
-          this.pick_time_list.sort();
-          $(param).addClass('selected');
-        }
-      }
+        // 로그인 여부 체크 -> 헤더를 위해
+        axios.get('http://localhost:8800/loginCheck')
+          .then((response) => {
+            this.axiosFlag = true;
 
-      // 예약 불가 처리
-      if (this.pick_time_list.length === 2) {
-        let reserveFlag = 0;
-        for (let t = this.pick_time_list[0]; t <= this.pick_time_list[1]; t++) {
-          // attr display가 있을 때만 추가
-          if ($(`.time-boundary-item:eq(${t})`).is('[display]')) {
-            this.check_reserve_time.push(t);
+            // 로그인 되어 있음
+            if (response.data.result === '1') {
+              this.$store.commit('office_setLogin_true');
 
-            $(`.time-boundary-item:eq(${t})`).css('background-color', '#2EE49D');
-            $(`.time-boundary-item:eq(${t})`).css('color', '#FFFFFF');
-          } else {
-            $('.fixed-popup').removeClass('blind');
-            $('.using-time-fail-txt:eq(0)').html(
-              '선택 시간 사이에 예약이 존재하여<br><br>해당 시간은 예약할 수 없습니다.',
-            );
-            reserveFlag = 1;
-          }
-        }
+              // 예약 타입 선택 O
+              if ($('.type-border-txt').prop('check') == true) {
+                if (!$('.duration').hasClass('blind')) {
+                  // 예약 가능 확인 로직
+                  const backoffice_no = window.location.href.split('backoffice_no=')[1];
+                  const room_no = $('#type-choice-value').attr('room_no');
 
-        if (reserveFlag === 1) {
-          this.pick_time_list = [];
-          this.check_reserve_time = [];
-          for (let t = 0; t < 24; t++) {
-            $(`.time-boundary-item:eq(${t})`).removeClass('selected');
-            $(`.time-boundary-item:eq(${t})`).css('background-color', '#FFFFFF');
-            $(`.time-boundary-item:eq(${t})`).css('color', '#000000');
-          }
+                  const reserve_stime = this.time;
+                  const reserve_etime = $('.duration').text().trim().split(' ~ ')[1];
 
-          reserveFlag = 0;
-        }
-      } else {
-        this.pick_time_list = [];
-        this.check_reserve_time = [];
+                  // 로딩 화면
+                  $('.popup-background:eq(1)').removeClass('blind');
+                  $('#spinner-section').removeClass('blind');
 
-        for (let t = 0; t < 24; t++) {
-          if ($(`.time-boundary-item:eq(${t})`).hasClass('selected')) {
-            this.pick_time_list.push(t);
-            $(`.time-boundary-item:eq(${t})`).css('background-color', '#2EE49D');
-            $(`.time-boundary-item:eq(${t})`).css('color', '#FFFFFF');
-          } else {
-            $(`.time-boundary-item:eq(${t})`).css('background-color', '#FFFFFF');
-            $(`.time-boundary-item:eq(${t})`).css('color', '#000000');
-          }
-        }
+                  const param_txt = `?backoffice_no=${backoffice_no}&room_no=${room_no}&reserve_stime=${reserve_stime}&reserve_etime=${reserve_etime}`;
+
+                  axios.get(`http://localhost:8800/office/office_reserve_check${param_txt}`)
+                    .then((res) => {
+                      console.log(res.data);
+                      // 로딩 화면 닫기
+                      $('.popup-background:eq(1)').addClass('blind');
+                      $('#spinner-section').addClass('blind');
+
+                      if (res.data.result == '1') {
+                        $('#office_go_reserve').removeClass('blind');
+                        $('#office_check_available').addClass('blind');
+                      } else {
+                        $('.fixed-popup').removeClass('blind');
+                        $('.using-time-fail-txt').html('해당 기간에 이미 예약이 존재하여<br><br>예약할 수 없습니다.');
+                      }
+                    })
+                    .catch(() => {
+                    // 로딩 화면 닫기
+                      $('.popup-background:eq(1)').addClass('blind');
+                      $('#spinner-section').addClass('blind');
+
+                      $('.popup-background:eq(1)').removeClass('blind');
+                      $('#common-alert-popup').removeClass('blind');
+                      $('.common-alert-txt').html('오류 발생으로 인해 선택하신 기간 <br>예약 가능 여부 확인에 실패하였습니다.');
+                    });
+                }
+                // 예약 타입 선택 O, 체크인 or 체크아웃 시간 X
+                else {
+                  $('.fixed-popup').removeClass('blind');
+                  $('.using-time-fail-txt').html('체크인 시간과 개월 수를<br><br>모두 선택하여 주십시오.');
+                }
+              }
+              // 예약 타입 선택 X
+              else {
+                $('.fixed-popup').removeClass('blind');
+                $('.using-time-fail-txt').html('예약 타입을 선택하여 주십시오.');
+              }
+            }
+            // 로그인 되어 있지 않음(or 세션 만료)
+            else {
+              this.$store.commit('office_setLogin_false');
+
+              $('.popup-background:eq(1)').removeClass('blind');
+              $('#common-alert-popup').removeClass('blind');
+              $('.common-alert-txt').text('로그인 후 이용가능한 기능입니다.');
+            }
+          }).catch(() => {
+            this.axiosFlag = true;
+
+            $('.popup-background:eq(1)').removeClass('blind');
+            $('#common-alert-popup').removeClass('blind');
+            $('.common-alert-txt').text('오류 발생으로 인해 로그인 여부를 불러오는데에 실패하였습니다.');
+          });
       }
     },
     /** 예약 로직 */
@@ -1072,11 +1087,6 @@ export default {
               const room_no = $('#type-choice-value').attr('room_no');
               const reserve_stime = String(`${this.time} 00:00:00`);
               const reserve_etime = String(`${this.checkout.getFullYear()}/${this.checkout.getMonth() + 1}/${this.checkout.getDate()} 00:00:00`);
-              let roomType = $('#type-choice-value').attr('room_type').trim();
-
-              if (roomType === '오피스') {
-                roomType = 'office';
-              }
 
               if (this.time.length === 0) {
                 $('.fixed-popup').removeClass('blind');
@@ -1092,15 +1102,16 @@ export default {
               $('.popup-background:eq(1)').removeClass('blind');
               $('#spinner-section').removeClass('blind');
 
-              const params = new URLSearchParams();
-              params.append('user_no', user_no);
-              params.append('backoffice_no', backoffice_no);
-              params.append('room_no', room_no);
-              params.append('reserve_stime', reserve_stime);
-              params.append('reserve_etime', reserve_etime);
-              params.append('room_type', roomType);
-
-              axios.get('http://localhost:8800/office/reserve', params)
+              axios.get('http://localhost:8800/office/reserve', {
+                params: {
+                  user_no,
+                  backoffice_no,
+                  room_no,
+                  reserve_stime,
+                  reserve_etime,
+                  room_type: 'office',
+                },
+              })
                 .then((res) => {
                   // 로딩 화면 닫기
                   $('.popup-background:eq(1)').addClass('blind');
@@ -1108,7 +1119,7 @@ export default {
 
                   if (res.data.result === '1') {
                     const url = window.location.href.split('/space')[0];
-                    window.location.href = `${url}/payment?reserve_no=${res.data.reserve_no}`;
+                    window.location.href = `${url}/payment/reserve_no=${res.data.reserve_no}`;
                   }
                 })
                 .catch(() => {
