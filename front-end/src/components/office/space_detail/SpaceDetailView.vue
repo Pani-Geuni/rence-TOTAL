@@ -979,14 +979,12 @@ export default {
 
                 axios.get(`http://localhost:8800/office/reserve_check?backoffice_no=${backoffice_no}&room_no=${room_no}&reserve_date=${this.time}`)
                   .then((res) => {
-                    console.log(res.data);
-
                     // 로딩 화면 닫기
                     $('.popup-background:eq(1)').addClass('blind');
                     $('#spinner-section').addClass('blind');
 
-                    const { reserve_list } = res.data.reserve_list;
-                    const temp_stime = '';
+                    const { reserve_list } = res.data;
+                    let temp_stime = '';
                     const now = new Date();
                     const year = now.getFullYear();
                     let month = now.getMonth() + 1;
@@ -1000,22 +998,22 @@ export default {
                     // 선택 날짜 요일 구하기
                     const dayOfWeek = this.getDayOfWeek(this.time);
 
-                    $('#check_available').addClass('blind');
-                    $('#go_reserve').removeClass('blind');
-
-                    const running_stime = '';
-                    const running_etime = '';
+                    let running_stime = '';
+                    let running_etime = '';
 
                     const running_arr = $('.running-time-li-wrap li').slice();
                     for (let i = 0; i < running_arr.length; i++) {
-                      if ($(running_arr[i]).children('label') === dayOfWeek) {
+                      if ($(running_arr[i]).children('label').text() === dayOfWeek) {
                         const running_time = $(running_arr[i]).children('span').text().trim();
 
                         if (running_time !== '휴무') {
+                          $('#check_available').addClass('blind');
+                          $('#go_reserve').removeClass('blind');
+
                           const split_time = running_time.split(' ~ ');
 
-                          running_stime = parseInt(split_time[0].split(':')[0]);
-                          running_etime = parseInt(split_time[1].split(':')[0]);
+                          running_stime = Number(split_time[0].split(':')[0]);
+                          running_etime = Number(split_time[1].split(':')[0]);
 
                           $('#reserve-time-boundary').css('display', 'flex');
                           const running_time_list = [];
@@ -1032,7 +1030,7 @@ export default {
                             temp_stime = running_stime;
                           }
 
-                          for (let t = temp_stime; t < running_etime; t++) {
+                          for (let t = Number(temp_stime); t <= Number(running_etime); t++) {
                             if (!reserve_list.includes(t)) {
                               running_time_list.push(t);
                             }
@@ -1044,17 +1042,19 @@ export default {
                             $(this).css('display', 'none');
                             $(this).removeAttr('display');
 
-                            if (running_time_list.includes(index)) {
+                            if (running_time_list.includes(Number(index))) {
                               $(this).css('display', 'flex');
                               $(this).attr('display', 'selected');
                             }
                           });
-                        } else {
-                          $('.time-boundary-list li').each(function (index, item) {
-                            $(this).css('display', 'none');
-                            $(this).removeAttr('display');
-                          });
+
+                          break;
                         }
+                      } else {
+                        $('.time-boundary-list li').each(function () {
+                          $(this).css('display', 'none');
+                          $(this).removeAttr('display');
+                        });
                       }
                     }
                   })
@@ -1158,7 +1158,7 @@ export default {
     },
     /** 선택 날짜 요일 구하기 */
     getDayOfWeek(date) {
-      const week = [0, 1, 2, 3, 4, 5, 6];
+      const week = ['일', '월', '화', '수', '목', '금', '토'];
       const dayOfWeek = week[new Date(date).getDay()];
       return dayOfWeek;
     },
@@ -1225,7 +1225,16 @@ export default {
               params.append('reserve_etime', reserve_etime);
               params.append('room_type', roomType.trim());
 
-              axios.get('http://localhost:8800/office/reserve', params)
+              axios.get('http://localhost:8800/office/reserve', {
+                params: {
+                  user_no,
+                  backoffice_no,
+                  room_no,
+                  reserve_stime,
+                  reserve_etime,
+                  room_type: roomType.trim(),
+                },
+              })
                 .then((res) => {
                   // 로딩 화면 닫기
                   $('.popup-background:eq(1)').addClass('blind');

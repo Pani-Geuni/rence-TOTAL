@@ -1,4 +1,6 @@
 <!-- eslint-disable radix -->
+<!-- eslint-disable no-unused-expressions -->
+<!-- eslint-disable radix -->
 <!-- eslint-disable linebreak-style -->
 <!-- eslint-disable no-plusplus -->
 <!-- eslint-disable array-callback-return -->
@@ -23,32 +25,32 @@
                 <span class="section-title">예약 정보</span>
                 <div class="reserve-info-wrap">
                     <section>
-                        <img :src="list.pdto.backoffice_image" alt="result-img" class="reserve-info-img" />
+                        <img :src="list.pvo.backoffice_image" alt="result-img" class="reserve-info-img" />
                     </section>
                     <section class="reserve-info-txt">
-                        <span class="info-company-name" :backoffice_no="list.pdto.backoffice_no">{{list.pdto.company_name}}</span>
+                        <span class="info-company-name" :backoffice_no="list.pvo.backoffice_no">{{list.pvo.company_name}}</span>
                         <ul class="info-li-wrap">
                             <li class="info-li">
                                 <label class="info-label">공간 타입</label>
-                                <span id="info-room-type" class="info-text" :room_type="list.pdto.room_type">{{list.pdto.room_type}}</span>
+                                <span id="info-room-type" class="info-text" :room_type="list.pvo.room_type">{{list.pvo.room_type}}</span>
                             </li>
                             <li class="info-li">
                                 <label class="info-label">예약 날짜</label>
-                                <span class="info-text">{{list.pdto.reserve_stime}} ~ {{list.pdto.reserve_etime}}</span>
+                                <span class="info-text">{{list.pvo.reserve_stime}} ~ {{list.pvo.reserve_etime}}</span>
                             </li>
                             <li class="info-li">
                                 <label class="info-label">공간 이름</label>
-                                <span class="info-text">{{list.pdto.room_name}}</span>
+                                <span class="info-text">{{list.pvo.room_name}}</span>
                             </li>
                             <li class="info-li">
                                 <label class="info-label">공간 가격</label>
 
-                                <span v-if="list.pdto.room_type !== '오피스'" class="info-text room_price"> 
-                                  {{list.pdto.room_price}}원/시간
+                                <span v-if="list.pvo.room_type !== '오피스'" class="info-text room_price"> 
+                                  {{list.pvo.room_price}}원/시간
                                 </span>
 
-                                <span v-if="list.pdto.room_type === '오피스'" class="info-text room_price"> 
-                                  {{list.pdto.room_price}}원/개월
+                                <span v-if="list.pvo.room_type === '오피스'" class="info-text room_price"> 
+                                  {{list.pvo.room_price}}원/개월
                                 </span>
                             </li>
                         </ul>
@@ -63,19 +65,19 @@
                             <li class="host-info-li">
                                 <label class="uh-label">예약자</label>
                                 <span class="uh-text">
-                                  <input type="text" id="user_name" class="pay-input" :value="list.pdto.user_name" readonly/>
+                                  <input type="text" id="user_name" class="pay-input" :value="list.pvo.user_name" readonly/>
                                 </span>
                             </li>
                             <li class="host-info-li">
                                 <label  class="uh-label">연락처</label>
                                 <span class="uh-text">
-                                  <input type="text" class="pay-input" :value="list.pdto.user_tel" readonly/>
+                                  <input type="text" class="pay-input" :value="list.pvo.user_tel" readonly/>
                                 </span>
                             </li>
                             <li class="host-info-li">
                                 <label  class="uh-label">이메일</label>
                                 <span class="uh-text">
-                                    <input type="text" class="pay-input" :value="list.pdto.user_email" readonly/>
+                                    <input type="text" class="pay-input" :value="list.pvo.user_email" readonly/>
                                 </span>
                             </li>
                         </ul>
@@ -87,15 +89,15 @@
                         <ul>
                             <li class="host-info-li">
                                 <label class="uh-label">사업자명</label>
-                                <span class="uh-text">{{list.pdto.owner_name}}</span>
+                                <span class="uh-text">{{list.pvo.owner_name}}</span>
                             </li>
                             <li class="host-info-li">
                                 <label  class="uh-label">위치</label>
-                                <span class="uh-text">{{list.pdto.roadname_address}}&nbsp;({{list.pdto.detail_address}})</span>
+                                <span class="uh-text">{{list.pvo.roadname_address}}&nbsp;({{list.pvo.detail_address}})</span>
                             </li>
                             <li class="host-info-li">
                                 <label  class="uh-label">연락처</label>
-                                <span class="uh-text">{{list.pdto.backoffice_tel}}&nbsp;{{list.pdto.backoffice_email}}</span>
+                                <span class="uh-text">{{list.pvo.backoffice_tel}}&nbsp;{{list.pvo.backoffice_email}}</span>
                             </li>
                         </ul>
                     </div>
@@ -137,14 +139,14 @@
                     <section class="money-payment">
                         <span class="payment-method-wrap">
                             <div class="payment-method">
-                                <div class="custom-radio">
-                                    <div @click="choice_prepayment" class="inner-radio choice-radio"></div>
+                                <div @click="choice_prepayment" class="custom-radio">
+                                    <div class="inner-radio choice-radio"></div>
                                 </div>
                                 <span class="payment-method-text">선결제</span>
                             </div>
-                            <div v-if="list.pdto.room_type !== '오피스'" class="payment-method">
-                                <div class="custom-radio">
-                                    <div @click="choice_post_payment" class="inner-radio"></div>
+                            <div v-if="list.pvo.room_type !== '오피스'" class="payment-method">
+                                <div @click="choice_post_payment" class="custom-radio">
+                                    <div class="inner-radio"></div>
                                 </div>
                                 <span class="payment-method-text">후불 결제</span>
                             </div>
@@ -169,15 +171,15 @@
                             <label>
                                 나의 마일리지 : 
                             </label>
-                            <span id="my-mileage" :my-mileage="list.pdto.mileage_total">
-                                {{list.pdto.mileage_total}}원
+                            <span id="my-mileage" :my-mileage="list.pvo.mileage_total">
+                                {{list.pvo.mileage_total}}원
                             </span>
                             <br>
                              <label>
                                 최대 사용 가능 마일리지 : 
                             </label>
-                            <span id="max-use-mileage" :max-use-mileage="list.pdto.mileage_total">
-                                {{list.pdto.mileage_total}}원
+                            <span id="max-use-mileage" :max-use-mileage="list.pvo.mileage_total">
+                                {{list.pvo.mileage_total}}원
                             </span>
                         </div>
                     </section>
@@ -190,20 +192,20 @@
                         <ul class="payment-info-li-wrap">
                             <li class="info-li">
                                 <label class="info-label">공간 타입</label>
-                                <span class="info-text">{{list.pdto.room_type}}</span>
+                                <span class="info-text">{{list.pvo.room_type}}</span>
                             </li>
                             <li class="info-li">
                                 <label class="info-label">예약 날짜</label>
-                                <span class="info-text">{{list.pdto.reserve_stime}} ~ {{list.pdto.reserve_etime}}</span>
+                                <span class="info-text">{{list.pvo.reserve_stime}} ~ {{list.pvo.reserve_etime}}</span>
                             </li>
                             <li class="info-li">
                                 <label class="info-label">공간 이름</label>
-                                <span class="info-text">{{list.pdto.room_name}}</span>
+                                <span class="info-text">{{list.pvo.room_name}}</span>
                             </li>
                             <li class="info-li">
                                 <label class="info-label">공간 가격</label>
-                                <span v-if="list.pdto.room_type !== '오피스'" class="info-text room_price">{{list.pdto.room_price}}원/시간</span>
-                                <span v-if="list.pdto.room_type === '오피스'" class="info-text room_price">{{list.pdto.room_price}}원/개월</span>
+                                <span v-if="list.pvo.room_type !== '오피스'" class="info-text room_price">{{list.pvo.room_price}}원/시간</span>
+                                <span v-if="list.pvo.room_type === '오피스'" class="info-text room_price">{{list.pvo.room_price}}원/개월</span>
                             </li>
                         </ul>
                     </section>
@@ -245,7 +247,7 @@ export default {
     return {
       list: '',
       reserveNo: '',
-      IMP: window,
+      IMP: window.IMP,
       payment_state: 'T',
       time: '',
       seconds: 60 * 10,
@@ -275,54 +277,57 @@ export default {
           $('#spinner-section').removeClass('blind');
 
           this.IMP.init('imp26554321');
-
-          this.reserveNo = this.$route.params.parameters.split('reserve_no=')[1];
-          axios.get(`http://localhost:8800/office/payment?reserve_no=${this.reserve_no}`)
+          this.reserveNo = window.location.href.split('reserve_no=')[1];
+          axios.get(`http://localhost:8800/office/payment?reserve_no=${this.reserveNo}`)
             .then((res) => {
+              console.log(res.data);
               this.list = res.data;
               this.timer();
 
-              $('.room_price').each(function (index, value) {
-                const price = $(value).text();
-                $(this).text(price.replace(/\B(?=(\d{3})+(?!\d))/g, ','));
-              });
+              // $('.room_price').each(function (index, value) {
+              //   const price = $(value).text();
+              //   $(this).text(price.replace(/\B(?=(\d{3})+(?!\d))/g, ','));
+              // });
 
-              $('#payment_all').text(
-                $('#payment_all')
-                  .text()
-                  .replace(/\B(?=(\d{3})+(?!\d))/g, ','),
-              );
+              // $('#payment_all').text(
+              //   $('#payment_all')
+              //     .text()
+              //     .replace(/\B(?=(\d{3})+(?!\d))/g, ','),
+              // );
 
-              $('#earned_mileage').text(
-                $('#earned_mileage')
-                  .text()
-                  .replace(/\B(?=(\d{3})+(?!\d))/g, ','),
-              );
+              // $('#earned_mileage').text(
+              //   $('#earned_mileage')
+              //     .text()
+              //     .replace(/\B(?=(\d{3})+(?!\d))/g, ','),
+              // );
 
-              $('#my-mileage').text(
-                $('#my-mileage')
-                  .text()
-                  .replace(/\B(?=(\d{3})+(?!\d))/g, ','),
-              );
+              // $('#my-mileage').text(
+              //   $('#my-mileage')
+              //     .text()
+              //     .replace(/\B(?=(\d{3})+(?!\d))/g, ','),
+              // );
 
-              $('#max-use-mileage').text(
-                $('#max-use-mileage')
-                  .text()
-                  .replace(/\B(?=(\d{3})+(?!\d))/g, ','),
-              );
+              // $('#max-use-mileage').text(
+              //   $('#max-use-mileage')
+              //     .text()
+              //     .replace(/\B(?=(\d{3})+(?!\d))/g, ','),
+              // );
 
-              this.payment_all = parseInt($('#payment_all').attr('payment_all'));
-              this.earned_mileage = parseInt($('#earned_mileage').attr('earned_mileage'));
-              this.actual_payment = payment_all;
+              this.payment_all = res.data.payment_all;
+              this.earned_mileage = res.data.earned_mileage;
+              this.actual_payment = this.payment_all;
 
-              this.max_use_mileage = parseInt($('#my-mileage').attr('my-mileage'));
-              this.deposit = payment_all * 0.2;
+              this.max_use_mileage = Number(res.data.pvo.mileage_total);
+              this.deposit = this.payment_all * 0.2;
 
               if ((this.payment_all * 0.8) <= this.max_use_mileage) {
-                this.max_use_mileage = payment_all * 0.8;
+                this.max_use_mileage = parseInt(this.payment_all) * 0.8;
                 $('#max-use-mileage').attr('max-use-mileage', this.max_use_mileage);
                 $('#max-use-mileage').text(this.max_use_mileage);
               }
+
+              console.log(this.actual_payment);
+              console.log(this.earned_mileage);
 
               this.load = true;
 
@@ -430,7 +435,6 @@ export default {
     /** 마일리지 사용 버튼 클릭 */
     use_mileage() {
       this.actual_payment = this.payment_all;
-      const my_mileage = parseInt($('#my-mileage').attr('my-mileage'));	// 내가 가진 마일리지
       const use_mileage = parseInt($('#use-mileage').val()) || 0;		// 사용할 마일리지
 
       if ($('.inner-radio:eq(0)').hasClass('choice-radio')) {
@@ -439,18 +443,18 @@ export default {
         this.actual_payment = this.payment_all; // 마일리지 사용 후 결제 금액
 
         // 가진 마일리지보다 적게 사용할 때
-        if (this.use_mileage <= this.max_use_mileage) {
+        if (use_mileage <= this.max_use_mileage) {
         // 사용 마일리지가 원결제 금액보다 작을 때
-          if (this.use_mileage <= this.payment_all) {
-            if (this.use_mileage === 0 || this.use_mileage === '') {
+          if (use_mileage <= this.payment_all) {
+            if (use_mileage === 0 || use_mileage === '') {
               this.actual_payment = this.payment_all;
               this.earned_mileage = Math.round(this.actual_payment * 0.05);
             } else {
-              this.actual_payment = this.payment_all - this.use_mileage;
+              this.actual_payment = this.payment_all - use_mileage;
               this.earned_mileage = Math.round(this.actual_payment * 0.05);
             }
           } else {
-          // 사용 마일리지가 원결제 금액보다 클 때
+            // 사용 마일리지가 원결제 금액보다 클 때
             $('#use-mileage').val('');
           }
 
@@ -466,20 +470,20 @@ export default {
         }
       } else if ($('.inner-radio:eq(1)').hasClass('choice-radio')) {
       // 후불 결제 시 로직
-        const payment_later = this.payment_all * 0.2;
+        const payment_later = parseInt(this.payment_all) * 0.2;
         this.actual_payment = payment_later;
         this.earned_mileage = Math.round(this.actual_payment * 0.05);
         $('#earned_mileage').text(this.earned_mileage);
 
         // 가진 마일리지보다 적게 사용할 때
-        if (this.use_mileage <= this.max_use_mileage) {
+        if (use_mileage <= this.max_use_mileage) {
         // 사용 마일리지가 원결제 금액보다 작을 때
-          if (this.use_mileage <= this.actual_payment) {
-            if (this.use_mileage === 0 || this.use_mileage === '') {
-              this.actual_payment = this.payment_later;
+          if (use_mileage <= this.actual_payment) {
+            if (use_mileage === 0 || use_mileage === '') {
+              this.actual_payment = payment_later;
               this.earned_mileage = this.actual_payment * 0.05;
             } else {
-              this.actual_payment = this.payment_later - this.use_mileage;
+              this.actual_payment = payment_later - use_mileage;
               this.earned_mileage = this.actual_payment * 0.05;
             }
           } else {
@@ -492,7 +496,7 @@ export default {
         } else {
         // 가진 마일리지보다 많이 사용할 때
           $('#use-mileage').val('');
-          this.actual_payment = this.payment_later;
+          this.actual_payment = payment_later;
           this.earned_mileage = Math.round(this.actual_payment * 0.05);
           $('#earned_mileage').text(this.earned_mileage);
           $('#payment_all').text(this.actual_payment);
@@ -552,7 +556,7 @@ export default {
                       $('.popup-background:eq(1)').addClass('blind');
                       $('#spinner-section').addClass('blind');
 
-                      if (res.data.result === 1) {
+                      if (res.data.result === '1') {
                         alert('결제 성공');
                         const port = window.location.href.split('localhost:')[1].split('/static')[0];
 
