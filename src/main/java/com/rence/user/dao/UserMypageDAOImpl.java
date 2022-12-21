@@ -323,7 +323,7 @@ public class UserMypageDAOImpl implements UserMypageDAO {
 		log.info("user_no: {}", user_no);
 		log.info("current page: {}", page);
 
-		Integer row_count = 8;
+		Integer row_count = 1;
 		Integer start_row = (page - 1) * row_count + 1;
 		Integer end_row = page * row_count;
 

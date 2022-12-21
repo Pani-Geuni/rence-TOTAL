@@ -134,7 +134,7 @@ public class OfficeServiceImpl implements OfficeService {
 		log.info("total_rowCount_question_all: {}", total_rowCount_question_all);
 
 		// 총 페이징 되는 수
-		long totalPageCnt = (long) Math.ceil(total_rowCount_question_all / 4.0);
+		long totalPageCnt = (long) Math.ceil(total_rowCount_question_all / 1.0);
 		log.info("totalPageCnt: {}", totalPageCnt);
 
 		long nowPage = page;
@@ -327,7 +327,7 @@ public class OfficeServiceImpl implements OfficeService {
 		log.info("total_rowCount_question_all: {}", total_rowCount_question_all);
 
 		// 총 페이징 되는 수
-		long totalPageCnt = (long) Math.ceil(total_rowCount_question_all / 4.0);
+		long totalPageCnt = (long) Math.ceil(total_rowCount_question_all / 1.0);
 		log.info("totalPageCnt: {}", totalPageCnt);
 
 		long nowPage = page;

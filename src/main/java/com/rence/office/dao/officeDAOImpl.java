@@ -144,7 +144,7 @@ public class officeDAOImpl implements officeDAO {
 	public List<OfficeQuestionDto> select_all_comment(String backoffice_no, Integer page) {
 		log.info("select_all_comment()...");
 
-		Integer row_count = 4;
+		Integer row_count = 1;
 		Integer start_row = (page - 1) * row_count + 1;
 		Integer end_row = page * row_count;
 
