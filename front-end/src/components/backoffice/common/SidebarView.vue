@@ -95,8 +95,10 @@ export default {
     // Dash Board Side Menu 현재 페이지 active 설정
     // ****************************************
     sidebarActive(locationPathname) {
-      switch (locationPathname) {
+      const pathName = window.location.href.split('index.html#')[1].split('?')[0];
+      switch (pathName) {
         case '/backoffice/dash/main':
+          console.log('hi main');
           $('#menu-home').addClass('active');
           break;
 

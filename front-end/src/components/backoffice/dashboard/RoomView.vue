@@ -116,7 +116,9 @@ export default {
 
   methods: {
     miniNavActive(locationPathname) {
-      switch (locationPathname) {
+      const pathName = window.location.href.split('index.html#')[1].split('?')[0];
+
+      switch (pathName) {
         case '/backoffice/dash/room':
           $('#mini-nav-list').addClass('active');
           break;
@@ -133,15 +135,15 @@ export default {
     },
 
     miniNavList() {
-      this.$router.push(`/backoffice/dash/room?backoffice_no=${this.babckoffice_no}&page=1`);
+      this.$router.push(`/backoffice/dash/room?backoffice_no=${this.$cookies.get('backoffice_no')}&page=1`);
     },
 
     miniNavQna() {
-      this.$router.push(`/backoffice/dash/qna?backoffice_no=${this.babckoffice_no}&page=1`);
+      this.$router.push(`/backoffice/dash/qna?backoffice_no=${this.$cookies.get('backoffice_no')}&page=1`);
     },
 
     miniNavReview() {
-      this.$router.push(`/backoffice/dash/review?backoffice_no=${this.babckoffice_no}&page=1`);
+      this.$router.push(`/backoffice/dash/review?backoffice_no=${this.$cookies.get('backoffice_no')}&page=1`);
     },
 
     getRoomList() {

@@ -43,19 +43,18 @@ export default {
 
   data() {
     return {
-      backoffice_no: this.$cookies.get('backoffice_no'),
+      backoffice_no: window.btoa(encodeURIComponent(this.$route.query.backoffice_no)),
     };
   },
 
   methods: {
     checkUpdatePw(e) {
       const targetId = e.target.id;
-
       if (targetId === 'input-update-pw') {
         const password = /^(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%^&*])[a-z0-9!@#$%^&*]{8,10}$/;
 
         if (!password.test(e.target.value)) {
-          if (($('#input-update-pw-re').val().trim().length > 0) && ($(this).val().trim() != $('#input-update-pw-re').val().trim())) {
+          if (($('#input-update-pw-re').val().trim().length > 0) && ($(this).val().trim() !== $('#input-update-pw-re').val().trim())) {
             $('.pw-warning-text:eq(0)').removeClass('blind');
             $('.pw-warning-text:eq(0)').text('아래 비밀번호와 일치하지 않습니다.');
           } else {
@@ -88,6 +87,8 @@ export default {
     clickUpdatePwBtn() {
       const password = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,10}$/;
 
+      console.log('asdf ', this.backoffice_no);
+
       if ($('#input-update-pw').val().trim().length > 0
         && $('#input-update-pw-re').val().trim().length > 0) {
         console.log($('#input-update-pw').val().trim());
@@ -103,31 +104,31 @@ export default {
           params.append('backoffice_no', this.backoffice_no);
           params.append('backoffice_pw', $('#input-update-pw-re').val().trim());
 
-          axios.post('http://localhost:8800/backoffice/settingOK_pw', params)
-            .then((res) => {
-              // 로딩 화면 닫기
-              $('.popup-background:eq(1)').addClass('blind');
-              $('#spinner-section').addClass('blind');
+          // axios.post('http://localhost:8800/backoffice/settingOK_pw', params)
+          //   .then((res) => {
+          //     // 로딩 화면 닫기
+          //     $('.popup-background:eq(1)').addClass('blind');
+          //     $('#spinner-section').addClass('blind');
 
-              if (res.data.result === '1') {
-                this.$router.replace(`/backoffice/dash/settings?backoffice_no=${this.backoffice_no}`);
-              } else if (res.data.result === '2') {
-                this.$router.replace('/backoffice/landing');
-              } else {
-                $('.popup-background:eq(1)').removeClass('blind');
-                $('#common-alert-popup').removeClass('blind');
-                $('.common-alert-txt').text('비밀번호 변경에 실패하였습니다.');
-              }
-            })
-            .catch(() => {
-              // 로딩 화면 닫기
-              $('.popup-background:eq(1)').addClass('blind');
-              $('#spinner-section').addClass('blind');
+          //     if (res.data.result === '1') {
+          //       this.$router.replace(`/backoffice/dash/settings?backoffice_no=${this.backoffice_no}`);
+          //     } else if (res.data.result === '2') {
+          //       this.$router.replace('/backoffice/landing');
+          //     } else {
+          //       $('.popup-background:eq(1)').removeClass('blind');
+          //       $('#common-alert-popup').removeClass('blind');
+          //       $('.common-alert-txt').text('비밀번호 변경에 실패하였습니다.');
+          //     }
+          //   })
+          //   .catch(() => {
+          //     // 로딩 화면 닫기
+          //     $('.popup-background:eq(1)').addClass('blind');
+          //     $('#spinner-section').addClass('blind');
 
-              $('.popup-background:eq(1)').removeClass('blind');
-              $('#common-alert-popup').removeClass('blind');
-              $('.common-alert-txt').text('비밀번호 변경에 실패하였습니다.');
-            });
+          //     $('.popup-background:eq(1)').removeClass('blind');
+          //     $('#common-alert-popup').removeClass('blind');
+          //     $('.common-alert-txt').text('비밀번호 변경에 실패하였습니다.');
+          //   });
         } else {
           $('.popup-background:eq(0)').removeClass('blind');
           $('#fail-alert-popup').removeClass('blind');
