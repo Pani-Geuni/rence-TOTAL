@@ -660,6 +660,9 @@ public class OfficeServiceImpl implements OfficeService {
 		date_dto.setReserve_etime(reserve_etime);
 		date_dto.setReserve_sdate(reserve_stime);
 		date_dto.setReserve_edate(reserve_etime);
+		
+		log.info("===date_dto: {}", date_dto);
+		
 
 		int result = dao.confirm_reserve(date_dto);
 		log.info("controller /backoffice/reserve result :: {}", result);
@@ -939,7 +942,7 @@ public class OfficeServiceImpl implements OfficeService {
 
 		pdto.setRoom_type(info_map.changeType(pdto.getRoom_type()));
 		List<String> splitImage = info_map.splitImage(pdto.getBackoffice_image());
-		String room_first_image = splitImage.get(0);
+		String room_first_image = splitImage.get(1);
 		pdto.setBackoffice_image(room_first_image);
 
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");

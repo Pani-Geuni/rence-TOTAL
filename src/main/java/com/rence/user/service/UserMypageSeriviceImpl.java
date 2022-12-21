@@ -117,7 +117,7 @@ public class UserMypageSeriviceImpl implements UserMypageSerivice {
 
 	@Override
 	public int user_img_updateOK(UserDto udto, HttpServletRequest request,
-			MultipartHttpServletRequest mtfRequest, MultipartFile multipartFile_user) {
+			MultipartHttpServletRequest mtfRequest, MultipartFile multipartFile_user, HttpServletResponse response) {
 		log.info("user_img_updateOK()...");
 
 		Map<String, String> map = new HashMap<String, String>();
@@ -140,6 +140,10 @@ public class UserMypageSeriviceImpl implements UserMypageSerivice {
 		// 사진(파일)업로드
 		udto = fileuploadService.FileuploadOK(udto, mtfRequest, multipartFile_user);
 		log.info("fileresult: {}", udto);
+		
+		Cookie cookie2 = new Cookie("user_image", udto.getUser_image()); // 고유번호 쿠키 저장
+		cookie2.setPath("/");
+		response.addCookie(cookie2);
 		
 		
 		int update_result = dao.user_img_updateOK(udto);

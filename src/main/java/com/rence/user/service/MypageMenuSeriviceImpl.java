@@ -60,12 +60,14 @@ public class MypageMenuSeriviceImpl implements MypageMenuSerivice {
 			}
 
 			ReserveInfo_ViewDto dto = dao.select_one_reserve_info(reserve_no);
+			log.info("=======dto: {}",dto);
 
 			List<String> splitImage = info_map.splitImage(dto.getBackoffice_image());
 			String room_first_image = splitImage.get(1);
 			dto.setBackoffice_image(room_first_image);
 
 			dto.setRoom_type(info_map.changeType(dto.getRoom_type()));
+			log.info("s=======dto.getRoom_type() {}",dto.getRoom_type());
 
 			map.put("reserve_no", reserve_no);
 			map.put("info_obj", dto);

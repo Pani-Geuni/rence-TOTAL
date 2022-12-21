@@ -24,7 +24,7 @@ public interface UserMypageSerivice {
 	Map<String, String> check_now_pw(UserDto udto);
 
 	//미이페이지 - 프로필 수정
-	 int user_img_updateOK(UserDto udto, HttpServletRequest request, MultipartHttpServletRequest mtfRequest, MultipartFile multipartFile_user);
+	 int user_img_updateOK(UserDto udto, HttpServletRequest request, MultipartHttpServletRequest mtfRequest, MultipartFile multipartFile_user, HttpServletResponse response);
 
 	//마이페이지 - 회원탙퇴
 	Map<String, String> user_secedeOK(UserDto udto, HttpSession session, HttpServletRequest request, HttpServletResponse response);
