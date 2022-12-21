@@ -54,23 +54,20 @@ public class UserMypageSeriviceImpl implements UserMypageSerivice {
 		// Base64 디코더 작업으로 suerNo정보 가져오기
 		byte[] decodedBytes = Base64.getDecoder().decode(user_no);
 		user_no = new String(decodedBytes);
-		
-		
-		
+
 		UserMypageDto umdto = dao.user_mypage_select(user_no);
 		// 총 마일리지 부분
 		UserDto udto = new UserDto();
 		udto.setUser_no(user_no);
 		MileageDto mileagedto = dao.totalMileage_selectOne(udto);
 		umdto.setMileage_total(Integer.toString(mileagedto.getMileage_total()));
-		
+
 		log.info("umdto: {}", umdto);
 		// 마일리지 콤마단위로 변환
 		DecimalFormat dc = new DecimalFormat("###,###,###,###,###");
 		umdto.setMileage_total(dc.format(Integer.parseInt(umdto.getMileage_total())));
 
 		umdto.setUser_image("https://rence.s3.ap-northeast-2.amazonaws.com/user/" + umdto.getUser_image());
-
 
 		return umdto;
 	}
@@ -140,22 +137,27 @@ public class UserMypageSeriviceImpl implements UserMypageSerivice {
 		// 사진(파일)업로드
 		udto = fileuploadService.FileuploadOK(udto, mtfRequest, multipartFile_user);
 		log.info("fileresult: {}", udto);
-		
-		Cookie cookie2 = new Cookie("user_image", udto.getUser_image()); // 고유번호 쿠키 저장
+
+		// 쿠키저장을 위해 유저번호 및 이미지 base64 암호화 처리
+		Base64.Encoder encoder = Base64.getEncoder();
+		byte[] user_image = ("https://rence.s3.ap-northeast-2.amazonaws.com/user/" + udto.getUser_image()).getBytes();
+
+		String user_image_base64 = encoder.encodeToString(user_image);
+
+		Cookie cookie2 = new Cookie("user_image", user_image_base64); // 고유번호 쿠키 저장
 		cookie2.setPath("/");
 		response.addCookie(cookie2);
-		
-		
+
 		int update_result = dao.user_img_updateOK(udto);
 		String result = null;
-		if(update_result == 1) {
+		if (update_result == 1) {
 			log.info("OK!!");
 			map.put("result", "1");
 		}
-		log.info("map: {}",map);
+		log.info("map: {}", map);
 
 		udto.setUser_image("https://rence.s3.ap-northeast-2.amazonaws.com/user/" + udto.getUser_image());
- 
+
 		return map;
 	}
 
