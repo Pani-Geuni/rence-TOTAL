@@ -424,7 +424,7 @@
 							<label class="fixed-section-label">
 								예약 날짜
 							</label>
-                <date-picker v-model:value="time0" @change="set_date"></date-picker>
+                <date-picker v-model:value="time0" @change="set_date" :disabled-date="notBeforeToday"></date-picker>
 						</section>
 					</section>
 
@@ -609,6 +609,9 @@ export default {
       });
   },
   methods: {
+    notBeforeToday(date) {
+      return date < new Date(new Date().setHours(0, 0, 0, 0));
+    },
     initMap() {
       const mapContainer = document.getElementById('map');
       const mapOption = {

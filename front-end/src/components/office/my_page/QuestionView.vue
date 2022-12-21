@@ -28,8 +28,8 @@
         </section>
         <section class="question-history-wrap">
           <ul>
-            <li v-for="obj in list" v-bind:key="obj" class="question-list">
-              <div class="question-content-wrap" @click="show_detail_question($event.target)">
+            <li v-for="obj in list" :key="obj" class="question-list">
+              <div class="question-content-wrap" @click="show_detail_question($event.currentTarget)">
                   <span v-if="obj.state === 'Y'" class="list-status complete-label">처리</span>
                   <span v-if="obj.state === 'N'" class="list-status un-complete-label">미처리</span>
       
@@ -43,14 +43,14 @@
                 <div class="question-line">
                   <div class="q-line">
                       <label class="q_label">Q.</label>
-                      <div v-if="obj.answer_content === null" class="question-btn-wrap">
-                        <span class="question-btn question-d-btn" @click="show_delete_q_popup($event.target)" v-bind:idx="obj.comment_no">삭제</span>
+                      <div v-if="obj.answer_content === 'x'" class="question-btn-wrap">
+                        <span class="question-btn question-d-btn" @click="show_delete_q_popup($event.target)" :idx="obj.comment_no">삭제</span>
                       </div>
                   </div>
                   <span>{{obj.comment_content}}</span>
                 </div>
                   
-                <div v-if="obj.answer_content !== null" class="answer-line">
+                <div v-if="obj.answer_content !== 'x'" class="answer-line">
                   <div class="answer-label">
                     <label class="a_label">A.</label>
                     <span class="answer-date">
