@@ -1,10 +1,6 @@
 package com.rence.user.service;
 
-
-
-import java.sql.Date;
 import java.text.DecimalFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Base64;
 import java.util.HashMap;
@@ -38,13 +34,9 @@ public class UserMypageSeriviceImpl implements UserMypageSerivice {
 
 	@Autowired
 	UserMypageDAO dao;
-	
+
 	@Autowired
 	UserFileuploadService fileuploadService;
-	
-	
-	
-	
 
 	@Override
 	public UserMypageDto user_mypage_select(HttpServletRequest request, HttpServletResponse response) {
@@ -59,10 +51,9 @@ public class UserMypageSeriviceImpl implements UserMypageSerivice {
 				user_no = c.getValue();
 			}
 		}
-		//Base64 디코더 작업으로 suerNo정보 가져오기
+		// Base64 디코더 작업으로 suerNo정보 가져오기
 		byte[] decodedBytes = Base64.getDecoder().decode(user_no);
 		user_no = new String(decodedBytes);
-		
 
 		UserMypageDto umdto = dao.user_mypage_select(user_no);
 
@@ -72,12 +63,11 @@ public class UserMypageSeriviceImpl implements UserMypageSerivice {
 		umdto.setMileage_total(dc.format(Integer.parseInt(umdto.getMileage_total())));
 
 		umdto.setUser_image("https://rence.s3.ap-northeast-2.amazonaws.com/user/" + umdto.getUser_image());
-		 
+
 		SimpleDateFormat sDate = new SimpleDateFormat("yyyy/MM/dd");
 //		log.info("---{}",sDate.format(umdto.getUser_birth()));
 //		umdto.setUser_birth((sDate.format(umdto.getUser_birth())));
-		
-		
+
 		return umdto;
 	}
 
@@ -122,13 +112,13 @@ public class UserMypageSeriviceImpl implements UserMypageSerivice {
 	}
 
 	@Override
-	public Map<String, String> user_img_updateOK(UserDto udto, HttpServletRequest request, MultipartHttpServletRequest mtfRequest,
-			MultipartFile multipartFile_user) {
+	public int user_img_updateOK(UserDto udto, HttpServletRequest request,
+			MultipartHttpServletRequest mtfRequest, MultipartFile multipartFile_user) {
 		log.info("user_img_updateOK()...");
-		
+
 		Map<String, String> map = new HashMap<String, String>();
-		
-		//쿠키에서 유저 번호 가져오기
+
+		// 쿠키에서 유저 번호 가져오기
 		String user_no = null;
 		Cookie[] cookies = request.getCookies();
 		for (Cookie c : cookies) {
@@ -136,6 +126,10 @@ public class UserMypageSeriviceImpl implements UserMypageSerivice {
 				user_no = c.getValue();
 			}
 		}
+
+		// Base64 디코더 작업으로 suerNo정보 가져오기
+		byte[] decodedBytes = Base64.getDecoder().decode(user_no);
+		user_no = new String(decodedBytes);
 		udto.setUser_no(user_no);
 		log.info("==result==: {}", udto);
 
@@ -143,16 +137,22 @@ public class UserMypageSeriviceImpl implements UserMypageSerivice {
 		udto = fileuploadService.FileuploadOK(udto, mtfRequest, multipartFile_user);
 		log.info("fileresult: {}", udto);
 		
-		udto.setUser_image("https://rence.s3.ap-northeast-2.amazonaws.com/user/" + udto.getUser_image());
-		map.put("user_image", udto.getUser_image());
-		map.put("result", "1");
+		
+		int update_result = dao.user_img_updateOK(udto);
+		String result = null;
+		
 
-		return map;
+		udto.setUser_image("https://rence.s3.ap-northeast-2.amazonaws.com/user/" + udto.getUser_image());
+//		map.put("user_image", udto.getUser_image());
+//		map.put("result", result);
+ 
+		return update_result;
 	}
-	
-	//마이페이지- 회원탈퇴
+
+	// 마이페이지- 회원탈퇴
 	@Override
-	public Map<String, String> user_secedeOK(UserDto udto, HttpSession session, HttpServletRequest request, HttpServletResponse response) {
+	public Map<String, String> user_secedeOK(UserDto udto, HttpSession session, HttpServletRequest request,
+			HttpServletResponse response) {
 		Map<String, String> map = new HashMap<String, String>();
 
 		int result = dao.user_secedeOK(udto);
@@ -174,11 +174,11 @@ public class UserMypageSeriviceImpl implements UserMypageSerivice {
 			log.info("user_secede failed...");
 			map.put("result", "0");
 		}
-		
+
 		return map;
 	}
-	
-	//마이페이지 - 예약리스트
+
+	// 마이페이지 - 예약리스트
 	@Override
 	public Map<String, Object> reserve_list_rsu(String time_point, String user_no, Integer page) {
 		List<MyPageReserveListDto> list = null;
@@ -250,13 +250,11 @@ public class UserMypageSeriviceImpl implements UserMypageSerivice {
 		map.put("list", list);
 		map.put("page", "reserve-list");
 
-			
-
 		log.info("reserve_list : {}", map);
 		return map;
 
 	}
-	
+
 	// 마이페이지 - 마일리지리스트
 	@Override
 	public Map<String, Object> mileage_list_page(UserDto udto, Integer page) {
@@ -264,13 +262,13 @@ public class UserMypageSeriviceImpl implements UserMypageSerivice {
 
 		// 총 마일리지 부분
 		UserMileageDto umdto = dao.totalMileage_selectOne(udto);
-				
+
 		log.info("umdto: {}", umdto);
 
 		// 마일리지 콤마단위로 변환
 		DecimalFormat dc = new DecimalFormat("###,###,###,###,###");
 		String mileage_total = dc.format(umdto.getMileage_total());
-		
+
 		log.info("mileage_total: " + mileage_total);
 
 		// 페이징 처리 로직(마일리지 리스트 전용!!!!)
@@ -321,10 +319,10 @@ public class UserMypageSeriviceImpl implements UserMypageSerivice {
 		map.put("mileage_total", mileage_total);
 		map.put("list", vos);
 		map.put("page", "mileage");
-		
+
 		return map;
 	}
-	
+
 	// 마이페이지 - 마일리지조건리스트
 	@Override
 	public Map<String, Object> mileage_list_page_searchKey(UserDto udto, Integer page, String searchKey) {
@@ -341,7 +339,7 @@ public class UserMypageSeriviceImpl implements UserMypageSerivice {
 		// 마일리지 콤마단위로 변환
 		DecimalFormat dc = new DecimalFormat("###,###,###,###,###");
 		String mileage_total = dc.format(umdto.getMileage_total());
-		
+
 		log.info("mileage_total: " + mileage_total);
 
 		// 페이징 처리 로직(이거는 마일리지 전용임!!!)
@@ -394,11 +392,9 @@ public class UserMypageSeriviceImpl implements UserMypageSerivice {
 		map.put("list", vos);
 		map.put("page", "mileage");
 
-		
-
 		return map;
 	}
-	
+
 	// 마이페이지 - 리뷰리스트
 	@Override
 	public Map<String, Object> review_list_page(String user_no, Integer page) {
@@ -447,12 +443,11 @@ public class UserMypageSeriviceImpl implements UserMypageSerivice {
 
 		return map;
 	}
-	
+
 	// 마이페이지 - 문의리스트
 	@Override
 	public Map<String, Object> question_list_page(String user_no, Integer page) {
-Map<String, Object> map = new HashMap<String, Object>();
-		
+		Map<String, Object> map = new HashMap<String, Object>();
 
 		// 페이징 처리 로직
 		// 리스트 수
@@ -500,6 +495,8 @@ Map<String, Object> map = new HashMap<String, Object>();
 					dto.setState("Y");
 				} else {
 					dto.setState("N");
+					dto.setAnswer_date("x");
+					dto.setAnswer_content("x");
 				}
 			}
 		}
@@ -507,9 +504,7 @@ Map<String, Object> map = new HashMap<String, Object>();
 		map.put("page", "question_list");
 		map.put("list", list);
 
-		
 		return map;
 	}
-	
 
 }// end class

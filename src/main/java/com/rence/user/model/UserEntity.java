@@ -5,6 +5,8 @@
 
 package com.rence.user.model;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -25,7 +27,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Table(name="userinfo")
 @Entity
-public class UserEntity{
+public class UserEntity implements Serializable{
 	
 	@Id //pk설정
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_user")

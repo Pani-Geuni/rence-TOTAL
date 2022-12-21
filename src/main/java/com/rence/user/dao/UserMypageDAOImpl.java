@@ -112,7 +112,7 @@ public class UserMypageDAOImpl implements UserMypageDAO {
 	@Override
 	public int user_img_updateOK(UserDto udto) {
 		log.info("user_img_updateOK()....");
-		log.info("udto", udto);
+		log.info("udto: {}", udto);
 
 		return repository.user_img_updateOK(udto.getUser_image(), udto.getUser_no());
 	}
