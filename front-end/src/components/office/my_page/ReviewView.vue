@@ -29,7 +29,7 @@
 	        <section class="question-history-wrap">
 	            <ul>
                 <li v-for="obj in list" v-bind:key="obj" class="question-list">
-                    <div class="question-content-wrap" @click="show_review_content($event.target)">
+                    <div class="question-content-wrap" @click="show_review_content($event.currentTarget)">
                         <span class="list-title-txt list-company-name">{{obj.company_name}}</span>
                         <span class="list-title-txt list-content">{{obj.review_content}}</span>
                         <span class="list-title-txt list-point">{{obj.review_point}}</span>
@@ -43,7 +43,7 @@
                                     {{obj.company_name}}&nbsp;{{obj.room_name}}
                                 </label>
                                 <div class="question-btn-wrap">
-                                    <span class="question-btn" @click="show_delete_review_popup($event.target)" v-bind:idx="obj.review_no">삭제</span>
+                                    <span class="question-btn" @click="show_delete_review_popup($event.target)" :idx="obj.review_no">삭제</span>
                                 </div>
                             </div>
                             <span>{{obj.review_content}}</span>

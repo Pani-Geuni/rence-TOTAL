@@ -251,7 +251,7 @@
             <section :class="{'paging-section question-paging': maxPage > 0, 'paging-section question-paging blind': maxPage === 0}">
               <section class="paging-section">
                 <div class="paging-wrap">
-                  <span @click="prev_page" :class="{'paging-box before-page-btn hide': maxPage <= 5, 'paging-box before-page-btn' : maxPage > 5}"> &lt;&lt; </span>
+                  <span @click="q_prev_page" :class="{'paging-box before-page-btn hide': maxPage <= 5, 'paging-box before-page-btn' : maxPage > 5}"> &lt;&lt; </span>
                   
                   <div class="paging-num-wrap paging-wrap">
                     <span @click="space_detail_q_paging($event.currentTarget)" v-for="num in forRange" :key="num" :idx="num" :class="{'paging-box paging-num choice': num === nowPage, 'paging-box paging-num un-choice' :num !== nowPage}">
@@ -259,7 +259,7 @@
                     </span>
                   </div>
                   
-                  <span @click="next_page" v-if="totalPageCnt > 5 && maxPage < totalPageCnt" class="paging-box next-page-btn">>></span>
+                  <span @click="q_next_page" v-if="totalPageCnt > 5 && maxPage < totalPageCnt" class="paging-box next-page-btn">>></span>
                   <span v-else class="paging-box next-page-btn hide">>></span>
                   <input type="hidden" id="totalPageCnt" :value="totalPageCnt">
                 </div>
@@ -304,7 +304,7 @@
             <section :class="{'paging-section review-paging': this.maxPage2 > 0, 'paging-section review-paging blind': this.maxPage2 === 0}">
               <section class="paging-section">
                 <div class="paging-wrap">
-                  <span @click="prev_page" :class="{'paging-box before-page-btn hide': this.maxPage2 <= 5, 'paging-box before-page-btn' : this.maxPage2 > 5}"> &lt;&lt; </span>
+                  <span @click="r_prev_page" :class="{'paging-box before-page-btn hide': this.maxPage2 <= 5, 'paging-box before-page-btn' : this.maxPage2 > 5}"> &lt;&lt; </span>
                   
                   <div class="paging-num-wrap paging-wrap">
                     <span @click="space_detail_r_paging($event.currentTarget)" v-for="num in this.forRange2" :key="num" :idx="num" :class="{'paging-box paging-num choice': num === this.nowPage2, 'paging-box paging-num un-choice' :num !== this.nowPage2}">
@@ -312,7 +312,7 @@
                     </span>
                   </div>
                   
-                  <span @click="next_page" v-if="this.totalPageCnt2 > 5 && this.maxPage2 < this.totalPageCnt2" class="paging-box next-page-btn">>></span>
+                  <span @click="r_next_page" v-if="this.totalPageCnt2 > 5 && this.maxPage2 < this.totalPageCnt2" class="paging-box next-page-btn">>></span>
                   <span v-else class="paging-box next-page-btn hide">>></span>
                   <input type="hidden" id="totalPageCnt2" :value="this.totalPageCnt2">
                 </div>
