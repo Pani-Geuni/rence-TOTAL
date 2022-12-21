@@ -61,8 +61,8 @@
         <div class="select-room-section-title">
           <h3>적용 공간 선택</h3>
           <div class="select-all-section">
-            <label @click="selectAllCheckbox" for="select-all-room">전체선택</label>
-            <input type="checkbox" id="select-all-room" />
+            <label for="select-all-room">전체선택</label>
+            <input type="checkbox" id="select-all-room" @click="selectAllCheckbox" @change="changeSelectAll" />
             <input type="hidden" :maxCnt="this.maxCnt" :nowCnt="this.nowCnt" id="maxCnt" />
           </div>
         </div>
@@ -155,8 +155,28 @@ export default {
 
   methods: {
 
-    selectAllCheckbox() {
-      console.log('hi');
+    selectAllCheckbox(e) {
+      if ($(e.target).is(':checked')) {
+        $(e.target).attr('checked', true);
+        console.log('ok');
+      } else {
+        $(e.target).attr('checked', false);
+        console.log('no');
+      }
+    },
+
+    changeSelectAll(e) {
+      if ($(e.target).is(':checked')) {
+        $("input:checkbox[name='select-room']").each(function (index) {
+          if ($(this).is(':disabled')) {
+            $(this).prop('checked', false);
+          } else {
+            $(this).prop('checked', true);
+          }
+        });
+      } else {
+        $("input:checkbox[name='select-room']").prop('checked', false);
+      }
     },
 
     getScheduleList() {
