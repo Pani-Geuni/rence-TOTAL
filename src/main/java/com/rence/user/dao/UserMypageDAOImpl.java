@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Repository;
 
+import com.rence.user.model.MileageDto;
+import com.rence.user.model.MileageEntity;
 import com.rence.user.model.MyPageReserveListDto;
 import com.rence.user.model.MyPageReserveListEntity;
 import com.rence.user.model.UserDto;
@@ -20,7 +22,7 @@ import com.rence.user.model.UserQuestioEntity;
 import com.rence.user.model.UserQuestionDto;
 import com.rence.user.model.UserReview_ViewDto;
 import com.rence.user.model.UserReview_ViewEntity;
-import com.rence.user.repository.MileageRepository;
+import com.rence.user.repository.UserMileageRepository;
 import com.rence.user.repository.MyQuestionRepository;
 import com.rence.user.repository.MyReserveRepository;
 import com.rence.user.repository.MypageRepository;
@@ -46,13 +48,16 @@ public class UserMypageDAOImpl implements UserMypageDAO {
 	MyReserveRepository myReserveRepository;
 
 	@Autowired
-	MileageRepository mileageRepository;
+	UserMileageRepository userMileageRepository;
 
 	@Autowired
 	UserReviewRepository userReviewRepository;
 
 	@Autowired
 	MyQuestionRepository myQuestionRepository;
+	
+	@Autowired
+	MileageRepository mileageRepository;
 
 	// 마이페이지 정보 불러오기
 	@Override
@@ -190,14 +195,15 @@ public class UserMypageDAOImpl implements UserMypageDAO {
 		return vos;
 	}
 
+
 	// 마이페이지 - 마일리지 리스트 - 총마일리지
 	@Override
-	public UserMileageDto totalMileage_selectOne(UserDto udto) {
+	public MileageDto totalMileage_selectOne(UserDto udto) {
 		log.info("totalMileage_selectOne()...." + udto.getUser_no());
 
-		UserMileageEntity entity = mileageRepository.totalMileage_selectOne(udto.getUser_no());
+		MileageEntity entity = mileageRepository.totalMileage_selectOne(udto.getUser_no());
 
-		UserMileageDto udto2 = modelmapper.map(entity, UserMileageDto.class);
+		MileageDto udto2 = modelmapper.map(entity, MileageDto.class);
 
 		return udto2;
 	}
@@ -207,7 +213,7 @@ public class UserMypageDAOImpl implements UserMypageDAO {
 	public long total_rowCount_mileage_all(UserDto udto) {
 		log.info("total_rowCount_mileage_all()....");
 
-		return mileageRepository.count_allmileage(udto.getUser_no());
+		return userMileageRepository.count_allmileage(udto.getUser_no());
 	}
 
 	// 마이페이지 - 마일리지 리스트 - 총 마일리지 리스트
@@ -234,7 +240,7 @@ public class UserMypageDAOImpl implements UserMypageDAO {
 		log.info("start_row: " + start_row);
 		log.info("end_row: " + end_row);
 
-		List<UserMileageEntity> entity_vos = mileageRepository.user_mileage_selectAll_paging(udto.getUser_no(),
+		List<UserMileageEntity> entity_vos = userMileageRepository.user_mileage_selectAll_paging(udto.getUser_no(),
 				start_row, end_row);
 		log.info("entity_vos: {}", entity_vos);
 
@@ -253,11 +259,11 @@ public class UserMypageDAOImpl implements UserMypageDAO {
 
 		long total_rowCount_mileage_all = 0;
 		if (searchKey.equals("all")) {
-			total_rowCount_mileage_all = mileageRepository.count_allmileage(udto.getUser_no());
+			total_rowCount_mileage_all = userMileageRepository.count_allmileage(udto.getUser_no());
 		} else if (searchKey.equals("plus")) {
-			total_rowCount_mileage_all = mileageRepository.count_plusmileage(udto.getUser_no());
+			total_rowCount_mileage_all = userMileageRepository.count_plusmileage(udto.getUser_no());
 		} else if (searchKey.equals("minus")) {
-			total_rowCount_mileage_all = mileageRepository.count_minusmileage(udto.getUser_no());
+			total_rowCount_mileage_all = userMileageRepository.count_minusmileage(udto.getUser_no());
 		}
 		return total_rowCount_mileage_all;
 	}
@@ -289,11 +295,11 @@ public class UserMypageDAOImpl implements UserMypageDAO {
 		log.info("end_row: " + end_row);
 
 		if (searchKey.equals("all")) {
-			entity_vos = mileageRepository.user_mileage_selectAll_paging(udto.getUser_no(), start_row, end_row);
+			entity_vos = userMileageRepository.user_mileage_selectAll_paging(udto.getUser_no(), start_row, end_row);
 		} else if (searchKey.equals("plus")) {
-			entity_vos = mileageRepository.mileage_search_list_plus_paging(udto.getUser_no(), start_row, end_row);
+			entity_vos = userMileageRepository.mileage_search_list_plus_paging(udto.getUser_no(), start_row, end_row);
 		} else if (searchKey.equals("minus")) {
-			entity_vos = mileageRepository.mileage_search_list_minus_paging(udto.getUser_no(), start_row, end_row);
+			entity_vos = userMileageRepository.mileage_search_list_minus_paging(udto.getUser_no(), start_row, end_row);
 		}
 
 		List<UserMileageDto> vos = entity_vos.stream().map(source -> modelmapper.map(source, UserMileageDto.class))
@@ -382,5 +388,7 @@ public class UserMypageDAOImpl implements UserMypageDAO {
 		}
 		return dto;
 	}
+	
+	
 
 }// end class

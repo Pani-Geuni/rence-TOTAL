@@ -1,7 +1,6 @@
 package com.rence.user.service;
 
 import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
@@ -19,6 +18,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.rence.office.common.OfficeInfoMap;
 import com.rence.user.dao.UserMypageDAO;
+import com.rence.user.model.MileageDto;
 import com.rence.user.model.MyPageReserveListDto;
 import com.rence.user.model.UserDto;
 import com.rence.user.model.UserMileageDto;
@@ -54,9 +54,16 @@ public class UserMypageSeriviceImpl implements UserMypageSerivice {
 		// Base64 디코더 작업으로 suerNo정보 가져오기
 		byte[] decodedBytes = Base64.getDecoder().decode(user_no);
 		user_no = new String(decodedBytes);
-
+		
+		
+		
 		UserMypageDto umdto = dao.user_mypage_select(user_no);
-
+		// 총 마일리지 부분
+		UserDto udto = new UserDto();
+		udto.setUser_no(user_no);
+		MileageDto mileagedto = dao.totalMileage_selectOne(udto);
+		umdto.setMileage_total(Integer.toString(mileagedto.getMileage_total()));
+		
 		log.info("umdto: {}", umdto);
 		// 마일리지 콤마단위로 변환
 		DecimalFormat dc = new DecimalFormat("###,###,###,###,###");
@@ -64,9 +71,6 @@ public class UserMypageSeriviceImpl implements UserMypageSerivice {
 
 		umdto.setUser_image("https://rence.s3.ap-northeast-2.amazonaws.com/user/" + umdto.getUser_image());
 
-		SimpleDateFormat sDate = new SimpleDateFormat("yyyy/MM/dd");
-//		log.info("---{}",sDate.format(umdto.getUser_birth()));
-//		umdto.setUser_birth((sDate.format(umdto.getUser_birth())));
 
 		return umdto;
 	}
@@ -261,13 +265,13 @@ public class UserMypageSeriviceImpl implements UserMypageSerivice {
 		Map<String, Object> map = new HashMap<String, Object>();
 
 		// 총 마일리지 부분
-		UserMileageDto umdto = dao.totalMileage_selectOne(udto);
+		MileageDto mileagedto = dao.totalMileage_selectOne(udto);
 
-		log.info("umdto: {}", umdto);
+		log.info("mileagedto: {}", mileagedto);
 
 		// 마일리지 콤마단위로 변환
 		DecimalFormat dc = new DecimalFormat("###,###,###,###,###");
-		String mileage_total = dc.format(umdto.getMileage_total());
+		String mileage_total = dc.format(mileagedto.getMileage_total());
 
 		log.info("mileage_total: " + mileage_total);
 
@@ -333,12 +337,12 @@ public class UserMypageSeriviceImpl implements UserMypageSerivice {
 		log.info("UserDto(사용자 고유번호): {}", udto);
 
 		// 총 마일리지 부분
-		UserMileageDto umdto = dao.totalMileage_selectOne(udto);
-		log.info("umdto: {}", umdto);
+		MileageDto mileagedto = dao.totalMileage_selectOne(udto);
+		log.info("umdto: {}", mileagedto);
 
 		// 마일리지 콤마단위로 변환
 		DecimalFormat dc = new DecimalFormat("###,###,###,###,###");
-		String mileage_total = dc.format(umdto.getMileage_total());
+		String mileage_total = dc.format(mileagedto.getMileage_total());
 
 		log.info("mileage_total: " + mileage_total);
 

@@ -40,6 +40,6 @@ public class UserMileageEntity {
 	@Column(name="room")
 	private String room; //company_name;
 	@Column(name="date")
-	private Date date; // payment_date
+	private String date; // payment_date
 	
 }//end class

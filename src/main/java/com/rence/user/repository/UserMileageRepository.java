@@ -8,16 +8,13 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import com.rence.user.model.MileageEntity;
 import com.rence.user.model.UserMileageEntity;
-import com.rence.user.model.UserMileageEntity;
 
-public interface MileageRepository extends JpaRepository<UserMileageEntity, Object> {
+public interface UserMileageRepository extends JpaRepository<UserMileageEntity, Object> {
 
-	// 총마일리지 조회
-	@Query(nativeQuery = true, value = "select * from( select * from USER_DETAIL_MILEAGE_VIEW where (state ='T' or state ='F')  and user_no=?1 order by no desc)WHERE ROWNUM between 1 and 1")
-	public UserMileageEntity totalMileage_selectOne(String user_no);
-
-
+	
+	
 	// 마일리지 리스트수-전체(페이징 처리를 위해서) all
 	@Query(nativeQuery = true, value = "select count(*) from user_detail_mileage_view"
 			+ " where (state = 'T' or state = 'F') and user_no = ?1")
@@ -46,9 +43,6 @@ public interface MileageRepository extends JpaRepository<UserMileageEntity, Obje
 	//사용
 	@Query(nativeQuery = true, value = "select  * from (select ROWNUM as rn, u.* from (select *  from user_detail_mileage_view  where  user_no = ?1 and state='F' order by no desc) u) where rn between ?2 and ?3")
 	public List<UserMileageEntity> mileage_search_list_minus_paging(String user_no, Integer start_row, Integer end_row);
-
-
-
 
 
 }// end class
