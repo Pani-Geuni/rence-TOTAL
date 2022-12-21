@@ -664,6 +664,15 @@ public class DashboardDAOImpl implements DashboardDAO {
 	@Override
 	public List<ScheduleListViewDTO> backoffice_schedule_list(String backoffice_no, String not_sdate, String not_edate, String not_stime, String not_etime, String off_type, int min, int max) {
 		
+		log.info("backoffice_no::{}",backoffice_no);
+		log.info("not_sdate::{}",not_sdate);
+		log.info("not_edate::{}",not_edate);
+		log.info("not_stime::{}",not_stime);
+		log.info("not_etime::{}",not_etime);
+		log.info("off_type::{}",off_type);
+		log.info("min::{}",min);
+		log.info("max::{}",max);
+		
 		List<ScheduleListViewDTO> sc_vos = new ArrayList<ScheduleListViewDTO>();
 
 		// 1, 2 날짜 형태 변환
@@ -703,6 +712,7 @@ public class DashboardDAOImpl implements DashboardDAO {
 			}
 		}
 
+		log.info("sc_vos::{}",sc_vos);
 		log.info("sc_vos : {} ", sc_vos.size());
 
 		return sc_vos;
@@ -721,7 +731,7 @@ public class DashboardDAOImpl implements DashboardDAO {
 	 */
 	@Override
 	public List<ReservationViewDTO> backoffice_reservation(String backoffice_no, String not_sdate, String not_edate, String not_stime, String not_etime, String room_no, String off_type, int min, int max) {
-		
+
 		String reserve_stime = null;
 		String reserve_etime = null;
 		
@@ -764,7 +774,7 @@ public class DashboardDAOImpl implements DashboardDAO {
 		int flag = reserveAutoUpdateRepository.update_reserve_state_cancel(reserve_no);
 		BOPaymentDTO pvo = new BOPaymentDTO();
 		
-		// 결제 취소,=
+		// 결제 취소
 		if (flag == 1) {
 			// 결제정보 테이블의 상태 'C' 로 변경
 			p_repository.backoffice_update_payment_state_host_cancel(reserve_no); // 환불 상태 'C', 환불 금액 = 실제 결제 금액, 결제일시 = 환불일시
@@ -807,9 +817,14 @@ public class DashboardDAOImpl implements DashboardDAO {
 	@Override
 	public List<ScheduleDTO> backoffice_schedule_calendar(String backoffice_no) {
 		
+		log.info("backoffice_no : {}",backoffice_no);
+		
 		List<ScheduleEntity> se = schedule_repository.backoffice_schedule_calendar(backoffice_no);
+		log.info("se:{}",se);
 		
 		List<ScheduleDTO> svos = se.stream().map(svo -> modelMapper.map(svo, ScheduleDTO.class)).collect(Collectors.toList());
+		
+		log.info("svos:{}",svos);
 		
 		return svos;
 	}
