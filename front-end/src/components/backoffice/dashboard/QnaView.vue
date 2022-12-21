@@ -31,7 +31,7 @@
       <!-- END ct-header -->
 
       <div v-for="vos in q_vos" :key="vos">
-        <div @click="showQanAnswer($event.target)" class="ct-body-row qna">
+        <div @click="showQanAnswer($event.currentTarget)" class="ct-body-row qna">
           <div class="ct-body-cell qna">
             <p v-if="vos.comment_state === 'T'" class="qna-process true">처리</p>
             <p v-if="vos.comment_state === 'F'" class="qna-process false">미처리</p>
@@ -176,8 +176,7 @@ export default {
     },
 
     showQanAnswer(e) {
-      // console.log(e);
-      $(e).parent().siblings('.detail-qna-wrap').toggleClass('blind');
+      $(e).siblings('.detail-qna-wrap').toggleClass('blind');
     },
 
     showAnswerDeletePopup(e) {

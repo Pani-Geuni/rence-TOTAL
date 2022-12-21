@@ -2,22 +2,25 @@
 /* @author 전판근 */
 /* ************ */
 
-.reservation-ct{
-	min-height: 200px;
-	max-height: 200px;
-	overflow-y: overlay;
+.reservation-ct {
+  min-height: 200px;
+  max-height: 200px;
+  overflow-y: overlay;
 }
-.reservation-ct::-webkit-scrollbar{
-    width: 4px;
+
+.reservation-ct::-webkit-scrollbar {
+  width: 4px;
 }
+
 .reservation-ct::-webkit-scrollbar-thumb {
-    background-color: #808080;
-    height: 3px;
-    border-radius: 10px;
+  background-color: #808080;
+  height: 3px;
+  border-radius: 10px;
 }
-.reservation-ct::-webkit-scrollbar-track{
-    background-color: #EEEEEE;
-    border-radius: 10px;
+
+.reservation-ct::-webkit-scrollbar-track {
+  background-color: #EEEEEE;
+  border-radius: 10px;
 }
 
 .custom-table {
@@ -28,8 +31,8 @@
 }
 
 .custom-table * {
-	font-family: "HallymGothic";
-	font-weight: 900;
+  font-family: "HallymGothic";
+  font-weight: 900;
 }
 
 .ct-header {
@@ -73,8 +76,8 @@
   border-radius: 8px;
 
   font-size: 10px;
-  font-weight : 700 !important;
-  letter-spacing : 0.4px;
+  font-weight: 700 !important;
+  letter-spacing: 0.4px;
   color: #ffffff;
   background-color: #b2a4ff;
 
@@ -101,8 +104,8 @@
   cursor: default;
 }
 
-.reserve_is_cancle{
-	cursor: pointer !important;
+.reserve_is_cancle {
+  cursor: pointer !important;
 }
 
 .ct-body-btn.review-edit {
@@ -113,8 +116,8 @@
   background-color: #2ee49d;
 }
 
-.qna-delete{
-	background-color: #ff5c71;
+.qna-delete {
+  background-color: #ff5c71;
 }
 
 /* ********** */
@@ -126,6 +129,7 @@
 
   margin-top: 24px;
 }
+
 .page-item button {
   width: 20px;
   height: 20px;
@@ -147,27 +151,27 @@
 /* ********************************* */
 .ct-header-cell.main:nth-child(1),
 .ct-body-cell.main:nth-child(1) {
-	width: 110px;
+  width: 110px;
 }
 
 .ct-header-cell.main:nth-child(2),
 .ct-body-cell.main:nth-child(2) {
-	width: 100px;
+  width: 100px;
 }
 
 .ct-header-cell.main:nth-child(3),
 .ct-body-cell.main:nth-child(3) {
-	width: 70px;
+  width: 70px;
 }
 
 .ct-header-cell.main:nth-child(4),
 .ct-body-cell.main:nth-child(4) {
-	width: 80px;
+  width: 80px;
 }
 
 .ct-header-cell.main:nth-child(5),
 .ct-body-cell.main:nth-child(5) {
-	width: 50px;
+  width: 50px;
 }
 
 /* ********************************* */
@@ -211,7 +215,7 @@
 
 .ct-header-cell.qna:nth-child(4),
 .ct-body-cell.qna:nth-child(4) {
-  width: 70px;
+  width: 100px;
 }
 
 .ct-header-cell.qna:nth-child(5),
@@ -225,42 +229,42 @@
 /* ***************************** */
 .ct-header-cell.reserve:nth-child(1),
 .ct-body-cell.reserve:nth-child(1) {
-	width: 130px;
+  width: 130px;
 }
 
 .ct-header-cell.reserve:nth-child(2),
 .ct-body-cell.reserve:nth-child(2) {
-	width: 80px;
+  width: 80px;
 }
 
 .ct-header-cell.reserve:nth-child(3),
 .ct-body-cell.reserve:nth-child(3) {
-	width: 100px;
+  width: 100px;
 }
 
 .ct-header-cell.reserve:nth-child(4),
 .ct-body-cell.reserve:nth-child(4) {
-	width: 50px;
+  width: 50px;
 }
 
 .ct-header-cell.reserve:nth-child(5),
 .ct-body-cell.reserve:nth-child(5) {
-	width: 80px;
+  width: 80px;
 }
 
 .ct-header-cell.reserve:nth-child(6),
 .ct-body-cell.reserve:nth-child(6) {
-	width: 150px;
+  width: 150px;
 }
 
 .ct-header-cell.reserve:nth-child(7),
 .ct-body-cell.reserve:nth-child(7) {
-	width: 80px;
+  width: 80px;
 }
 
 .ct-header-cell.reserve:nth-child(8),
 .ct-body-cell.reserve:nth-child(8) {
-	width: 60px;
+  width: 60px;
 }
 
 /* ********************************* */
@@ -268,25 +272,25 @@
 /* ********************************* */
 .ct-header-cell.reservation:nth-child(1),
 .ct-body-cell.reservation:nth-child(1) {
-	width: 60px;
+  width: 60px;
 }
 
 .ct-header-cell.reservation:nth-child(2),
 .ct-body-cell.reservation:nth-child(2) {
-	width: 80px;
+  width: 80px;
 }
 
 .ct-header-cell.reservation:nth-child(3),
 .ct-body-cell.reservation:nth-child(3) {
-	width: 100px;
+  width: 100px;
 }
 
 .ct-header-cell.reservation:nth-child(4),
 .ct-body-cell.reservation:nth-child(4) {
-	width: 80px;
+  width: 80px;
 }
 
 .ct-header-cell.reservation:nth-child(5),
 .ct-body-cell.reservation:nth-child(5) {
-	width: 120px;
+  width: 120px;
 }

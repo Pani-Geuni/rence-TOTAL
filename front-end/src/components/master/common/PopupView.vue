@@ -116,6 +116,10 @@ export default {
           console.log('수락 에러');
         }
       });
+
+      if (window.location.href === 'http://localhost:8800/static/index.html#/master/main') {
+        this.$router.go();
+      }
     },
     closeGrantBtn() {
       $('#grant-popup').addClass('blind');
@@ -141,6 +145,10 @@ export default {
           this.$router.replace('/master/main');
         }
       });
+
+      if (window.location.href === 'http://localhost:8800/static/index.html#/master/main') {
+        this.$router.go();
+      }
     },
 
     closeRefuseBtn() {
@@ -170,6 +178,9 @@ export default {
           this.$router.replace('/master/backoffice_end');
         }
       });
+      if (window.location.href === 'http://localhost:8800/static/index.html#/master/backoffice_end') {
+        this.$router.go();
+      }
     },
 
     closeDeleteBtn() {
