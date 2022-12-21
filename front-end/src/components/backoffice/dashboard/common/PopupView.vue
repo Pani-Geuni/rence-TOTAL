@@ -1015,6 +1015,7 @@ export default {
           this.$router.replace('/backoffice/landing');
         }
       });
+      this.$router.go();
     },
 
     closeLogoutPopup() {
