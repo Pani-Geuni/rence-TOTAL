@@ -82,7 +82,7 @@
           <div class="ct-body-row" :class="{ 'blind': sc_vos.length === 0 }" v-for="vos in sc_vos" :key="vos">
             <div class="ct-body-cell schedule">
               <input type="checkbox" name="select-room" id="room_no" class="room-checkbox"
-                :class="{ 'disabled': 'vos.reserve_cnt > 0' }" :room_no="vos.room_no" value="" />
+                :disabled="vos.reserve_cnt > 0 ? true : false" :room_no="vos.room_no" value="" />
             </div>
             <div class="ct-body-cell schedule">
               <span class="room_type" v-if="vos.room_type === 'desk'">데스크</span>
@@ -186,6 +186,14 @@ export default {
         $('.popup-background:eq(1)').removeClass('blind');
         $('#common-alert-popup').removeClass('blind');
         $('.common-alert-txt').text('일정 설정 타입을 선택해 주세요.');
+      } else if (this.not_sdate === '' || this.not_edate === '') {
+        $('.popup-background:eq(1)').removeClass('blind');
+        $('#common-alert-popup').removeClass('blind');
+        $('.common-alert-txt').text('날짜 및 시간을 선택해 주세요.');
+      } else if (this.not_sdate > this.not_edate) {
+        $('.popup-background:eq(1)').removeClass('blind');
+        $('#common-alert-popup').removeClass('blind');
+        $('.common-alert-txt').text('종료 시간은 시작 시간보다 빠를 수 없습니다.');
       } else {
         const url = `http://localhost:8800/backoffice/dash/schedule_research?${params}&page=1`;
         axios.get(url).then((res) => {
@@ -196,8 +204,6 @@ export default {
 
           this.maxCnt = res.data.maxCnt;
           this.nowCnt = res.data.nowCnt;
-          console.log('????? maxCnt : ', this.maxCnt);
-          console.log('????? nowCnt : ', this.nowCnt);
         });
       }
     },
@@ -268,7 +274,7 @@ export default {
       console.log(this.check_room);
 
       if (this.check_room.length !== 0) {
-        const backoffice_no = this.$cookies.get('backoffice_no');
+        const backoffice_no = decodeURIComponent(window.atob(this.$cookies.get('backoffice_no')));
         const sDateTime = this.not_sdate.toString().split(' ');
         const eDateTime = this.not_edate.toString().split(' ');
 
@@ -295,6 +301,9 @@ export default {
             params.append('not_stime', not_stime);
             params.append('not_etime', not_etime);
             params.append('off_type', off_type);
+
+            console.log('backoffice_no :', backoffice_no);
+            console.log('room_no :', room_no);
 
             axios.post('http://localhost:8800/backoffice/dash/scheduleOK', params)
               // eslint-disable-next-line no-loop-func
