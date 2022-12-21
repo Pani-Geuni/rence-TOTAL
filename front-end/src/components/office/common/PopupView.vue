@@ -1519,8 +1519,9 @@ export default {
 
         axios.get(`http://localhost:8800/rence/reserve_cancel?reserve_no=${reserve_no}&user_no=${user_no}`)
           .then((res) => {
+            console.log(res.data);
             if (res.data.result === '1') {
-              const reserve_no = location.href.split('reserve_no=')[1].split('&')[0];
+              const reserve_no = window.location.href.split('reserve_no=')[1];
               const cancel_amount = parseInt($('#actual_payment').attr('actual_payment').replace(',', ''));
 
               axios.get(`http://localhost:8800/rence/payment_cancel?reserve_no=${reserve_no}&cancel_amount=${cancel_amount}&reason=예약 취소로 인한 결제 환불`)
@@ -1556,6 +1557,10 @@ export default {
                   $('.common-alert-txt').text('오류 발생으로 인해 처리에 실패하였습니다.');
                 });
             } else {
+              // 로딩 화면 닫기
+              $('.popup-background:eq(1)').addClass('blind');
+              $('#spinner-section').addClass('blind');
+
               $('#reserve-cancel-popup').addClass('blind');
               $('#reserve-cancel-fail-popup').removeClass('blind');
             }

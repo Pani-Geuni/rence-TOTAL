@@ -430,11 +430,7 @@
 							<label class="fixed-section-label">
 								체크인 시간
 							</label>
-							<!-- <div class="time-select-wrap"> -->
-                <date-picker v-model:value="time0" @change="set_date"></date-picker>
-								<!-- <input type="text" class="type-border-txt time-input" placeholder="날짜/시간 추가" readonly /> -->
-								<!-- <img src="@/assets/IMG/office/full-dropdown.svg" alt="full-dropdown" class="full-dropdown" /> -->
-							<!-- </div> -->
+                <date-picker v-model:value="time0" @change="set_date" :disabled-date="notBeforeToday"></date-picker>
 						</section>
 						<section class="time-boundary month-time-boundary">
 							<label class="fixed-section-label">대여 개월 수</label>
@@ -608,6 +604,9 @@ export default {
       });
   },
   methods: {
+    notBeforeToday(date) {
+      return date < new Date(new Date().setHours(0, 0, 0, 0));
+    },
     initMap() {
       const mapContainer = document.getElementById('map');
       const mapOption = {

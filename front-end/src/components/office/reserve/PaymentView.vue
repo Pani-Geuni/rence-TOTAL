@@ -284,34 +284,34 @@ export default {
               this.list = res.data;
               this.timer();
 
-              // $('.room_price').each(function (index, value) {
-              //   const price = $(value).text();
-              //   $(this).text(price.replace(/\B(?=(\d{3})+(?!\d))/g, ','));
-              // });
+              $('.room_price').each(function (index, value) {
+                const price = $(value).text();
+                $(this).text(price.replace(/\B(?=(\d{3})+(?!\d))/g, ','));
+              });
 
-              // $('#payment_all').text(
-              //   $('#payment_all')
-              //     .text()
-              //     .replace(/\B(?=(\d{3})+(?!\d))/g, ','),
-              // );
+              $('#payment_all').text(
+                $('#payment_all')
+                  .text()
+                  .replace(/\B(?=(\d{3})+(?!\d))/g, ','),
+              );
 
-              // $('#earned_mileage').text(
-              //   $('#earned_mileage')
-              //     .text()
-              //     .replace(/\B(?=(\d{3})+(?!\d))/g, ','),
-              // );
+              $('#earned_mileage').text(
+                $('#earned_mileage')
+                  .text()
+                  .replace(/\B(?=(\d{3})+(?!\d))/g, ','),
+              );
 
-              // $('#my-mileage').text(
-              //   $('#my-mileage')
-              //     .text()
-              //     .replace(/\B(?=(\d{3})+(?!\d))/g, ','),
-              // );
+              $('#my-mileage').text(
+                $('#my-mileage')
+                  .text()
+                  .replace(/\B(?=(\d{3})+(?!\d))/g, ','),
+              );
 
-              // $('#max-use-mileage').text(
-              //   $('#max-use-mileage')
-              //     .text()
-              //     .replace(/\B(?=(\d{3})+(?!\d))/g, ','),
-              // );
+              $('#max-use-mileage').text(
+                $('#max-use-mileage')
+                  .text()
+                  .replace(/\B(?=(\d{3})+(?!\d))/g, ','),
+              );
 
               this.payment_all = res.data.payment_all;
               this.earned_mileage = res.data.earned_mileage;
@@ -471,36 +471,38 @@ export default {
       } else if ($('.inner-radio:eq(1)').hasClass('choice-radio')) {
       // 후불 결제 시 로직
         const payment_later = parseInt(this.payment_all) * 0.2;
+        console.log(this.payment_all);
+        console.log(this.payment_all);
         this.actual_payment = payment_later;
         this.earned_mileage = Math.round(this.actual_payment * 0.05);
         $('#earned_mileage').text(this.earned_mileage);
 
-        // 가진 마일리지보다 적게 사용할 때
-        if (use_mileage <= this.max_use_mileage) {
-        // 사용 마일리지가 원결제 금액보다 작을 때
-          if (use_mileage <= this.actual_payment) {
-            if (use_mileage === 0 || use_mileage === '') {
-              this.actual_payment = payment_later;
-              this.earned_mileage = this.actual_payment * 0.05;
-            } else {
-              this.actual_payment = payment_later - use_mileage;
-              this.earned_mileage = this.actual_payment * 0.05;
-            }
-          } else {
-          // 사용 마일리지가 원결제 금액보다 클 때
-            $('#use-mileage').val('');
-          }
+        // // 가진 마일리지보다 적게 사용할 때
+        // if (use_mileage <= this.max_use_mileage) {
+        // // 사용 마일리지가 원결제 금액보다 작을 때
+        //   if (use_mileage <= this.actual_payment) {
+        //     if (use_mileage === 0 || use_mileage === '') {
+        //       this.actual_payment = payment_later;
+        //       this.earned_mileage = this.actual_payment * 0.05;
+        //     } else {
+        //       this.actual_payment = payment_later - use_mileage;
+        //       this.earned_mileage = this.actual_payment * 0.05;
+        //     }
+        //   } else {
+        //   // 사용 마일리지가 원결제 금액보다 클 때
+        //     $('#use-mileage').val('');
+        //   }
 
-          $('#earned_mileage').text(this.earned_mileage);
-          $('#payment_all').text(this.actual_payment);
-        } else {
-        // 가진 마일리지보다 많이 사용할 때
-          $('#use-mileage').val('');
-          this.actual_payment = payment_later;
-          this.earned_mileage = Math.round(this.actual_payment * 0.05);
-          $('#earned_mileage').text(this.earned_mileage);
-          $('#payment_all').text(this.actual_payment);
-        }
+        //   $('#earned_mileage').text(this.earned_mileage);
+        //   $('#payment_all').text(this.actual_payment);
+        // } else {
+        // // 가진 마일리지보다 많이 사용할 때
+        //   $('#use-mileage').val('');
+        //   this.actual_payment = payment_later;
+        //   this.earned_mileage = Math.round(this.actual_payment * 0.05);
+        //   $('#earned_mileage').text(this.earned_mileage);
+        //   $('#payment_all').text(this.actual_payment);
+        // }
       }
 
       // 숫자 콤마 찍기

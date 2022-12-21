@@ -72,7 +72,8 @@
           </div>
         </router-link>
 
-        <router-link to="/review">
+        <!-- <router-link to="/review"> -->
+        <router-link to="/reviews">
           <div id="review-menu" class="menu-box left-menu">
             <section class="menu-box-img-section">
               <img src="@/assets/IMG/my-page/review.svg" alt="menu-box-img" class="menu-box-img" />

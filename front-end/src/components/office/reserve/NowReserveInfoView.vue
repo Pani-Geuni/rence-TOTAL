@@ -207,6 +207,7 @@ export default {
     return {
       list: '',
       reserveNo: '',
+      load: false,
       axiosFlag: true,
     };
   },

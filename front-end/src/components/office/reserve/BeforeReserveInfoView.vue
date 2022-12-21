@@ -145,19 +145,19 @@
                   <ul class="payment-info-li-wrap">
                     <li class="info-li">
                       <label class="pay-info-label">상품 가격</label>
-                      <span class="pay-info-text" id="actual_payment" :payment_total="list.mdto.payment_total">{{list.mdto.payment_total}}원</span>
+                      <span class="pay-info-text" id="actual_payment" :payment_total="list.mvo.payment_total">{{list.mvo.payment_total}}원</span>
                     </li>
                     <li class="info-li">
                       <label class="pay-info-label">마일리지 적립 금액</label>
-                      <span class="pay-info-text">{{list.mdto.mileage_change}}원</span>
+                      <span class="pay-info-text">{{list.mvo.mileage_change}}원</span>
                     </li>
                     <li class="info-li">
                       <label class="pay-info-label">결제 가격</label>
-                      <span class="pay-info-text" id="actual_payment" :actual_payment="list.mdto.actual_payment">{{list.mdto.actual_payment}}원</span>
+                      <span class="pay-info-text" id="actual_payment" :actual_payment="list.mvo.actual_payment">{{list.mvo.actual_payment}}원</span>
                     </li>
                     <li class="info-li">
                       <label class="pay-info-label">마일리지 사용 금액</label>
-                      <span class="pay-info-text">{{list.mdto.use_mileage}}원</span>
+                      <span class="pay-info-text">{{list.mvo.use_mileage}}원</span>
                     </li>
                   </ul>
                 </section>
@@ -276,6 +276,7 @@ export default {
 
           axios.get(`http://localhost:8800/rence/reserved_info?reserve_no=${this.reserveNo}`)
             .then((res) => {
+              console.log(res.data);
               this.list = res.data;
               this.load = true;
 
@@ -411,14 +412,22 @@ export default {
                     if ($('.g-star').hasClass('blind')) point++;
                   }
 
-                  const params = new URLSearchParams();
-                  params.append('user_no', window.atob(this.$cookies.get('user_no')));
-                  params.append('backoffice_no', $(param).attr('backoffice_no'));
-                  params.append('room_no', $(param).attr('room_no'));
-                  params.append('review_point', point);
-                  params.append('review_content', $('#review-write').val().trim());
+                  // const params = new URLSearchParams();
+                  // params.append('user_no', window.atob(this.$cookies.get('user_no')));
+                  // params.append('backoffice_no', $(param).attr('backoffice_no'));
+                  // params.append('room_no', $(param).attr('room_no'));
+                  // params.append('review_point', point);
+                  // params.append('review_content', $('#review-write').val().trim());
 
-                  axios.get('http://localhost:8800/rence/insert_review', params)
+                  axios.get('http://localhost:8800/rence/insert_review', {
+                    params: {
+                      user_no: window.atob(this.$cookies.get('user_no')),
+                      backoffice_no: $(param).attr('backoffice_no'),
+                      room_no: $(param).attr('room_no'),
+                      review_point: point,
+                      review_content: $('#review-write').val().trim(),
+                    },
+                  })
                     .then((res) => {
                       this.review_flag = true;
 
@@ -426,7 +435,7 @@ export default {
                       $('.popup-background:eq(0)').addClass('blind');
                       $('#spinner-section').addClass('blind');
 
-                      if (res.data.result === 1) {
+                      if (res.data.result === '1') {
                         // TEXTAREA 초기화
                         $('#review-write').val('');
 
