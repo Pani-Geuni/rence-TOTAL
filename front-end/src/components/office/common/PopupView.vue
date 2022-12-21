@@ -393,7 +393,7 @@ export default {
               if (port === '8800') {
                 window.location.href = 'http://localhost:8800/static/index.html#/';
               } else {
-                window.location.href = `http://localhost:${port}/list/search_list/type=${this.type}&location=${this.location}&searchWord=${$('#input_searchBar').val().trim()}&condition=date&page=1`;
+                window.location.href = `http://localhost:${port}/`;
               }
             }
             // 로그아웃 실패
@@ -523,7 +523,7 @@ export default {
             if (port === '8800') {
               window.location.href = 'http://localhost:8800/static/index.html#/';
             } else {
-              window.location.href = `http://localhost:${port}/list/search_list/type=${this.type}&location=${this.location}&searchWord=${$('#input_searchBar').val().trim()}&condition=date&page=1`;
+              window.location.href = `http://localhost:${port}/`;
             }
           }
           // 로그아웃 실패
@@ -1306,15 +1306,21 @@ export default {
                 $('.modify-popup-input-short').removeClass('null-input-border');
                 $('.modify-popup-input').removeClass('null-input-border');
 
+                $('.popup-background:eq(0)').addClass('blind');
+                $('#modify-pw-section').addClass('blind');
+
                 // 성공 알림창
                 $('.popup-background:eq(1)').removeClass('blind');
                 $('#common-alert-popup').removeClass('blind');
-                $('.common-alert-txt').text('비밀번호가 변경되었습니다.');
-                $('#common-alert-btn').attr('is_reload', true);
+                $('.common-alert-txt').text('비밀번호가 변경되어 로그아웃 처리되고<br>홈으로 이동합니다!');
+                $('#common-alert-btn').attr('logout', 'true');
               } else {
+                $('.popup-background:eq(0)').addClass('blind');
+                $('#modify-pw-section').addClass('blind');
+
                 $('.popup-background:eq(1)').removeClass('blind');
                 $('#common-alert-popup').removeClass('blind');
-                $('.common-alert-txt').text('예상치못한 오류로 비밀번호 변경에 실패하였습니다.');
+                $('.common-alert-txt').text('비밀번호 변경에 실패하였습니다.');
               }
             })
             .catch(() => {
@@ -1326,7 +1332,7 @@ export default {
 
               $('.popup-background:eq(1)').removeClass('blind');
               $('#common-alert-popup').removeClass('blind');
-              $('.common-alert-txt').text('오류 발생으로 인해 처리에 실패하였습니다.');
+              $('.common-alert-txt').text('오류 발생으로 인해 비밀번호 변경 처리에 실패하였습니다.');
             });
         }
       } else {
@@ -1384,11 +1390,10 @@ export default {
         $('.review-upload-value').addClass('null-input-border');
       } else {
         const formData = new FormData();
-
         const image = $('.file').get(0).files;
 
         for (let i = 0; i < image.length; i++) {
-          formData.append('multipartFile_user', image[i]);
+          formData.append('multipartFile', image[i]);
         }
 
         // 로딩 화면
@@ -1401,6 +1406,10 @@ export default {
           },
         })
           .then((res) => {
+            // 로딩 화면
+            $('.popup-background:eq(1)').addClass('blind');
+            $('#spinner-section').addClass('blind');
+
             if (res.data.result === '1') {
               $('.popup-background:eq(1)').removeClass('blind');
               $('#common-alert-popup').removeClass('blind');
@@ -1497,71 +1506,6 @@ export default {
         }
       } else {
         $('#modify-pw-now').addClass('null-input-border');
-      }
-    },
-    /** 비밀번호 수정 로직 * */
-    do_modify_pw() {
-      if (this.modify_pw_flag) {
-        if ($('#modify-pw-now').val().trim().length > 0 && $('#modify-pw-new').val().trim().length > 0 && $('#modify-pw-renew').val().trim().length > 0) {
-          if ($('.modify-error-txt:eq(0)').hasClass('blind')
-              && $('.modify-error-txt:eq(1)').hasClass('blind')
-              && $('.modify-error-txt:eq(2)').hasClass('blind')
-              && !$('.modify-popup-input-short').hasClass('null-input-border')
-              && !$('.modify-popup-input:eq(0)').hasClass('null-input-border')
-              && !$('.modify-popup-input:eq(1)').hasClass('null-input-border')) {
-            // 로딩 화면
-            $('.popup-background:eq(1)').removeClass('blind');
-            $('#spinner-section').removeClass('blind');
-
-            this.modify_pw_flag = false;
-
-            const params = new URLSearchParams();
-            params.append('user_no', window.atob(this.$cookies.get('user_no')));
-            params.append('user_pw', $('#modify-pw-renew').val().trim());
-
-            axios.post('http://localhost:8800/rence/user_pw_updateOK', params)
-              .then((res) => {
-                this.modify_pw_flag = true;
-
-                // 로딩 화면 닫기
-                $('.popup-background:eq(1)').addClass('blind');
-                $('#spinner-section').addClass('blind');
-
-                // 비밀번호 변경 성공
-                if (res.data.result === '1') {
-                // INPUT 초기화
-                  $('.modify-popup-input').val('');
-                  $('.modify-popup-input-short').val('');
-
-                  // 경고 테두리 초기화
-                  $('.modify-popup-input-short').removeClass('null-input-border');
-                  $('.modify-popup-input').removeClass('null-input-border');
-
-                  // 성공 알림창
-                  $('.popup-background:eq(1)').removeClass('blind');
-                  $('#common-alert-popup').removeClass('blind');
-                  $('.common-alert-txt').text('비밀번호가 변경되었습니다.');
-                  $('#common-alert-btn').attr('logout', 'true');
-                } else {
-                  $('.popup-background:eq(1)').removeClass('blind');
-                  $('#common-alert-popup').removeClass('blind');
-                  $('.common-alert-txt').text('예상치못한 오류로 비밀번호 변경에 실패하였습니다.');
-                }
-              }).catch(() => {
-                this.modify_pw_flag = true;
-
-                // 로딩 화면 닫기
-                $('.popup-background:eq(1)').addClass('blind');
-                $('#spinner-section').addClass('blind');
-
-                $('.popup-background:eq(1)').removeClass('blind');
-                $('#common-alert-popup').removeClass('blind');
-                $('.common-alert-txt').text('오류 발생으로 인해 처리에 실패하였습니다.');
-              });
-          }
-        } else {
-          $('#modify-pw-now').addClass('null-input-border');
-        }
       }
     },
 
