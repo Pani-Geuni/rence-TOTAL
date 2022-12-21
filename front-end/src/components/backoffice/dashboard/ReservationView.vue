@@ -22,7 +22,7 @@
           <h3>예약자 정보</h3>
           <div class="select-all-section">
             <label for="select-all-reservation">전체선택</label>
-            <input type="checkbox" id="select-all-reservation" />
+            <input type="checkbox" id="select-all-reservation" @click="selectAllCheckbox" @change="changeSelectAll" />
           </div>
           <!-- END select-all-section -->
         </div>
@@ -110,6 +110,30 @@ export default {
   },
 
   methods: {
+    selectAllCheckbox(e) {
+      if ($(e.target).is(':checked')) {
+        $(e.target).attr('checked', true);
+        console.log('ok');
+      } else {
+        $(e.target).attr('checked', false);
+        console.log('no');
+      }
+    },
+
+    changeSelectAll(e) {
+      if ($(e.target).is(':checked')) {
+        $("input:checkbox[name='reserve_no']").each(function (index) {
+          if ($(this).is(':disabled')) {
+            $(this).prop('checked', false);
+          } else {
+            $(this).prop('checked', true);
+          }
+        });
+      } else {
+        $("input:checkbox[name='reserve_no']").prop('checked', false);
+      }
+    },
+
     getReservationList() {
       this.room_no = this.$route.query.room_no;
       this.not_sdate = this.$route.query.not_sdate;
@@ -127,14 +151,6 @@ export default {
       params.append('not_etime', this.not_etime);
       params.append('off_type', this.off_type);
       params.append('page', this.page);
-
-      console.log(this.backoffice_no);
-      console.log(this.room_no);
-      console.log(this.not_sdate);
-      console.log(this.not_edate);
-      console.log(this.not_stime);
-      console.log(this.not_etime);
-      console.log(this.off_type);
 
       axios.get(`http://localhost:8800/backoffice/dash/reservation?${params}`)
         .then((res) => {
