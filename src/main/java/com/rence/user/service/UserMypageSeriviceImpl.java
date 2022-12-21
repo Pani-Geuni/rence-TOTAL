@@ -116,7 +116,7 @@ public class UserMypageSeriviceImpl implements UserMypageSerivice {
 	}
 
 	@Override
-	public int user_img_updateOK(UserDto udto, HttpServletRequest request,
+	public Map<String, String> user_img_updateOK(UserDto udto, HttpServletRequest request,
 			MultipartHttpServletRequest mtfRequest, MultipartFile multipartFile_user, HttpServletResponse response) {
 		log.info("user_img_updateOK()...");
 
@@ -148,13 +148,15 @@ public class UserMypageSeriviceImpl implements UserMypageSerivice {
 		
 		int update_result = dao.user_img_updateOK(udto);
 		String result = null;
-		
+		if(update_result == 1) {
+			log.info("OK!!");
+			map.put("result", "1");
+		}
+		log.info("map: {}",map);
 
 		udto.setUser_image("https://rence.s3.ap-northeast-2.amazonaws.com/user/" + udto.getUser_image());
-//		map.put("user_image", udto.getUser_image());
-//		map.put("result", result);
  
-		return update_result;
+		return map;
 	}
 
 	// 마이페이지- 회원탈퇴

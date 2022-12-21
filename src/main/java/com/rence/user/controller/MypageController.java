@@ -67,7 +67,7 @@ public class MypageController {
 	@GetMapping("/go_my_page")
 	public String go_my_page(HttpServletRequest request, HttpServletResponse response) {
 		log.info("go_my_page()...");
-		
+
 		UserMypageDto umdto = service.user_mypage_select(request, response);
 
 		log.info("====umdto: {}", umdto);
@@ -87,7 +87,6 @@ public class MypageController {
 		log.info("result: {}", udto);
 
 		Map<String, String> map = service.user_pw_updateOK(udto);
-
 
 		String jsonObject = gson.toJson(map);
 		return jsonObject;
@@ -113,14 +112,16 @@ public class MypageController {
 	// **********************
 	@ApiOperation(value = "프로필 수정", notes = "프로필 수정 입니다.")
 	@RequestMapping(value = "/user_img_updateOK", method = RequestMethod.POST)
-	public void user_img_updateOK(UserDto udto, HttpServletRequest request, MultipartHttpServletRequest mtfRequest, HttpServletResponse response,
+	public String user_img_updateOK(UserDto udto, HttpServletRequest request,
+			MultipartHttpServletRequest mtfRequest, HttpServletResponse response,
 			@RequestParam(value = "multipartFile") MultipartFile multipartFile_user) {
 		log.info("user_img_updateOK()...");
 		log.info("result: {}", udto);
-		
-		 int result = service.user_img_updateOK(udto, request, mtfRequest,multipartFile_user,response);
-		
-		
+
+		Map<String, String> map = service.user_img_updateOK(udto, request, mtfRequest, multipartFile_user, response);
+
+		String jsonObject = gson.toJson(map);
+		return jsonObject;
 	}
 
 	// **********************
@@ -133,13 +134,12 @@ public class MypageController {
 		log.info("user_secedeOK()...");
 		log.info("result: {}", udto);
 
-		Map<String, String> map = service.user_secedeOK(udto, session, request, response );
-		
+		Map<String, String> map = service.user_secedeOK(udto, session, request, response);
+
 		String jsonObject = gson.toJson(map);
 		return jsonObject;
 	}
 
-	
 	// **********************
 	// 예약 리스트 이동
 	// **********************
@@ -150,10 +150,9 @@ public class MypageController {
 
 		log.info("reserve_list");
 		log.info("current page: {}", page);
-		
-		
+
 		Map<String, Object> map = service.reserve_list_rsu(time_point, user_no, page);
-		
+
 		String jsonObject = gson.toJson(map);
 		return jsonObject;
 	}
@@ -165,34 +164,36 @@ public class MypageController {
 	@GetMapping("/mileage")
 	public String go_mileage(UserDto udto, HttpServletRequest request,
 			@RequestParam(value = "page", defaultValue = "1") Integer page) {
-	
+
 		log.info("go_mileage()...");
 		log.info("UserDto(사용자 고유번호): {}", udto);
 		log.info("current page: {}", page);
-		
-		Map<String, Object> map = service.mileage_list_page(udto, page);
-		
 
+		Map<String, Object> map = service.mileage_list_page(udto, page);
 
 		String jsonObject = gson.toJson(map);
 		return jsonObject;
-
 
 	}
 
-	// **********************	// 마일리지 리스트 - searchKey	// **********************	@ApiOperation(value = "마일리지 조건리스트", notes = "마일리지 조건리스트 페이지입니다.")	@GetMapping("/mileage_search_list")	public String go_mileage_search_list(UserDto udto, Model model, HttpServletRequest request, String searchKey,			@RequestParam(value = "page", defaultValue = "1") Integer page) {
-		
+	// **********************
+	// 마일리지 리스트 - searchKey
+	// **********************
+	@ApiOperation(value = "마일리지 조건리스트", notes = "마일리지 조건리스트 페이지입니다.")
+	@GetMapping("/mileage_search_list")
+	public String go_mileage_search_list(UserDto udto, Model model, HttpServletRequest request, String searchKey,
+			@RequestParam(value = "page", defaultValue = "1") Integer page) {
+
 		log.info("go_mileage()...");
 		log.info("UserDto(사용자 고유번호): {}", udto);
 		log.info("current page: {}", page);
-		
-		Map<String, Object> map = service.mileage_list_page_searchKey(udto, page,searchKey);
-		
 
+		Map<String, Object> map = service.mileage_list_page_searchKey(udto, page, searchKey);
 
 		String jsonObject = gson.toJson(map);
 		return jsonObject;
-	}
+	}
+
 	// **********************
 	// 후기 리스트 이동
 	// **********************
@@ -200,14 +201,14 @@ public class MypageController {
 	@GetMapping("/review_list")
 	public String review_list(String user_no, Model model,
 			@RequestParam(value = "page", defaultValue = "1") Integer page) {
-		
+
 		log.info("review_list()...");
 		log.info("user_no: " + user_no);
 		Map<String, Object> map = service.review_list_page(user_no, page);
-		
+
 		String jsonObject = gson.toJson(map);
 		return jsonObject;
-	
+
 	}
 
 	// **********************
@@ -217,14 +218,14 @@ public class MypageController {
 	@GetMapping("/question_list")
 	public String question_list(String user_no, Model model,
 			@RequestParam(value = "page", defaultValue = "1") Integer page) {
-		
+
 		log.info("question_list()...");
 		log.info("user_no: " + user_no);
 		Map<String, Object> map = service.question_list_page(user_no, page);
-		
+
 		String jsonObject = gson.toJson(map);
 		return jsonObject;
-	
+
 	}
 
 }// end class
