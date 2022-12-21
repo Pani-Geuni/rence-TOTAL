@@ -153,7 +153,7 @@
                         <ul class="payment-info-li-wrap">
                           <li class="info-li">
                             <label class="pay-info-label">상품 가격</label>
-                            <span class="pay-info-text" id="actual_payment" :payment_total="list.mdto.payment_total">{{list.mdto.payment_total}}원</span>
+                            <span class="pay-info-text" id="actual_payment_s" :payment_total="list.mdto.payment_total">{{list.mdto.payment_total}}원</span>
                           </li>
                           <li class="info-li">
                             <label class="pay-info-label">마일리지 적립 금액</label>
@@ -278,6 +278,9 @@ export default {
 
               $('.popup-background:eq(0)').removeClass('blind');
               $('#reserve-cancel-popup').removeClass('blind');
+              const m = String(Number($('#actual_payment').attr('actual_payment').replace(',', '')));
+              console.log(m);
+              $('#refund-btn').prop('refund_amount', m);
             }
             // 로그인 되어 있지 않음(or 세션 만료)
             else {
