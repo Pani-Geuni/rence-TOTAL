@@ -502,7 +502,8 @@ public class DashboardServiceImpl implements DashboardService {
 				maxPage = nowPage;
 			}
 		}
-		log.info("maxPage: " + maxPage);
+		log.info("maxPage : {}", maxPage);
+		log.info("rvos : {}", rvos);
 
 		map.put("totalPageCnt", totalPageCnt);
 		map.put("nowPage", nowPage);

@@ -25,17 +25,17 @@ public interface BackOfficeService {
 
 	public Map<String, String> backoffice_authOK(String backoffice_email, String auth_code);
 
-	public Map<String, String> backoffice_loginOK(String username, HttpSession session, HttpServletResponse response) throws UnsupportedEncodingException;
+	public Map<String, String> backoffice_loginOK(String username, HttpServletResponse response) throws UnsupportedEncodingException;
 
 	public Map<String, String> backoffice_reset_pw(BackOfficeDTO bvo, EmailVO evo);
 
 	public Map<String, String> backoffice_settingOK_pw(BackOfficeDTO bvo, HttpServletRequest request,
-			HttpServletResponse response, HttpSession session) throws UnsupportedEncodingException;
+			HttpServletResponse response) throws UnsupportedEncodingException;
 
 	public void auth_auto_delete(String user_email);
 
-	public Map<String, String> backoffice_logoutOK(HttpServletRequest request, HttpServletResponse response, HttpSession session);
+	public Map<String, String> backoffice_logoutOK(HttpServletRequest request, HttpServletResponse response);
 
-	public Map<String, Object> login_check(HttpSession session);
+	public Map<String, Object> login_check();
 
 }

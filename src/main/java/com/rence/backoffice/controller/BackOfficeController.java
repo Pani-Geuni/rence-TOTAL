@@ -61,7 +61,7 @@ public class BackOfficeController {
 	@GetMapping("/loginCheck")
 	public String dashboard_login_check() {
 
-		Map<String, Object> map = service.login_check(session);
+		Map<String, Object> map = service.login_check();
 
 		String json = gson.toJson(map);
 
@@ -123,7 +123,7 @@ public class BackOfficeController {
 	@PostMapping("/loginSuccess")
 	public String backoffice_loginOK(@RequestParam String username, HttpServletResponse response) throws UnsupportedEncodingException {
 
-		Map<String, String> map = service.backoffice_loginOK(username, session, response);
+		Map<String, String> map = service.backoffice_loginOK(username, response);
 
 		String json = gson.toJson(map);
 
@@ -153,7 +153,7 @@ public class BackOfficeController {
 	@GetMapping("/logoutOK")
 	public String backoffice_logoutOK(HttpServletRequest request, HttpServletResponse response) {
 
-		Map<String, String> map = service.backoffice_logoutOK(request,response,session);
+		Map<String, String> map = service.backoffice_logoutOK(request,response);
 		
 		String json = gson.toJson(map);
 
@@ -198,7 +198,7 @@ public class BackOfficeController {
 	@PostMapping("/settingOK_pw")
 	public String backoffice_settingOK_pw(BackOfficeDTO bvo, HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException {
 
-		Map<String, String> map = service.backoffice_settingOK_pw(bvo, request, response,session);
+		Map<String, String> map = service.backoffice_settingOK_pw(bvo, request, response);
 
 		String json = gson.toJson(map);
 
