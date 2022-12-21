@@ -74,7 +74,7 @@ public class AutoAspect {
 	   }
 	
 	//*******************************************//
-	//**********예약 상태 false 30분 뒤 삭제***********//
+	//**********예약 상태 false 10분 뒤 삭제***********//
 	//******************************************//
 	@Pointcut("execution(* com.rence.office.controller.OfficeController.reserve_rsu(..))")
 	public void falsePointcut() {
