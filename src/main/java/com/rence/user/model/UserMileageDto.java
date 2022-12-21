@@ -32,5 +32,5 @@ public class UserMileageDto {
 	
 	private String room; //company_name;
 	
-	private Date date; // payment_date
+	private String date; // payment_date
 }//end class

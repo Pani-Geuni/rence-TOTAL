@@ -2,6 +2,7 @@ package com.rence.user.dao;
 
 import java.util.List;
 
+import com.rence.user.model.MileageDto;
 import com.rence.user.model.MyPageReserveListDto;
 import com.rence.user.model.UserDto;
 import com.rence.user.model.UserMileageDto;
@@ -36,7 +37,7 @@ public interface UserMypageDAO {
 	List<MyPageReserveListDto> select_all_before_reserve_list_paging(String user_no, Integer page);
 
 	//마이페이지 - 마일리지 리스트 - 총마일리지
-	UserMileageDto totalMileage_selectOne(UserDto udto);
+	MileageDto totalMileage_selectOne(UserDto udto);
 
 	//마이페이지 - 마일리지 리스트 - 총 마일리지 리스트 수
 	long total_rowCount_mileage_all(UserDto udto);
