@@ -27,8 +27,8 @@ public interface ScheduleListRepository extends JpaRepository<ScheduleListViewEn
 			+ "on rm.room_no=rv.room_no where rm.room_no in ( "
 			+ "select room_no from roominfo where backoffice_no=?1 and room_state!='F' "
 			+ "minus "
-			+ "select room_no from roomschedule where backoffice_no=?1  and (not_stime <= TO_DATE(?2,'YYYY-MM-DD HH24:MI:SS')) and (not_etime >= TO_DATE(?3,'YYYY-MM-DD HH24:MI:SS'))) )order by room_no asc "
-			+ ")A )B where B.no=1 and B.rnum  between ?4 and ?5")
+			+ "select room_no from roomschedule where backoffice_no=?1  and (not_stime <= TO_DATE(?2,'YYYY-MM-DD HH24:MI:SS')) and (not_etime >= TO_DATE(?3,'YYYY-MM-DD HH24:MI:SS'))) ) "
+			+ ")A order by room_no asc)B where B.no=1 and B.rnum  between ?4 and ?5")
 	public List<ScheduleListViewEntity> backoffice_schedule_list(String backoffice_no, String reserve_stime, String reserve_etime, Integer min, Integer max);
 
 	// 일정 갯수
