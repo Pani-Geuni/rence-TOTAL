@@ -79,7 +79,7 @@ export default {
         .then((res) => {
           console.log(res.data);
           if (res.data.result === '1') {
-            window.location.href = '/master/login';
+            this.$router.push('/master/login');
           }
         }).catch((e) => {
           console.log(e);
