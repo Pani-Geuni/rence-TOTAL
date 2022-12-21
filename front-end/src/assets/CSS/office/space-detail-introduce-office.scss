@@ -722,8 +722,8 @@
 	display: flex;
 	justify-content: right;
 }
-.using-time-section {
-	position: relative;
+.using-time-sections {
+	position: relative !important;
 	padding-bottom: 25px;
 	border-bottom: 2px solid #e4e4e4;
 }
@@ -751,9 +751,8 @@
 	cursor: pointer;
 }
 .duration {
-	position: absolute;
+	display:flex;
 	margin-top: 10px;
-	bottom: 0px;
 	margin-bottom: 10px;
 	font-size: 13px;
 	color: #808080;

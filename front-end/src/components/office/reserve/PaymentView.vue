@@ -14,7 +14,7 @@
 -->
 
 <template>
-  <div v-if="load === true" class="space-detail-wrap">
+  <div v-if="this.load === true" class="space-detail-wrap">
     <section class="page-title-section">
         <span class="page-title">예약하기</span>
     </section>
@@ -326,9 +326,6 @@ export default {
                 $('#max-use-mileage').text(this.max_use_mileage);
               }
 
-              console.log(this.actual_payment);
-              console.log(this.earned_mileage);
-
               this.load = true;
 
               // 로딩 화면
@@ -476,33 +473,6 @@ export default {
         this.actual_payment = payment_later;
         this.earned_mileage = Math.round(this.actual_payment * 0.05);
         $('#earned_mileage').text(this.earned_mileage);
-
-        // // 가진 마일리지보다 적게 사용할 때
-        // if (use_mileage <= this.max_use_mileage) {
-        // // 사용 마일리지가 원결제 금액보다 작을 때
-        //   if (use_mileage <= this.actual_payment) {
-        //     if (use_mileage === 0 || use_mileage === '') {
-        //       this.actual_payment = payment_later;
-        //       this.earned_mileage = this.actual_payment * 0.05;
-        //     } else {
-        //       this.actual_payment = payment_later - use_mileage;
-        //       this.earned_mileage = this.actual_payment * 0.05;
-        //     }
-        //   } else {
-        //   // 사용 마일리지가 원결제 금액보다 클 때
-        //     $('#use-mileage').val('');
-        //   }
-
-        //   $('#earned_mileage').text(this.earned_mileage);
-        //   $('#payment_all').text(this.actual_payment);
-        // } else {
-        // // 가진 마일리지보다 많이 사용할 때
-        //   $('#use-mileage').val('');
-        //   this.actual_payment = payment_later;
-        //   this.earned_mileage = Math.round(this.actual_payment * 0.05);
-        //   $('#earned_mileage').text(this.earned_mileage);
-        //   $('#payment_all').text(this.actual_payment);
-        // }
       }
 
       // 숫자 콤마 찍기
