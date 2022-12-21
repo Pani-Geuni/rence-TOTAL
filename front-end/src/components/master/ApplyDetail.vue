@@ -27,7 +27,7 @@
           </div>
         </section>
 
-        <div class="space-imgs-section-wrap">
+        <section class="space-imgs-section-wrap">
           <section class="space-imgs-section">
             <div class="window">
               <ul class="container">
@@ -40,14 +40,10 @@
               <div class="button-container">
                 <span class="prev button-size">&lt;</span>
                 <span class="next button-size">></span>
-                <!-- <span class="prev button-size hide" @click="set_prev_image">&lt;</span>
-              <span
-                :class="{ 'next button-size': backoffice_image.length > 1, 'next button-size hide': backoffice_image.length <= 1 }"
-                @click="set_next_image">></span> -->
               </div>
             </div>
           </section>
-        </div>
+        </section>
         <!-- END space-imgs-section -->
 
         <section class="map-wrap ">
