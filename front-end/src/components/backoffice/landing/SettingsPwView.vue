@@ -43,7 +43,7 @@ export default {
 
   data() {
     return {
-      backoffice_no: window.btoa(encodeURIComponent(this.$route.query.backoffice_no)),
+      backoffice_no: decodeURIComponent(this.$route.query.backoffice_no),
     };
   },
 
@@ -104,31 +104,31 @@ export default {
           params.append('backoffice_no', this.backoffice_no);
           params.append('backoffice_pw', $('#input-update-pw-re').val().trim());
 
-          // axios.post('http://localhost:8800/backoffice/settingOK_pw', params)
-          //   .then((res) => {
-          //     // 로딩 화면 닫기
-          //     $('.popup-background:eq(1)').addClass('blind');
-          //     $('#spinner-section').addClass('blind');
+          axios.post('http://localhost:8800/backoffice/settingOK_pw', params)
+            .then((res) => {
+              // 로딩 화면 닫기
+              $('.popup-background:eq(1)').addClass('blind');
+              $('#spinner-section').addClass('blind');
 
-          //     if (res.data.result === '1') {
-          //       this.$router.replace(`/backoffice/dash/settings?backoffice_no=${this.backoffice_no}`);
-          //     } else if (res.data.result === '2') {
-          //       this.$router.replace('/backoffice/landing');
-          //     } else {
-          //       $('.popup-background:eq(1)').removeClass('blind');
-          //       $('#common-alert-popup').removeClass('blind');
-          //       $('.common-alert-txt').text('비밀번호 변경에 실패하였습니다.');
-          //     }
-          //   })
-          //   .catch(() => {
-          //     // 로딩 화면 닫기
-          //     $('.popup-background:eq(1)').addClass('blind');
-          //     $('#spinner-section').addClass('blind');
+              if (res.data.result === '1') {
+                this.$router.replace(`/backoffice/dash/settings?backoffice_no=${this.backoffice_no}`);
+              } else if (res.data.result === '2') {
+                this.$router.replace('/backoffice/landing');
+              } else {
+                $('.popup-background:eq(1)').removeClass('blind');
+                $('#common-alert-popup').removeClass('blind');
+                $('.common-alert-txt').text('비밀번호 변경에 실패하였습니다.');
+              }
+            })
+            .catch(() => {
+              // 로딩 화면 닫기
+              $('.popup-background:eq(1)').addClass('blind');
+              $('#spinner-section').addClass('blind');
 
-          //     $('.popup-background:eq(1)').removeClass('blind');
-          //     $('#common-alert-popup').removeClass('blind');
-          //     $('.common-alert-txt').text('비밀번호 변경에 실패하였습니다.');
-          //   });
+              $('.popup-background:eq(1)').removeClass('blind');
+              $('#common-alert-popup').removeClass('blind');
+              $('.common-alert-txt').text('비밀번호 변경에 실패하였습니다.');
+            });
         } else {
           $('.popup-background:eq(0)').removeClass('blind');
           $('#fail-alert-popup').removeClass('blind');
