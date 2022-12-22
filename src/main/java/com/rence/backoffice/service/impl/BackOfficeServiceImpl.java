@@ -266,13 +266,11 @@ public class BackOfficeServiceImpl implements BackOfficeService {
 		Map<String, String> map = new HashMap<String, String>();
 
 		if (result == 1) {
-			if (session.getAttribute("backoffice_id") != null) {
-				if (backoffice_no.equals(bvo.getBackoffice_no())) {
+			if (backoffice_no.equals(bvo.getBackoffice_no())) {
 					// HOST 로그인 session이 존재할 때
 					// Host 환경설정 > 비밀번호 수정
 					log.info("succeed...setting");
 					map.put("result", "1");
-				}
 			} else {
 				// 가입 신청이 완료되어
 				// 신청자의 메일에서 링크 페이지를 열고 수정 했을 때
