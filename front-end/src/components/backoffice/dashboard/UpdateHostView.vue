@@ -833,9 +833,10 @@ export default {
       formData.append('backoffice_no', this.backoffice_no);
       formData.append('backoffice_tag', this.backoffice_tag);
       formData.append('backoffice_info', this.backoffice_info);
-      formData.append('backoffice_type', stringBackofficeType);
       formData.append('backoffice_option', stringBackofficeOption);
       formData.append('backoffice_around', stringBackofficeAround);
+      formData.append('backoffice_image', this.img_name);
+      formData.append('backoffice_type', stringBackofficeType);
 
       formData.append('mon_stime', mon_stime);
       formData.append('mon_etime', mon_etime);
@@ -860,7 +861,9 @@ export default {
       formData.append('sat_dayoff', this.sat_dayoff);
       formData.append('sun_dayoff', this.sun_dayoff);
 
-      formData.append('backoffice_image', this.img_name);
+      for (let i = 0; i < imageTag.length; i++) {
+        formData.append('multipartFile_room', imageTag[i]);
+      }
 
       axios.post('http://localhost:8800/backoffice/dash/updateOK_host', formData, {
         headers: {
