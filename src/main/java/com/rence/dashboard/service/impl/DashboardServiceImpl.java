@@ -1011,11 +1011,20 @@ public class DashboardServiceImpl implements DashboardService {
 			String[] st = sdate.split(" ");
 			String[] et = edate.split(" ");
 			if (st[0].equals(et[0])) {
-				// 브레이크 타임
-				vo.setSdate(st[0]);
-				vo.setStime(st[1]);
-				vo.setEtime(et[1]);
-				vo.setSchedule_type("breaktime");
+				log.info("st[1]::::{}",st[1]);
+				log.info("et[1]::::{}",et[1]);
+				if (st[1].equals("00:00:00") && et[1].equals("23:59:59")) {
+					// 휴무
+					vo.setSdate(st[0]);
+					vo.setEdate(et[0]);
+					vo.setSchedule_type("dayoff");
+				}else {
+					// 브레이크 타임
+					vo.setSdate(st[0]);
+					vo.setStime(st[1]);
+					vo.setEtime(et[1]);
+					vo.setSchedule_type("breaktime");
+				}
 			} else {
 				// 휴무
 				vo.setSdate(st[0]);
