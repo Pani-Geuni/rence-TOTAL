@@ -134,7 +134,6 @@ export default {
 
     axios.get(this.url)
       .then((res) => {
-        console.log(res.data);
         this.list = res.data.list;
         this.maxCnt = res.data.maxCnt;
         this.nowCnt = res.data.nowCnt;
@@ -181,6 +180,7 @@ export default {
         searchWord = this.$route.params.parameters.split('searchWord=')[1].split('&')[0];
         window.location.href = `${url}/list/search_list/type=${type}&location=${location}&searchWord=${searchWord}&condition=${$(param).attr('condition')}&page=1`;
       }
+      window.location.reload();
     },
     list_paging(param) {
       if (Math.ceil($(param).scrollTop() + $(param).innerHeight()) >= $(param).prop('scrollHeight')) {

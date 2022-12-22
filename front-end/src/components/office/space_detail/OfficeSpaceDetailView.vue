@@ -548,7 +548,6 @@ export default {
 
     axios.get(`http://localhost:8800/office/space_introduce_office?backoffice_no=${backofficeNo}&introduce_menu=info&page=1`)
       .then((res) => {
-        console.log(res.data);
         this.list = res.data;
         this.maxPage = res.data.maxPage;
         this.nowPage = res.data.nowPage;
@@ -832,8 +831,6 @@ export default {
 
                   axios.get(`http://localhost:8800/office/insert_question${params}`)
                     .then((res) => {
-                      console.log(res.data);
-
                       this.question_flag = true;
 
                       // 로딩 화면 닫기
@@ -1016,7 +1013,6 @@ export default {
 
                   axios.get(`http://localhost:8800/office/office_reserve_check${param_txt}`)
                     .then((res) => {
-                      console.log(res.data);
                       // 로딩 화면 닫기
                       $('.popup-background:eq(1)').addClass('blind');
                       $('#spinner-section').addClass('blind');
@@ -1290,8 +1286,6 @@ export default {
 
       axios.get(`http://localhost:8800/office/introduce_q_paging?backoffice_no=${this.$route.params.parameters.split('backoffice_no=')[1]}&page=${Number($(param).text())}`)
         .then((res) => {
-          console.log(res.data);
-
           // 로딩 화면 닫기
           $('.popup-background:eq(1)').addClass('blind');
           $('#spinner-section').addClass('blind');
@@ -1326,7 +1320,6 @@ export default {
 
       axios.get(`http://localhost:8800/office/introduce_r_paging?backoffice_no=${this.$route.params.parameters.split('backoffice_no=')[1]}&page=${Number($(param).text())}`)
         .then((res) => {
-          console.log(res.data);
           // 로딩 화면 닫기
           $('.popup-background:eq(1)').addClass('blind');
           $('#spinner-section').addClass('blind');
