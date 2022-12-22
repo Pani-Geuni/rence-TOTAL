@@ -48,7 +48,7 @@ public interface DashboardDAO {
 
 	public int backoffice_updateOK_room(String backoffice_no, RoomDTO rvo);
 
-	public void backoffice_deleteOK_room(String backoffice_no, String room_no);
+	public int backoffice_deleteOK_room(String backoffice_no, String room_no);
 
 	public long backoffice_qna_selectAll_cnt(String backoffice_no);
 

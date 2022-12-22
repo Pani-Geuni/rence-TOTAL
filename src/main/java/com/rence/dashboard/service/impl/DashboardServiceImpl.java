@@ -260,12 +260,7 @@ public class DashboardServiceImpl implements DashboardService {
 	public Map<String, String> backoffice_deleteOK_room(String backoffice_no, String room_no) {
 		Map<String, String> map = new HashMap<String, String>();
 
-		int result = 1;
-		try {
-			dao.backoffice_deleteOK_room(backoffice_no, room_no);
-		} catch (Exception e) {
-			result = 0;
-		}
+		int result = dao.backoffice_deleteOK_room(backoffice_no, room_no);
 
 		if (result == 1) {
 			dao.backoffice_qna_insert(backoffice_no, room_no);

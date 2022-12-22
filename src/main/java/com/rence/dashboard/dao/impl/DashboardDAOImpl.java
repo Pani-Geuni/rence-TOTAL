@@ -306,8 +306,8 @@ public class DashboardDAOImpl implements DashboardDAO {
 	 * 공간관리 - 공간 삭제
 	 */
 	@Override
-	public void backoffice_deleteOK_room(String backoffice_no, String room_no) {
-		rm_repository.backoffice_deleteOK_room(backoffice_no, room_no);
+	public int backoffice_deleteOK_room(String backoffice_no, String room_no) {
+		return rm_repository.backoffice_deleteOK_room(backoffice_no, room_no);
 	}
 	
 	/**
