@@ -267,8 +267,8 @@ public class BackOfficeServiceImpl implements BackOfficeService {
 
 		if (result == 1) {
 			if (backoffice_no.equals(bvo.getBackoffice_no())) {
-					// HOST 로그인 session이 존재할 때
-					// Host 환경설정 > 비밀번호 수정
+					// HOST Cookie가 존재하고 값이 일치할 때,
+					// Host 환경설정 -> 비밀번호 수정
 					log.info("succeed...setting");
 					map.put("result", "1");
 			} else {
