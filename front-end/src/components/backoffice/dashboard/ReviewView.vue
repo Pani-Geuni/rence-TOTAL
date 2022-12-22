@@ -124,21 +124,22 @@ export default {
     },
 
     miniNavList() {
-      this.$router.push(`/backoffice/dash/room?backoffice_no=${this.babckoffice_no}&page=1`);
+      this.$router.push(`/backoffice/dash/room?backoffice_no=${this.$cookies.get('backoffice_no')}&page=1`);
     },
 
     miniNavQna() {
-      this.$router.push(`/backoffice/dash/qna?backoffice_no=${this.babckoffice_no}&page=1`);
+      this.$router.push(`/backoffice/dash/qna?backoffice_no=${this.$cookies.get('backoffice_no')}&page=1`);
     },
 
     miniNavReview() {
-      this.$router.push(`/backoffice/dash/review?backoffice_no=${this.babckoffice_no}&page=1`);
+      this.$router.push(`/backoffice/dash/review?backoffice_no=${this.$cookies.get('backoffice_no')}&page=1`);
     },
 
     getReviewList() {
-      const url = `http://localhost:8800/backoffice/dash/review?backoffice_no=${this.babckoffice_no}`;
+      const params = new URLSearchParams();
+      params.append('backoffice_no', this.backoffice_no);
 
-      axios.get(url).then((res) => {
+      axios.get(`http://localhost:8800/backoffice/dash/review?${params}`).then((res) => {
         console.log(res.data);
         this.rv_vos = res.data.rv_vos;
         this.cnt = res.data.cnt;
@@ -219,6 +220,7 @@ export default {
     axios.get('http://localhost:8800/backoffice/loginCheck')
       .then((res) => {
         if (res.data.result === '1') {
+          console.log('login OK!!');
           this.$nextTick(() => {
             this.miniNavActive(window.location.pathname);
             this.getReviewList();
