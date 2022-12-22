@@ -44,9 +44,8 @@ public interface RoomRepository extends JpaRepository<RoomEntity, Object> {
 	// 공간 삭제
 	@Modifying
 	@Transactional
-//	@Query(nativeQuery = true, value = "DELETE FROM roominfo where backoffice_no=?1 and room_no=?2 and room_no not in (select room_no from reserveinfo where backoffice_no=?1 and room_no=?2 and (reserve_state='begin' or reserve_state='in_use'))")
 	@Query(nativeQuery = true, value = "update roominfo set room_state='F' where backoffice_no=?1 and room_no=?2 and room_no not in (select room_no from reserveinfo where backoffice_no=?1 and room_no=?2 and (reserve_state='begin' or reserve_state='in_use'))")
-	public void backoffice_deleteOK_room(String backoffice_no, String room_no);
+	public int backoffice_deleteOK_room(String backoffice_no, String room_no);
 
 	
 	// 휴무 일정 - 공간 이름
