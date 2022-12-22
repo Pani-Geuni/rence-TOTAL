@@ -149,15 +149,15 @@ export default {
     },
 
     miniNavList() {
-      this.$router.push(`/backoffice/dash/room?backoffice_no=${this.backoffice_no}&page=1`);
+      this.$router.push(`/backoffice/dash/room?backoffice_no=${this.$cookies.get('backoffice_no')}&page=1`);
     },
 
     miniNavQna() {
-      this.$router.push(`/backoffice/dash/qna?backoffice_no=${this.backoffice_no}&page=1`);
+      this.$router.push(`/backoffice/dash/qna?backoffice_no=${this.$cookies.get('backoffice_no')}&page=1`);
     },
 
     miniNavReview() {
-      this.$router.push(`/backoffice/dash/review?backoffice_no=${this.backoffice_no}&page=1`);
+      this.$router.push(`/backoffice/dash/review?backoffice_no=${this.$cookies.get('backoffice_no')}&page=1`);
     },
 
     getQnaList() {

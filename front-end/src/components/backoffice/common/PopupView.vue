@@ -161,9 +161,6 @@ export default {
           .then((res) => {
             if (res.data.result === '1') {
               console.log('res.data : ', res.data);
-              // this.$cookies.set('backoffice_no', res.data.backoffice_no);
-              // this.$cookies.set('host_image', res.data.host_image);
-              // this.$cookies.set('JSESSIONID', res.data.JsessionId);
 
               this.$router.push(`/backoffice/dash/main?backoffice_no=${this.$cookies.get('backoffice_no')}`);
             } else {
