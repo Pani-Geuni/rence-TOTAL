@@ -359,18 +359,9 @@ export default {
     timer() {
       this.time = setInterval(() => {
         if (this.seconds === 0) {
-          $('.popup-background:eq(1)').removeClass('blind');
-          $('#common-alert-popup').removeClass('blind');
-          $('.common-alert-txt').html('결제 시간을 초과했습니다.<br>다시 시도해주세요.');
-
-          const url = window.location.href.split('/payment')[0];
-
-          if ($('#info-room-type').attr('room_type') === '오피스') {
-            window.location.href = `${url}/space_office?backoffice_no=${$('.info-company-name').attr('backoffice_no')}`;
-          } else {
-            window.location.href = `${url}/space?backoffice_no=${$('.info-company-name').attr('backoffice_no')}`;
-          }
           clearInterval(this.time);
+          $('.popup-background:eq(0)').removeClass('blind');
+          $('#timer-end-popup').removeClass('blind');
         }
 
         this.seconds--;

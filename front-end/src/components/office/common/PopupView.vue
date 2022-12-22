@@ -309,6 +309,17 @@
         </router-link>
     </div>
     <!-- END RESERVE-CANCLE-CONFIRM CONFIRM POPUP -->
+
+    <div id="timer-end-popup" class="alert-popup blind">
+      <section class="alert-txt-section">
+        <span class="common-alert-txt">
+          결제 시간을 초과했습니다.<br>다시 시도해주세요.
+        </span>
+      </section>
+      <section @click="timer_alert" class="alert-btn-section">
+        <span>확인</span>
+      </section>
+    </div>
 	</div>
 
 	<div class="popup-background blind">
@@ -1721,6 +1732,22 @@ export default {
             $('.common-alert-txt').text('오류 발생으로 인해 처리에 실패하였습니다.');
           });
       }
+    },
+    /** ********************************** */
+    /** ******** PAYMENT PAGE POPUP ****** */
+    /** ********************************** */
+    timer_alert() {
+      $('.popup-background:eq(0)').addClass('blind');
+      $('#timer-end-popup').addClass('blind');
+
+      const url = window.location.href.split('/payment')[0];
+
+      if ($('#info-room-type').attr('room_type') === '오피스') {
+        window.location.href = `${url}/space_office/backoffice_no=${$('.info-company-name').attr('backoffice_no')}`;
+      } else {
+        window.location.href = `${url}/space/backoffice_no=${$('.info-company-name').attr('backoffice_no')}`;
+      }
+      window.reload();
     },
   }, // END methods()
 };

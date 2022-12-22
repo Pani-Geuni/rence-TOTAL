@@ -236,6 +236,11 @@ export default {
                   for (let i = this.start; i <= this.maxPage; i++) {
                     this.forRange.push(i);
                   }
+
+                  $('.paging-box.paging-num').removeClass('choice');
+                  $('.paging-box.paging-num').addClass('un-choice');
+
+                  $('.paging-box.paging-num:eq(0)').click();
                 })
                 .catch(() => {
                   // 로딩 화면 닫기
