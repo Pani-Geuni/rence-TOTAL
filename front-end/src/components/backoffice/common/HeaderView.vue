@@ -1,3 +1,8 @@
+<!-- ------------ -->
+<!-- @author 전판근 -->
+<!-- @refactoring 전판근 -->
+<!-- ------------ -->
+
 <!-- eslint-disable vuejs-accessibility/click-events-have-key-events -->
 <!-- eslint-disable max-len -->
 <template>
@@ -57,8 +62,6 @@
 <script>
 import $ from 'jquery';
 // import '@/assets/JS/backoffice/host_header';
-
-console.log('backoffice header');
 
 export default {
   name: 'HostHeaderView',

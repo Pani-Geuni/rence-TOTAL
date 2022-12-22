@@ -1,3 +1,8 @@
+<!--
+--  @author 전판근
+-- @refactoring 전판근
+-->
+
 <!-- eslint-disable vuejs-accessibility/click-events-have-key-events -->
 <template>
   <!-- START aside-menu -->
@@ -98,7 +103,6 @@ export default {
       const pathName = window.location.href.split('index.html#')[1].split('?')[0];
       switch (pathName) {
         case '/backoffice/dash/main':
-          console.log('hi main');
           $('#menu-home').addClass('active');
           break;
 

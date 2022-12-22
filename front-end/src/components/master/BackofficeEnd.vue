@@ -1,3 +1,8 @@
+<!--
+--  @author 전판근, 김예은
+-- @refactoring 전판근
+-->
+
 <!-- eslint-disable vuejs-accessibility/click-events-have-key-events -->
 <!-- eslint-disable max-len -->
 <template>
@@ -65,14 +70,11 @@ export default {
       // eslint-disable-next-line camelcase
       const backoffice_no = e.target.parentElement.getAttribute('idx');
 
-      console.log(backoffice_no);
       // eslint-disable-next-line camelcase
       this.$router.push(`/master/backoffice_apply_detail?backoffice_no=${backoffice_no}&page=delete`);
     },
 
     clickDeletePopup(e) {
-      console.log(e.target.parentElement.getAttribute('idx'));
-      console.log(e.target.parentElement.getAttribute('backoffice_email'));
 
       $('.popup-background:eq(0)').removeClass('blind');
       $('#delete-popup').removeClass('blind');
@@ -85,7 +87,6 @@ export default {
       const url = 'http://localhost:8800/master/backoffice_end';
 
       axios.get(url).then((res) => {
-        console.log(res.data.bvos);
         this.vos = res.data.bvos;
       });
     },

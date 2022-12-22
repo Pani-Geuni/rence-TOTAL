@@ -1,3 +1,8 @@
+<!--
+--  @author 전판근
+-- @refactoring 전판근
+-->
+
 <!-- eslint-disable max-len -->
 <!-- eslint-disable vuejs-accessibility/form-control-has-label -->
 <template>
@@ -87,12 +92,8 @@ export default {
     clickUpdatePwBtn() {
       const password = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,10}$/;
 
-      console.log('asdf ', this.backoffice_no);
-
       if ($('#input-update-pw').val().trim().length > 0
         && $('#input-update-pw-re').val().trim().length > 0) {
-        console.log($('#input-update-pw').val().trim());
-        console.log($('#input-update-pw-re').val().trim());
 
         if ($('#input-update-pw').val().trim() === $('#input-update-pw-re').val().trim()
           && password.test($('#input-update-pw').val().trim())) {

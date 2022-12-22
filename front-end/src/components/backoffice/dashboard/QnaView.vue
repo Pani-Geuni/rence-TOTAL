@@ -1,3 +1,9 @@
+<!--
+--  @author 전판근, 김예은
+-- @refactoring 전판근
+-->
+
+
 <!-- eslint-disable vuejs-accessibility/click-events-have-key-events -->
 <!-- eslint-disable max-len -->
 <template>
@@ -166,7 +172,6 @@ export default {
 
       axios.get(`http://localhost:8800/backoffice/dash/qna?backoffice_no=${this.backoffice_no}`)
         .then((res) => {
-          console.log(res.data);
           this.q_vos = res.data.q_vos;
           this.cnt = res.data.cnt;
           this.maxPage = res.data.maxPage;
@@ -196,10 +201,6 @@ export default {
       params.append('backoffice_no', this.backoffice_no);
       params.append('room_no', e.target.getAttribute('room_no'));
       params.append('comment_no', e.target.getAttribute('comment_no'));
-
-      console.log(this.backoffice_no);
-      console.log(e.target.getAttribute('room_no'));
-      console.log(e.target.getAttribute('comment_no'));
 
       axios.get(`http://localhost:8800/backoffice/dash/insert_comment?${params}`)
         .then((res) => {
@@ -235,7 +236,6 @@ export default {
 
       axios.get(`http://localhost:8800/backoffice/dash/qna?${params}`)
         .then((res) => {
-          console.log(res.data);
           this.q_vos = res.data.q_vos;
         });
     },
@@ -260,7 +260,6 @@ export default {
 
       axios.get(`http://localhost:8800/backoffice/dash/qna?${params}`)
         .then((res) => {
-          console.log(res.data);
           this.q_vos = res.data.q_vos;
         });
     },
@@ -287,7 +286,6 @@ export default {
 
       axios.get(`http://localhost:8800/backoffice/dash/qna?${params}`)
         .then((res) => {
-          console.log(res.data);
           this.q_vos = res.data.q_vos;
         });
     },

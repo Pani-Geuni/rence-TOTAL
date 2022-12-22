@@ -1,3 +1,8 @@
+<!--
+--  @author 전판근, 김예은
+-- @refactoring 전판근
+-->
+
 <!-- eslint-disable vuejs-accessibility/click-events-have-key-events -->
 <!-- eslint-disable max-len -->
 <template>
@@ -140,7 +145,6 @@ export default {
       params.append('backoffice_no', this.backoffice_no);
 
       axios.get(`http://localhost:8800/backoffice/dash/review?${params}`).then((res) => {
-        console.log(res.data);
         this.rv_vos = res.data.rv_vos;
         this.cnt = res.data.cnt;
         this.maxPage = res.data.maxPage;
@@ -158,7 +162,6 @@ export default {
 
       axios.get(`http://localhost:8800/backoffice/dash/review?${params}`)
         .then((res) => {
-          console.log(res.data);
           this.rv_vos = res.data.rv_vos;
         });
     },
@@ -183,7 +186,6 @@ export default {
 
       axios.get(`http://localhost:8800/backoffice/dash/review?${params}`)
         .then((res) => {
-          console.log(res.data);
           this.rv_vos = res.data.rv_vos;
         });
     },
@@ -210,7 +212,6 @@ export default {
 
       axios.get(`http://localhost:8800/backoffice/dash/review?${params}`)
         .then((res) => {
-          console.log(res.data);
           this.rv_vos = res.data.rv_vos;
         });
     },
@@ -220,7 +221,6 @@ export default {
     axios.get('http://localhost:8800/backoffice/loginCheck')
       .then((res) => {
         if (res.data.result === '1') {
-          console.log('login OK!!');
           this.$nextTick(() => {
             this.miniNavActive(window.location.pathname);
             this.getReviewList();

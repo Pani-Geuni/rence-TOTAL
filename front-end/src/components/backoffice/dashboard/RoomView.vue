@@ -1,3 +1,8 @@
+<!--
+--  @author 전판근, 김예은
+-- @refactoring 전판근
+-->
+
 <!-- eslint-disable vuejs-accessibility/click-events-have-key-events -->
 <!-- eslint-disable max-len -->
 <template>
@@ -153,7 +158,6 @@ export default {
 
       axios.get(url)
         .then((res) => {
-          console.log(res.data);
           this.rm_vos = res.data.rm_vos;
           this.unit = res.data.unit;
           this.maxPage = res.data.maxPage;
@@ -232,7 +236,6 @@ export default {
 
       axios.get(`http://localhost:8800/backoffice/dash/room?${params}`)
         .then((res) => {
-          console.log(res.data);
           this.rm_vos = res.data.rm_vos;
         });
     },
@@ -257,7 +260,6 @@ export default {
 
       axios.get(`http://localhost:8800/backoffice/dash/room?${params}`)
         .then((res) => {
-          console.log(res.data);
           this.rm_vos = res.data.rm_vos;
         });
     },
@@ -284,7 +286,6 @@ export default {
 
       axios.get(`http://localhost:8800/backoffice/dash/room?${params}`)
         .then((res) => {
-          console.log(res.data);
           this.rm_vos = res.data.rm_vos;
         });
     },

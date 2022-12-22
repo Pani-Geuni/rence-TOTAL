@@ -1,3 +1,8 @@
+<!--
+--  @author 전판근
+-- @refactoring 전판근
+-->
+
 <!-- eslint-disable max-len -->
 <template>
   <div class="titleSection">
@@ -103,7 +108,6 @@ export default {
 
       const url = `http://localhost:8800/backoffice/dash/settings?${params}`;
       axios.get(url).then((res) => {
-        console.log(res.data);
         this.vo = res.data.vo;
         this.backoffice_tag = res.data.backoffice_tag;
         this.backoffice_option = res.data.backoffice_option;

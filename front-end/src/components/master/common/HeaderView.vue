@@ -1,3 +1,8 @@
+<!--
+--  @author 전판근, 김예은
+-- @refactoring 전판근
+-->
+
 <!-- eslint-disable vuejs-accessibility/click-events-have-key-events -->
 <!-- eslint-disable max-len -->
 <template>
@@ -77,12 +82,9 @@ export default {
     goLogout() {
       axios.post('http://localhost:8800/master/logoutOK')
         .then((res) => {
-          console.log(res.data);
           if (res.data.result === '1') {
             this.$router.push('/master/login');
           }
-        }).catch((e) => {
-          console.log(e);
         });
     },
   },

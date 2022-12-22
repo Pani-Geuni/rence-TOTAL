@@ -1,3 +1,8 @@
+<!--
+--  @author 전판근
+-- @refactoring 전판근
+-->
+
 <!-- eslint-disable vuejs-accessibility/form-control-has-label -->
 <!-- eslint-disable max-len -->
 <!-- eslint-disable vuejs-accessibility/label-has-for -->
@@ -113,10 +118,8 @@ export default {
     selectAllCheckbox(e) {
       if ($(e.target).is(':checked')) {
         $(e.target).attr('checked', true);
-        console.log('ok');
       } else {
         $(e.target).attr('checked', false);
-        console.log('no');
       }
     },
 
@@ -154,8 +157,6 @@ export default {
 
       axios.get(`http://localhost:8800/backoffice/dash/reservation?${params}`)
         .then((res) => {
-          console.log(res.data);
-
           this.reserve_stime = res.data.reserve_stime;
           this.reserve_etime = res.data.reserve_etime;
           this.rv_vos = res.data.rv_vos;
@@ -260,7 +261,6 @@ export default {
       .then((res) => {
         if (res.data.result === '1') {
           this.$nextTick(() => {
-            console.log('reservation');
             this.getReservationList();
           });
         } else {

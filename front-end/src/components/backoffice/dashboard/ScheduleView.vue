@@ -1,3 +1,8 @@
+<!--
+--  @author 전판근, 김예은
+-- @refactoring 전판근
+-->
+
 <!-- eslint-disable vuejs-accessibility/click-events-have-key-events -->
 <!-- eslint-disable vuejs-accessibility/label-has-for -->
 <!-- eslint-disable max-len -->
@@ -158,10 +163,8 @@ export default {
     selectAllCheckbox(e) {
       if ($(e.target).is(':checked')) {
         $(e.target).attr('checked', true);
-        console.log('ok');
       } else {
         $(e.target).attr('checked', false);
-        console.log('no');
       }
     },
 
@@ -185,7 +188,6 @@ export default {
 
       const url = `http://localhost:8800/backoffice/dash/schedule?${params}`;
       axios.get(url).then((res) => {
-        console.log(res.data);
         this.cnt = res.data.cnt;
       });
     },
@@ -217,8 +219,6 @@ export default {
       } else {
         const url = `http://localhost:8800/backoffice/dash/schedule_research?${params}&page=1`;
         axios.get(url).then((res) => {
-          console.log(res.data);
-
           this.sc_vos = res.data.sc_vos;
           this.sc_vos_cnt = res.data.cnt;
 
@@ -229,7 +229,6 @@ export default {
     },
 
     clickReservationDetail(e) {
-      console.log(e.target.value);
       const sDateTime = this.not_sdate.toString().split(' ');
       const eDateTime = this.not_edate.toString().split(' ');
 
@@ -240,13 +239,6 @@ export default {
       const room_no = e.target.getAttribute('room_no');
       const off_type = $("input:radio[name='set_schedule']:checked").val();
       const reserve_cnt = parseInt(e.target.getAttribute('reserve_cnt'), 10);
-
-      console.log(this.backoffice_no);
-      console.log(sDateTime[0], sDateTime[1]);
-      console.log(eDateTime[0], eDateTime[1]);
-      console.log(room_no);
-      console.log(off_type);
-      console.log(reserve_cnt);
 
       // 로딩 화면
       $('.popup-background:eq(1)').removeClass('blind');
@@ -278,7 +270,6 @@ export default {
 
       axios.get(`http://localhost:8800/backoffice/dash/schedule_calendar?backoffice_no=${backoffice_no}`)
         .then((res) => {
-          console.log(res.data);
           $('.popup-background:eq(0)').removeClass('blind');
           $('.dayoff-calendar-wrap').removeClass('blind');
 
@@ -289,9 +280,7 @@ export default {
     },
 
     clickScheduleConfirm() {
-      console.log('schedule confirm');
       this.check_room = $('input[type=checkbox]:checked').parents('.ct-body-row');
-      console.log(this.check_room);
 
       if (this.check_room.length !== 0) {
         const backoffice_no = decodeURIComponent(window.atob(this.$cookies.get('backoffice_no')));
@@ -321,9 +310,6 @@ export default {
             params.append('not_stime', not_stime);
             params.append('not_etime', not_etime);
             params.append('off_type', off_type);
-
-            console.log('backoffice_no :', backoffice_no);
-            console.log('room_no :', room_no);
 
             axios.post('http://localhost:8800/backoffice/dash/scheduleOK', params)
               // eslint-disable-next-line no-loop-func
@@ -374,10 +360,6 @@ export default {
     },
 
     handleScheduleList(e) {
-      console.log('handleScheduleList');
-      console.log('maxCnt :', this.maxCnt);
-      console.log('nowCnt :', this.nowCnt);
-
       if (Math.ceil($(e).scrollTop() + $(e).innerHeight()) >= $(e).prop('scrollHeight')) {
         if ($('.ct-body-row').length - 1 < Number($('#maxCnt').attr('maxCnt')) && this.scroll_flag) {
           // 로딩 화면
@@ -394,7 +376,6 @@ export default {
           const off_type = $("input:radio[name='set_schedule']:checked").val();
 
           const page = $('#maxCnt').attr('nowCnt');
-          console.log('?????? off_type :', off_type);
 
           this.scroll_flag = false;
 
@@ -407,18 +388,11 @@ export default {
           param.append('off_type', off_type);
           param.append('page', Number(page) + 1);
 
-          console.log('maxCnt2 :', this.maxCnt);
-          console.log('nowCnt2 :', this.nowCnt);
-          console.log('page :', page);
-
           const url = `http://localhost:8800/backoffice/dash/schedule_research_paging?${param}`;
-          console.log('url ::: ', url);
-
 
           axios.get(url)
             .then((res) => {
               this.scroll_flag = true;
-              console.log('paging data ::: ', res.data);
 
               // 로딩 화면 닫기
               $('.popup-background:eq(1)').addClass('blind');
@@ -427,7 +401,6 @@ export default {
               const now = $('#maxCnt').attr('nowCnt');
               $('#maxCnt').attr('nowCnt', Number(now) + 1);
               this.sc_vos = this.sc_vos.concat(res.data.sc_vos);
-              console.log('sc_vos :', this.sc_vos);
             })
             .catch(() => {
               this.scroll_flag = true;
