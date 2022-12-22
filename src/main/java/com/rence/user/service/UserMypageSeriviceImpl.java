@@ -128,7 +128,7 @@ public class UserMypageSeriviceImpl implements UserMypageSerivice {
 			}
 		}
 
-		// Base64 디코더 작업으로 suerNo정보 가져오기
+		// Base64 디코더 작업으로 userNo정보 가져오기
 		byte[] decodedBytes = Base64.getDecoder().decode(user_no);
 		user_no = new String(decodedBytes);
 		udto.setUser_no(user_no);
@@ -418,7 +418,7 @@ public class UserMypageSeriviceImpl implements UserMypageSerivice {
 		log.info("total_rowCount_review: {}", total_rowCount_review);
 
 		// 총 페이징되는 수
-		long totalPageCnt = (long) Math.ceil(total_rowCount_review / 1.0);
+		long totalPageCnt = (long) Math.ceil(total_rowCount_review / 8.0);
 		log.info("totalPageCnt: {}", totalPageCnt);
 
 		// 현재페이지
