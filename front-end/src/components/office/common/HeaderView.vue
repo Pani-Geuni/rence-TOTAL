@@ -88,10 +88,10 @@
           <div class = "custom-select-user blind">
                 <ul class="user-select-wrap">
                   <router-link to ="/my_page">
-                    <li id = "go-myPage" class="user-select-list">마이페이지</li>
+                    <li id = "go-myPage" class="user-select-list" @click="after_login_menu()">마이페이지</li>
                   </router-link>
                   <router-link to ="/backoffice/landing">
-                    <li class="user-select-list">공간등록신청</li>
+                    <li class="user-select-list" @click="after_login_menu()">공간등록신청</li>
                   </router-link>
                   <li id = "go-logOut" class="user-select-list" @click="after_login_menu('go-logOut')">로그아웃</li>
                 </ul>
