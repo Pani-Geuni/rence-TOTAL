@@ -57,13 +57,10 @@ export default {
       // 로그인 성공
       if ($('#master-id').val().trim().length > 0 && $('#master-pw').val().trim().length > 0) {
         const params = new URLSearchParams();
-        console.log('username :', $('#master-id').val().trim());
-        console.log('password :', $('#master-pw').val().trim());
 
         params.append('username', $('#master-id').val().trim());
         params.append('password', $('#master-pw').val().trim());
         axios.post('http://localhost:8800/master/loginOK', params).then((res) => {
-          console.log('res.data :', res.data);
 
           if (res.data.result === '1') {
             // INPUT 초기화

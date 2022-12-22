@@ -150,9 +150,6 @@ export default {
         $('.popup-background:eq(1)').removeClass('blind');
         $('#spinner-section').removeClass('blind');
 
-        console.log('id :', $('#login-id').val().trim());
-        console.log('pw :', $('#login-pw').val().trim());
-
         const params = new URLSearchParams();
         params.append('username', $('#login-id').val().trim());
         params.append('password', $('#login-pw').val().trim());
@@ -160,8 +157,6 @@ export default {
         axios.post('http://localhost:8800/backoffice/loginOK', params, { withCredentials: true })
           .then((res) => {
             if (res.data.result === '1') {
-              console.log('res.data : ', res.data);
-
               this.$router.push(`/backoffice/dash/main?backoffice_no=${this.$cookies.get('backoffice_no')}`);
             } else {
               // 로딩 화면 닫기
@@ -171,16 +166,9 @@ export default {
               $('.popup-background:eq(1)').removeClass('blind');
               $('#common-alert-popup').removeClass('blind');
               $('.common-alert-txt').text('로그인에 실패하였습니다.');
-
-              console.log(params.get('username'));
-              console.log(params.get('password'));
-              console.log(res.data);
-              console.log(res.data.result)
             }
           })
           .catch((e) => {
-            console.log(e);
-
             // 로딩 화면 닫기
             $('.popup-background:eq(1)').addClass('blind');
             $('#spinner-section').addClass('blind');
@@ -234,8 +222,6 @@ export default {
       if ($('#find-pw-email').val().trim().length > 0 && $('#find-pw-backoffice-code').val().trim().length > 0) {
         if (this.find_pw_flag) {
           this.find_pw_flag = false;
-          console.log('backoffice_id :', $('#find-pw-backoffice-code').val().trim());
-          console.log('backoffice_email :', $('#find-pw-email').val().trim());
 
           // 로딩 화면
           $('.popup-background:eq(1)').removeClass('blind');
@@ -249,7 +235,6 @@ export default {
           axios.get(url).then((res) => {
             this.find_pw_flag = true;
 
-            console.log(res.data);
             $('.popup-background:eq(1)').addClass('blind');
             $('#spinner-section').addClass('blind');
 
@@ -297,7 +282,6 @@ export default {
     // 로그아웃
     logout() {
       axios.get('http://localhost:8800/backoffice/logout').then((res) => {
-        console.log(res.data);
         if (res.data.result === '1') {
           $('#logout-popup').addClass('blind');
           $('.popup-background:eq(0)').addClass('blind');

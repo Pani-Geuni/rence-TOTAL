@@ -214,7 +214,6 @@ export default {
     miniNavWeek() {
       this.$router.push(`/backoffice/dash/day_sales?backoffice_no=${this.$cookies.get('backoffice_no')}&sales_date=week&page=1`);
       this.sales_date = 'week';
-      console.log('week :', this.sales_date);
       this.getSales();
     },
 
@@ -238,7 +237,6 @@ export default {
         // 로딩 화면
         $('.popup-background:eq(1)').addClass('blind');
         $('#spinner-section').addClass('blind');
-        console.log(res.data);
 
         this.svo = res.data.svo;
         this.s_vos = res.data.s_vos;
@@ -269,7 +267,6 @@ export default {
 
       axios.get(`http://localhost:8800/backoffice/dash/day_sales?${params}`)
         .then((res) => {
-          console.log(res.data);
           this.s_vos = res.data.s_vos;
         });
     },
@@ -295,7 +292,6 @@ export default {
 
       axios.get(`http://localhost:8800/backoffice/dash/day_sales?${params}`)
         .then((res) => {
-          console.log(res.data);
           this.s_vos = res.data.s_vos;
         });
     },
@@ -323,7 +319,6 @@ export default {
 
       axios.get(`http://localhost:8800/backoffice/dash/day_sales?${params}`)
         .then((res) => {
-          console.log(res.data);
           this.s_vos = res.data.s_vos;
         });
     },

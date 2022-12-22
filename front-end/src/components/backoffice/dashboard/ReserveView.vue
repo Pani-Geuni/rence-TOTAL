@@ -168,8 +168,6 @@ export default {
   methods: {
 
     miniNavActive(reserveState) {
-      console.log('miniNavActive :', reserveState);
-
       switch (reserveState) {
         case 'all':
           $('#reserve-all').addClass('active');
@@ -218,9 +216,6 @@ export default {
     },
 
     reserveSearch(e) {
-      console.log(e.target.value);
-      console.log(this.reserve_state);
-
       const searchword = e.target.value;
 
       // 로딩 화면
@@ -236,7 +231,6 @@ export default {
       axios.get(url).then((res) => {
         $('.popup-background:eq(1)').addClass('blind');
         $('#spinner-section').addClass('blind');
-        console.log(res.data);
         this.r_vos = res.data.r_vos;
       });
     },
@@ -248,7 +242,6 @@ export default {
       const url = `http://localhost:8800/backoffice/dash/reserve?${params}`;
 
       axios.get(url).then((res) => {
-        console.log(res.data);
         this.r_vos = res.data.r_vos;
         this.cnt = res.data.cnt;
         this.maxPage = res.data.maxPage;
@@ -268,12 +261,6 @@ export default {
       const reserve_stime = e.target.getAttribute('reserve_stime');
       const reserve_etime = e.target.getAttribute('reserve_etime');
 
-      console.log(e.target.getAttribute('reserve_no'));
-      console.log(e.target.getAttribute('user_no'));
-      console.log(e.target.getAttribute('user_email'));
-      console.log(e.target.getAttribute('reserve_stime'));
-      console.log(e.target.getAttribute('reserve_etime'));
-
       $('#reserve-delete-one-btn').attr('reserve_no', reserve_no);
       $('#reserve-delete-one-btn').attr('user_no', user_no);
       $('#reserve-delete-one-btn').attr('user_email', user_email);
@@ -291,7 +278,6 @@ export default {
 
       axios.get(`http://localhost:8800/backoffice/dash/reserve?${params}`)
         .then((res) => {
-          console.log(res.data);
           this.r_vos = res.data.r_vos;
         });
     },
@@ -317,7 +303,6 @@ export default {
 
       axios.get(`http://localhost:8800/backoffice/dash/reserve?${params}`)
         .then((res) => {
-          console.log(res.data);
           this.r_vos = res.data.r_vos;
         });
     },
@@ -345,7 +330,6 @@ export default {
 
       axios.get(`http://localhost:8800/backoffice/dash/reserve?${params}`)
         .then((res) => {
-          console.log(res.data);
           this.r_vos = res.data.r_vos;
         });
     },

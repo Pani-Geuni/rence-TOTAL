@@ -69,8 +69,6 @@ export default {
       // eslint-disable-next-line camelcase
       const backoffice_no = e.target.parentElement.getAttribute('idx');
 
-      console.log(backoffice_no);
-
       // eslint-disable-next-line camelcase
       const url = `/master/backoffice_apply_detail?backoffice_no=${backoffice_no}&page=apply`;
       // this.$router.push(url);
@@ -78,9 +76,6 @@ export default {
     },
 
     clickGrantPopup(e) {
-      console.log(e.target.parentElement.getAttribute('idx'));
-      console.log(e.target.parentElement.getAttribute('backoffice_email'));
-      // const backoffice_no = e.target.parentElement.getAttribute('idx');
       $('.popup-background:eq(0)').removeClass('blind');
       $('#grant-popup').removeClass('blind');
 
@@ -91,8 +86,6 @@ export default {
     },
 
     clickRefusePopup(e) {
-      console.log(e.target.parentElement.getAttribute('idx'));
-      console.log(e.target.parentElement.getAttribute('backoffice_email'));
 
       $('.popup-background:eq(0)').removeClass('blind');
       $('#refuse-popup').removeClass('blind');
@@ -106,16 +99,10 @@ export default {
     getSelectAllApplyList() {
       // eslint-disable-next-line quotes
       const url = 'http://localhost:8800/master/main';
-      console.log('getSelectAllApplyList');
-      console.log(url);
 
       axios.get(url).then((res) => {
-        console.log(res.data.bvos);
         this.vos = res.data.bvos;
-      })
-        .catch((e) => {
-          console.log(e);
-        });
+      });
     },
   },
 

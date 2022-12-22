@@ -162,15 +162,12 @@ export default {
 
   methods: {
     getReserveList() {
-      console.log('backoffice no', this.backoffice_no);
       const params = new URLSearchParams();
       params.append('backoffice_no', this.backoffice_no);
 
       const url = `http://localhost:8800/backoffice/dash/main?${params}`;
-      console.log(this.backoffice_no);
 
       axios.get(url).then((res) => {
-        console.log(res.data);
         this.r_vos = res.data.r_vos;
         this.c_vos = res.data.c_vos;
         this.svo = res.data.svo;

@@ -671,16 +671,12 @@ export default {
               $('#spinner-section').removeClass('blind');
               this.mail_flag = false;
 
-              // console.log($('#backoffice_email').val().trim(), this.mail_flag);
-
               const params = new URLSearchParams();
               params.append('backoffice_email', this.backoffice_email);
               const url = `http://localhost:8800/backoffice/auth?${params}`;
               axios.get(url)
                 .then((res) => {
                   this.mail_flag = true;
-                  console.log('success');
-                  console.log(res);
 
                   // 로딩 화면 닫기
                   $('.popup-background:eq(1)').addClass('blind');
@@ -731,9 +727,6 @@ export default {
           // 로딩 화면
           $('.popup-background:eq(1)').removeClass('blind');
           $('#spinner-section').removeClass('blind');
-
-          console.log(this.backoffice_email);
-          console.log(this.auth_code);
 
           const params = new URLSearchParams();
           params.append('backoffice_email', this.backoffice_email);
@@ -846,14 +839,9 @@ export default {
           delete this.tag[key];
         }
       }
-      // console.log('index :', index);
 
-      // this.tag.splice(index, 1);
-      console.log(this.tag);
-      // this.tag[index] = '';
       this.margin_tag_list = this.marginTag();
       this.toStringTag(this.margin_tag_list);
-      // console.log(this.tag.indexOf(index));
     },
 
     timer(check) {
@@ -901,7 +889,6 @@ export default {
     },
 
     disableTimepicker(event) {
-      console.log(event.target.checked);
       const { checked } = event.target;
 
       if (checked === true) {
@@ -931,8 +918,6 @@ export default {
             extraRoadAddr += (extraRoadAddr !== '' ? `, ${data.buildingName}` : data.buildingName);
           }
 
-          console.log(roadAddr);
-
           // 우편번호와 주소 정보를 해당 필드에 넣는다.
           // $('#zipcode').val(data.zonecode);
           this.zipcode = data.zonecode;
@@ -941,7 +926,6 @@ export default {
             // $('#roadname_address').val(roadAddr);
             this.roadname_address = roadAddr;
           } else {
-            // $('#roadname_address').val(auto_roadAddr);
             // eslint-disable-next-line camelcase
             this.roadname_address = auto_roadAddr;
           }
@@ -1041,9 +1025,6 @@ export default {
     // 신청
     // ******************
     submit() {
-      console.log('---------------');
-      console.log($('#multipartFile_room').get(0).files);
-      console.log('---------------');
       const sun_stime = this.timeFormatter(this.sunStime);
       const sun_etime = this.timeFormatter(this.sunEtime);
       const mon_stime = this.timeFormatter(this.monStime);
@@ -1058,21 +1039,6 @@ export default {
       const fri_etime = this.timeFormatter(this.friEtime);
       const sat_stime = this.timeFormatter(this.satStime);
       const sat_etime = this.timeFormatter(this.satEtime);
-
-      console.log(this.owner_name);
-      console.log(this.backoffice_id);
-      console.log(this.backoffice_name);
-      console.log(this.company_name);
-      console.log(this.backoffice_tel);
-      console.log(this.backoffice_email);
-      console.log(this.zipcode);
-      console.log(this.roadname_address);
-      console.log(this.number_address);
-      console.log(this.detail_address);
-      console.log(this.backoffice_info);
-
-      console.log(this.backoffice_tag);
-      console.log(this.backoffice_info);
 
       let stringBackofficeType = '';
       for (let i = 0; i < this.backoffice_type.length; i++) {
@@ -1100,23 +1066,6 @@ export default {
           stringBackofficeAround += this.backoffice_around[i];
         }
       }
-
-      console.log(this.backoffice_type);
-      console.log(stringBackofficeType);
-      console.log(this.backoffice_option);
-      console.log(stringBackofficeOption);
-      console.log(this.backoffice_around);
-      console.log(stringBackofficeAround);
-
-      console.log(sun_stime, sun_etime, this.sun_dayoff);
-      console.log(mon_stime, mon_etime, this.mon_dayoff);
-      console.log(tue_stime, tue_etime, this.tue_dayoff);
-      console.log(wed_stime, wed_etime, this.wed_dayoff);
-      console.log(thu_stime, thu_etime, this.thu_dayoff);
-      console.log(fri_stime, fri_etime, this.fri_dayoff);
-      console.log(sat_stime, sat_etime, this.sat_dayoff);
-
-      console.log(this.img_name);
 
       // 1. 필수 input / textarea 입력되었는지 확인
       if (
@@ -1184,17 +1133,10 @@ export default {
                 formData.append('sun_dayoff', this.sun_dayoff);
 
                 for (let i = 0; i < imageTag.length; i++) {
-                  console.log(imageTag[i]);
                   formData.append('multipartFile_room', imageTag[i]);
                 }
 
                 formData.append('multipartFile_host', '');
-
-                // console.log('@@@@@@@');
-                // for (let key of formData.entries()) {
-                //   console.log(`${key}`);
-                // }
-                // console.log('@@@@@@@');
 
                 axios.post('http://localhost:8800/backoffice/insertOK', formData, {
                   headers: {
@@ -1203,10 +1145,7 @@ export default {
                 })
                   .then((res) => {
                     if (res.data.result === '1') {
-                      console.log('가입 성공');
                       this.$router.replace('/backoffice/landing');
-                    } else {
-                      console.log('가입 실패');
                     }
                   });
               }

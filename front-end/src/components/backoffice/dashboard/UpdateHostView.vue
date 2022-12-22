@@ -560,14 +560,12 @@ export default {
 
   methods: {
     getHostInfo() {
-      console.log(this.backoffice_no);
       axios.get('http://localhost:8800/backoffice/dash/update_host', {
         params: {
           backoffice_no: this.backoffice_no,
         },
       })
         .then((res) => {
-          console.log(res.data);
           this.vo = res.data.vo;
           this.ovo = res.data.ovo;
           this.backoffice_tag = res.data.backoffice_tag;
@@ -682,7 +680,6 @@ export default {
           delete this.tag[key];
         }
       }
-      console.log(this.tag);
       this.margin_tag_list = this.marginTag();
       this.toStringTag(this.margin_tag_list);;
     },
@@ -783,11 +780,6 @@ export default {
     },
 
     submit() {
-      console.log('update submit');
-      console.log('---------------');
-      console.log($('#multipartFile_room').get(0).files);
-      console.log('---------------');
-
       const sun_stime = this.timeFormatter(this.sunStime);
       const sun_etime = this.timeFormatter(this.sunEtime);
       const mon_stime = this.timeFormatter(this.monStime);
@@ -864,29 +856,6 @@ export default {
       formData.append('sun_dayoff', this.sun_dayoff);
 
       formData.append('backoffice_image', this.img_name);
-      // for (let i = 0; i < imageTag.length; i++) {
-      //   console.log(this.imageTag[i]);
-      //   formData.append('multipartFile_room', imageTag[i]);
-      // }
-
-      console.log(this.backoffice_tag);
-      console.log(this.backoffice_info);
-      console.log(this.backoffice_type);
-      console.log(stringBackofficeType);
-      console.log(this.backoffice_option);
-      console.log(stringBackofficeOption);
-      console.log(this.backoffice_around);
-      console.log(stringBackofficeAround);
-
-      console.log(sun_stime, sun_etime, this.sun_dayoff);
-      console.log(mon_stime, mon_etime, this.mon_dayoff);
-      console.log(tue_stime, tue_etime, this.tue_dayoff);
-      console.log(wed_stime, wed_etime, this.wed_dayoff);
-      console.log(thu_stime, thu_etime, this.thu_dayoff);
-      console.log(fri_stime, fri_etime, this.fri_dayoff);
-      console.log(sat_stime, sat_etime, this.sat_dayoff);
-      console.log(this.img_name);
-      console.log(this.backoffice_image);
 
       axios.post('http://localhost:8800/backoffice/dash/updateOK_host', formData, {
         headers: {
@@ -895,10 +864,7 @@ export default {
       })
         .then((res) => {
           if (res.data.result === '1') {
-            console.log('변경 성공');
             this.$router.replace(`/backoffice/dash/main?backoffice_no=${this.$cookies.get('backoffice_no')}`);
-          } else {
-            console.log('변경 실패');
           }
         });
     },

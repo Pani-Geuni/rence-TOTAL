@@ -509,7 +509,6 @@ export default {
 
     clickTypeSelectItem(e) {
       const type = e.target.getAttribute('roomType');
-      console.log(type);
 
       if (type === '데스크') this.edit_room_type = 'desk';
       else if (type === '미팅룸(4인)') this.edit_room_type = 'meeting_04';
@@ -552,15 +551,6 @@ export default {
     },
 
     insert_room() {
-      console.log('--------');
-      console.log(this.room_name);
-      console.log(this.edit_room_type);
-
-      console.log(this.input_price_name);
-      console.log(typeof this.input_price_name);
-
-      console.log('--------');
-
       if (this.room_name !== '' && this.edit_room_type !== '') {
         if (this.edit_room_type === 'office') {
           if (this.input_price_name !== 0) {
@@ -621,7 +611,6 @@ export default {
 
     clickEditTypeSelectItem(e) {
       const type = e.target.getAttribute('roomType');
-      console.log(type);
 
       if (type === '데스크') this.m_edit_room_type = 'desk';
       else if (type === '미팅룸(4인)') this.m_edit_room_type = 'meeting_04';
@@ -644,10 +633,6 @@ export default {
     editRoom(e) {
       this.room_no = e.target.getAttribute('idx');
       this.room_name = $('#m-input-room-name').val().trim();
-
-      console.log('edit type :', this.m_edit_room_type);
-      console.log(this.m_input_price_name);
-      console.log(typeof this.m_input_price_name);
 
       if (this.room_name !== '' && this.m_edit_room_type !== '') {
         if (this.m_edit_room_type === 'office') {
@@ -733,8 +718,6 @@ export default {
     },
 
     clickAnswerDeleteBtn(e) {
-      console.log('clickAnswerDeleteBtn');
-
       if (this.delete_comment_flag) {
         this.delete_comment_flag = false;
 
@@ -746,8 +729,6 @@ export default {
         params.append('backoffice_no', this.backoffice_no);
         params.append('mother_no', e.target.getAttribute('mother_no'));
         params.append('comment_no', e.target.getAttribute('comment_no'));
-
-        console.log('params :', params);
 
         axios.post('http://localhost:8800/backoffice/dash/deleteOK_comment', params)
           .then((res) => {
@@ -798,7 +779,6 @@ export default {
     },
 
     insertHostComment(e) {
-      console.log('??');
       if ($('#host-comment').val().trim().length > 0) {
         if (this.insert_comment_flag) {
           this.insert_comment_flag = false;
@@ -909,7 +889,6 @@ export default {
     // **************************************************
     clickCheckNowPwBtn() {
       if ($('.input-check-pw').val().trim().length > 0) {
-        console.log($('.input-check-pw').val().trim());
         // 로딩 화면
         $('.popup-background:eq(1)').removeClass('blind');
         $('#spinner-section').removeClass('blind');
@@ -1011,7 +990,6 @@ export default {
 
     clickLogout() {
       axios.get('http://localhost:8800/backoffice/logout').then((res) => {
-        console.log(res.data);
         if (res.data.result === '1') {
           $('#logout-popup').addClass('blind');
           $('.popup-background:eq(0)').addClass('blind');
@@ -1027,11 +1005,7 @@ export default {
     },
 
     clickReserveDeleteBtn() {
-      console.log('reserve delete');
       this.check_arr = $('input[type=checkbox]:checked').parents('.ct-body-row');
-      console.log('-----------');
-      console.log(this.check_arr);
-      console.log('-----------');
       // START FOR문
       for (let i = 0; i < this.check_arr.length; i++) {
         const reserve_no = $(this.check_arr[i]).find('#reserve_no').attr('reserve_no');
@@ -1041,10 +1015,6 @@ export default {
           .split(' ~ ')[0].trim();
         const reserve_etime = $(this.check_arr[i]).find('.reserve_date_set').text().trim()
           .split(' ~ ')[1].trim();
-
-        console.log('==========');
-        console.log(decodeURIComponent(window.atob(this.$cookies.get('backoffice_no'))));
-        console.log('==========');
 
         const params = new URLSearchParams();
         params.append('backoffice_no', decodeURIComponent(window.atob(this.$cookies.get('backoffice_no'))));
@@ -1155,16 +1125,12 @@ export default {
     getDayoffCalendar() {
       axios.get(`http://localhost:8800/backoffice/dash/schedule_calendar?backoffice_no=${this.backoffice_no}`)
         .then((res) => {
-          console.log('getDayoffCalendar -------');
-          console.log(res.data);
-          console.log('--------------');
           this.month = res.data.month;
           this.calendar_vos = res.data.vos;
         });
     },
 
     clickDayoffCancelBtn(e) {
-      console.log('clickDayoffCancelBtn');
       $('.popup-background:eq(1)').removeClass('blind');
       $('#dayoff-cancel-popup').removeClass('blind');
 
@@ -1288,7 +1254,6 @@ export default {
     },
 
     commentTextLength(e) {
-      console.log(e.target.value, e.target.value.length);
       $('.now_txt_length').text(e.target.value.length);
 
       const targetValue = e.target.value;
@@ -1310,11 +1275,6 @@ export default {
       params.append('room_name', this.room_name);
       params.append('room_type', this.m_edit_room_type);
       params.append('room_price', Number(this.m_input_price_name));
-
-      console.log('------');
-      console.log(this.m_edit_room_type);
-      console.log(typeof this.m_edit_room_type);
-      console.log('------');
 
       axios.post('http://localhost:8800/backoffice/dash/updateOK_room', params)
         .then((res) => {

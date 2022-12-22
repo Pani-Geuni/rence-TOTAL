@@ -177,10 +177,9 @@ export default {
 
       const geocoder = new kakao.maps.services.Geocoder();
       const location = $('#location_addr').val();
-      console.log('location :', location);
+
       // eslint-disable-next-line camelcase
       const location_name = $('#location_name').val();
-      console.log('location_name :', location_name);
 
       // 주소로 좌표를 검색합니다
       geocoder.addressSearch(location, (result, status) => {
@@ -247,12 +246,9 @@ export default {
     },
 
     getApplyDetailInfo() {
-      console.log(this.backoffice_no);
       const url = `http://localhost:8800/master/backoffice_apply_detail?backoffice_no=${this.backoffice_no}&page=apply`;
-      console.log(url);
 
       axios.get(url).then((res) => {
-        console.log(res.data);
         this.backoffice_type = res.data.backoffice_type;
         this.backoffice_tag = res.data.backoffice_type;
         this.backoffice_option = res.data.backoffice_option;
@@ -263,9 +259,6 @@ export default {
     },
 
     clickGrantPopup(e) {
-      console.log(e.target.parentElement.getAttribute('idx'));
-      console.log(e.target.parentElement.getAttribute('backoffice_email'));
-      // const backoffice_no = e.target.parentElement.getAttribute('idx');
       $('.popup-background:eq(0)').removeClass('blind');
       $('#grant-popup').removeClass('blind');
 
@@ -276,9 +269,6 @@ export default {
     },
 
     clickRefusePopup(e) {
-      console.log(e.target.parentElement.getAttribute('idx'));
-      console.log(e.target.parentElement.getAttribute('backoffice_email'));
-
       $('.popup-background:eq(0)').removeClass('blind');
       $('#refuse-popup').removeClass('blind');
 
@@ -288,8 +278,6 @@ export default {
     },
 
     clickDeletePopup(e) {
-      console.log(e.target.parentElement.getAttribute('idx'));
-      console.log(e.target.parentElement.getAttribute('backoffice_email'));
 
       $('.popup-background:eq(0)').removeClass('blind');
       $('#delete-popup').removeClass('blind');
@@ -308,13 +296,11 @@ export default {
 
       /* global kakao */
       script.addEventListener('load', () => {
-        console.log('loaded', kakao);
         kakao.maps.load(this.initMap);
       });
 
       document.head.appendChild(script);
     } else {
-      console.log('already loading kakao map :', window.kakao);
       this.initMap();
     }
 

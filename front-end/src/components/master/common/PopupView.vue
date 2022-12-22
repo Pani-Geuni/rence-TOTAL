@@ -112,8 +112,6 @@ export default {
           $('#grant-popup').addClass('blind');
           $('.popup-background:eq(0)').addClass('blind');
           this.$router.replace('/master/main');
-        } else {
-          console.log('수락 에러');
         }
       });
 
@@ -164,9 +162,6 @@ export default {
       const params = new URLSearchParams();
       params.append('backoffice_no', e.target.getAttribute('backoffice_no'));
       params.append('backoffice_email', e.target.getAttribute('backoffice_email'));
-
-      console.log('deleteOK no :', e.target.getAttribute('backoffice_no'));
-      console.log('deleteOK email :', e.target.getAttribute('backoffice_email'));
 
       axios.post('http://localhost:8800/master/revoke', params).then((res) => {
         $('.popup-background:eq(1)').addClass('blind');
