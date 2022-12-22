@@ -18,7 +18,7 @@ import com.rence.dashboard.model.RoomEntity;
 public interface RoomRepository extends JpaRepository<RoomEntity, Object> {
 
 	// 공간 관리 - 리스트
-	@Query(nativeQuery = true, value = "select * from (select ROWNUM as num, room_no, room_type, room_name, TO_CHAR(room_price) as room_price, backoffice_no, room_state from roominfo where backoffice_no=?1 and room_state!='F' order by room_no asc) where num between ?2 and ?3")
+	@Query(nativeQuery = true, value = "select * from (select ROWNUM as num, A.* from (select room_no, room_type, room_name, TO_CHAR(room_price) as room_price, backoffice_no, room_state from roominfo where backoffice_no=?1 and room_state!='F' order by room_no desc)A )where num between ?2 and ?3")
 	public List<RoomEntity> selectAll_room_list(String backoffice_no, Integer start_row, Integer end_row);
 
 	// ********페이징*********
