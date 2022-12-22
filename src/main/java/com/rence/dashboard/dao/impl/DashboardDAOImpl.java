@@ -664,15 +664,6 @@ public class DashboardDAOImpl implements DashboardDAO {
 	@Override
 	public List<ScheduleListViewDTO> backoffice_schedule_list(String backoffice_no, String not_sdate, String not_edate, String not_stime, String not_etime, String off_type, int min, int max) {
 		
-		log.info("backoffice_no::{}",backoffice_no);
-		log.info("not_sdate::{}",not_sdate);
-		log.info("not_edate::{}",not_edate);
-		log.info("not_stime::{}",not_stime);
-		log.info("not_etime::{}",not_etime);
-		log.info("off_type::{}",off_type);
-		log.info("min::{}",min);
-		log.info("max::{}",max);
-		
 		List<ScheduleListViewDTO> sc_vos = new ArrayList<ScheduleListViewDTO>();
 
 		// 1, 2 날짜 형태 변환

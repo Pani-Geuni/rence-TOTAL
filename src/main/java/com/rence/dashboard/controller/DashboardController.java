@@ -362,7 +362,6 @@ public class DashboardController {
 	@PostMapping("/updateOK_host")
 	public String backoffice_updateOK_host(BackOfficeDTO bvo, BackOfficeOperatingTimeDTO ovo, MultipartHttpServletRequest mtfRequest, @RequestParam(value = "multipartFile_room" , required = false) MultipartFile multipartFile_room) {
 
-		log.info("multipartFile_room::::{}",multipartFile_room);
 		BackOfficeDTO bvo2 = service.backoffice_setting_selectOne(bvo);
 		if(!bvo.getBackoffice_image().equals(bvo2.getBackoffice_image())) {
 			// 이미지 파일
