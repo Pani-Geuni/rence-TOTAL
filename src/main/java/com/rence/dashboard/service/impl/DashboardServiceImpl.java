@@ -673,7 +673,7 @@ public class DashboardServiceImpl implements DashboardService {
 
 		OptionEngToKorMap optionEngToKorMap = new OptionEngToKorMap();
 
-		if (bvo2.getBackoffice_tag() != null) {
+		if (bvo2.getBackoffice_tag() != null && !bvo2.getBackoffice_tag().equals("undefined")) {
 			String[] backoffice_tag = bvo2.getBackoffice_tag().split(",");
 			for (int i = 0; i < backoffice_tag.length; i++) {
 				backoffice_tag[i] = "#" + backoffice_tag[i];
