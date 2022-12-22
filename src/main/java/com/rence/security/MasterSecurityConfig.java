@@ -47,13 +47,9 @@ public class MasterSecurityConfig {
 		http.authenticationProvider(authenticationProvider());
 
 		http
-//		.authorizeRequests()
 				.antMatcher("/master/**").authorizeRequests()
-//		.antMatchers("/master/login").permitAll()
 				.anyRequest().authenticated() // 요청 URL에 따라 접근 권한을 설정
 
-//		 .anyRequest()
-//		 .authenticated()
 
 				.and().formLogin() // 로그인 폼은
 				.loginPage("/master/login") // 해당 주소로 로그인 페이지를 호출한다.

@@ -272,12 +272,9 @@ public class UserServiceImpl implements UserService {
 	public Map<String, String> user_logoutOK(HttpServletRequest request, HttpServletResponse response,
 			HttpSession session) {
 		log.info("user_logoutOK()....");
-		
-		
+
 		Map<String, String> map = new HashMap<String, String>();
 
-		
-//		session.removeAttribute("user_id");
 		map.put("result", "1");
 
 		return map;
