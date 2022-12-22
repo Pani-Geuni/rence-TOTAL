@@ -247,7 +247,7 @@
       <section class="confirm-txt-section">
         <span class="delete-txt">
           해당 예약을 취소하시겠습니까?<br>
-          취소 후 변경은 불가능합니다.aa
+          취소 후 변경은 불가능합니다.
         </span>
       </section>
       <section class="confirm-btn-section">
@@ -704,7 +704,7 @@ export default {
               $('#common-alert-popup').removeClass('blind');
               $('.common-alert-txt').text('삭제가 완료되었습니다.');
               $('#common-alert-btn').attr('is_reload', true);
-            } else {
+            } else if (res.data.result === '0') {
               $('.popup-background:eq(1)').removeClass('blind');
               $('#common-alert-popup').removeClass('blind');
               $('.common-alert-txt').text('삭제에 실패하였습니다.');
@@ -923,7 +923,7 @@ export default {
             $('#spinner-section').addClass('blind');
 
             if (res.data.result === '1') {
-              this.$router.replace(`/backoffice/setting_pw?backoffice_no=${this.backoffice_no}`);
+              this.$router.replace(`/backoffice/setting_pw?backoffice_no=${this.$cookies.get('backoffice_no')}`);
             } else if (res.data.result === '0') {
               $('.popup-background:eq(1)').removeClass('blind');
               $('#common-alert-popup').removeClass('blind');
