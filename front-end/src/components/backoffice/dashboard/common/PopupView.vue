@@ -329,8 +329,7 @@
               <p class="dayoff-list-item-title">{{ vos.room_name }}</p>
               <p class="dayoff-list-item-date" v-if="vos.schedule_type === 'dayoff'">{{ vos.sdate }} ~ {{ vos.edate }}
               </p>
-              <p class="dayoff-list-item-date" v-if="vos.schedule_type === 'breaktime'">{{ vos.sdate }} ~ {{ vos.edate
-              }}
+              <p class="dayoff-list-item-date" v-if="vos.schedule_type === 'breaktime'">{{ vos.sdate }}
               </p>
               <p class="dayoff-list-item-time" v-if="vos.schedule_type === 'breaktime'"> {{ vos.stime }} ~ {{ vos.etime
               }}
@@ -1244,8 +1243,6 @@ export default {
       params.append('room_type', this.edit_room_type);
       params.append('room_price', Number(this.input_price_name));
 
-      console.log(this.input_price_name);
-      console.log('tlqkf : ', typeof this.input_price_name);
       const url = `http://localhost:8800/backoffice/dash/insertOK_room?${params}`;
 
       axios.post('http://localhost:8800/backoffice/dash/insertOK_room', params).then((res) => {
