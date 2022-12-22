@@ -646,11 +646,15 @@ export default {
       this.room_no = e.target.getAttribute('idx');
       this.room_name = $('#m-input-room-name').val().trim();
 
+      console.log('edit type :', this.m_edit_room_type);
       console.log(this.m_input_price_name);
       console.log(typeof this.m_input_price_name);
 
       if (this.room_name !== '' && this.m_edit_room_type !== '') {
         if (this.m_edit_room_type === 'office') {
+          if (this.m_input_price_name === '') {
+            this.m_input_price_name = 0;
+          }
           if (this.m_input_price_name !== 0) {
             if (this.update_room_flag) {
               this.update();

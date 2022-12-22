@@ -17,7 +17,8 @@
             <span>예약자</span>
           </div>
           <div class="sb_2">
-            <input @keyup.enter="reserveSearch" type="text" placeholder="검색어를 입력하세요." id="input_searchBar" />
+            <input @keyup.enter="reserveSearch" type="text" placeholder="검색어를 입력하세요." id="input_searchBar"
+              v-model.trim="searchWord" />
           </div>
 
           <!-- CUSTOM SELECT -->
@@ -149,6 +150,7 @@ export default {
       nowPage: 0,
       nowCnt: 0,
       totalPageCnt: 0,
+      searchword: '',
     };
   },
 
@@ -208,7 +210,7 @@ export default {
           break;
       }
 
-      this.$router.push(`/backoffice/dash/reserve?backoffice_no=${this.backoffice_no}&reserve_state=${this.reserve_state}&page=1`);
+      this.$router.push(`/backoffice/dash/reserve?backoffice_no=${this.$cookies.get('backoffice_no')}&reserve_state=${this.reserve_state}&page=1`);
 
       this.$nextTick(() => {
         this.getReserveList();
@@ -227,7 +229,7 @@ export default {
 
       const params = new URLSearchParams();
       params.append('backoffice_no', this.backoffice_no);
-      params.append('searchword', searchword);
+      params.append('searchword', searchword.trim());
       params.append('reserve_state', this.reserve_state);
 
       const url = `http://localhost:8800/backoffice/dash/search_reserve?${params}`;
