@@ -126,7 +126,6 @@ export default {
 
           axios.get(`http://localhost:8800/rence/mileage?user_no=${window.atob(this.$cookies.get('user_no'))}&page=1`)
             .then((res) => {
-              console.log(res.data);
               this.mileage_total = res.data.mileage_total;
               this.list = res.data.list;
               this.maxPage = res.data.maxPage;

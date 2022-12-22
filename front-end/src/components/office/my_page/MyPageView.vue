@@ -137,7 +137,6 @@ export default {
 
           axios.get('http://localhost:8800/rence/go_my_page')
             .then((res) => {
-              console.log(res.data);
               this.list = res.data;
               this.load = true;
 

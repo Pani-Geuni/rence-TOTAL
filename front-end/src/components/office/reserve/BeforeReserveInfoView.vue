@@ -276,7 +276,6 @@ export default {
 
           axios.get(`http://localhost:8800/rence/reserved_info?reserve_no=${this.reserveNo}`)
             .then((res) => {
-              console.log(res.data);
               this.list = res.data;
               this.load = true;
 

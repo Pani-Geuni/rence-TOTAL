@@ -129,8 +129,6 @@ export default {
 
           axios.get(`http://localhost:8800/rence/question_list?user_no=${window.atob(this.$cookies.get('user_no'))}&page=1`)
             .then((res) => {
-              console.log(res.data);
-
               this.list = res.data.list;
               this.maxPage = res.data.maxPage;
               this.nowPage = res.data.nowPage;

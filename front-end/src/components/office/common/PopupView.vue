@@ -276,7 +276,7 @@
                 예약이 취소 되었습니다.
             </span>
         </section>
-        <section class="confirm-btn-section">
+        <section class="alert-btn-section">
             <div id="reserve-cancel-btn" @click="close_cancle_result_success_popup" class="confirm-yesBtn">확인</div>
         </section>
     </div>
@@ -289,21 +289,23 @@
                 예약 취소가 불가능합니다.
             </span>
         </section>
-        <section class="confirm-btn-section">
+        <section class="alert-btn-section">
             <div id="reserve-cancel-fail-btn" @click="close_cancle_result_fail_popup" class="confirm-yesBtn">확인</div>
         </section>
     </div>
     <!-- END RESERVE-CANCLE-FAIL CONFIRM POPUP -->
 
     <!-- START RESERVE-CANCLE CONFIRM POPUP -->
-    <div id ="disconnect-session-popup" class="alert-popup blind">
+    <div id ="disconnect-session-popup" class="confirm-popup blind">
         <section class="confirm-txt-section">
             <span class="reserve-cancle-txt">
                 세션이 만료되어 홈으로 이동합니다.
             </span>
         </section>
         <router-link to="/">
-            <div @click="close_disconnect_session_popup" class="alert-btn-section">확인</div>
+          <section @click="close_disconnect_session_popup" class="alert-btn-section">
+            <div class="alert-btn-section">확인</div>
+          </section>
         </router-link>
     </div>
     <!-- END RESERVE-CANCLE-CONFIRM CONFIRM POPUP -->
@@ -432,11 +434,14 @@ export default {
     },
 
     /** ********************************** */
-    /** ************ LOGIN ************** */
+    /** ************* LOGIN ************** */
     /** ********************************** */
     do_login() {
       // 로그인 시도
       if ($('#login-id').val().trim().length > 0 && $('#login-pw').val().trim().length > 0) {
+        $('.popup-background:eq(1)').removeClass('blind');
+        $('#spinner-section').removeClass('blind');
+
         const params = new URLSearchParams();
         params.append('username', $('#login-id').val().trim());
         params.append('password', $('#login-pw').val().trim());
@@ -456,7 +461,7 @@ export default {
           }
         })
           .catch(() => {
-          // 로딩 화면 닫기
+            // 로딩 화면 닫기
             $('.popup-background:eq(1)').addClass('blind');
             $('#spinner-section').addClass('blind');
 
@@ -575,11 +580,25 @@ export default {
     },
     /** 아이디 찾기 버튼 클릭 이벤트 */
     go_find_id() {
+      // INPUT 초기화
+      $('#login-id').val('');
+      $('#login-pw').val('');
+
+      $('#login-id').removeClass('null-input-border');
+      $('#login-pw').removeClass('null-input-border');
+
       $('#login-section').addClass('blind');
       $('#find-id-section').removeClass('blind');
     },
     /** 비밀번호 찾기 버튼 클릭 이벤트 */
     go_find_pw() {
+      // INPUT 초기화
+      $('#login-id').val('');
+      $('#login-pw').val('');
+
+      $('#login-id').removeClass('null-input-border');
+      $('#login-pw').removeClass('null-input-border');
+
       $('#login-section').addClass('blind');
       $('#find-pw-section').removeClass('blind');
     },
@@ -1535,7 +1554,6 @@ export default {
 
         axios.get(`http://localhost:8800/rence/reserve_cancel?reserve_no=${reserve_no}&user_no=${user_no}`)
           .then((res) => {
-            console.log(res.data);
             if (res.data.result === '1') {
               const reserve_no = window.location.href.split('reserve_no=')[1];
               const cancel_amount = $(param).prop('refund_amount');
@@ -1543,7 +1561,7 @@ export default {
               const params = new URLSearchParams();
               params.append('reserve_no', reserve_no);
               params.append('cancel_amount', cancel_amount);
-              params.append('reason', 'aa');
+              params.append('reason', 'for_refund');
 
               axios.post('http://localhost:8800/rence/payment_cancel', params)
                 .then((response) => {

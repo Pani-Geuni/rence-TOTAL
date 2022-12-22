@@ -280,7 +280,6 @@ export default {
           this.reserveNo = window.location.href.split('reserve_no=')[1];
           axios.get(`http://localhost:8800/office/payment?reserve_no=${this.reserveNo}`)
             .then((res) => {
-              console.log(res.data);
               this.list = res.data;
               this.timer();
 
@@ -468,8 +467,6 @@ export default {
       } else if ($('.inner-radio:eq(1)').hasClass('choice-radio')) {
       // 후불 결제 시 로직
         const payment_later = parseInt(this.payment_all) * 0.2;
-        console.log(this.payment_all);
-        console.log(this.payment_all);
         this.actual_payment = payment_later;
         this.earned_mileage = Math.round(this.actual_payment * 0.05);
         $('#earned_mileage').text(this.earned_mileage);

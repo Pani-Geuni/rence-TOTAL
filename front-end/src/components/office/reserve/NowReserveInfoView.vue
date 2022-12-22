@@ -231,7 +231,6 @@ export default {
 
           axios.get(`http://localhost:8800/rence/reserve_info?reserve_no=${this.reserveNo}`)
             .then((res) => {
-              console.log(res.data);
               this.list = res.data;
               this.load = true;
 
@@ -279,7 +278,6 @@ export default {
               $('.popup-background:eq(0)').removeClass('blind');
               $('#reserve-cancel-popup').removeClass('blind');
               const m = String(Number($('#actual_payment').attr('actual_payment').replace(',', '')));
-              console.log(m);
               $('#refund-btn').prop('refund_amount', m);
             }
             // 로그인 되어 있지 않음(or 세션 만료)
