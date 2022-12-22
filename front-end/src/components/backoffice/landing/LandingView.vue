@@ -1,3 +1,8 @@
+<!--
+--  @author 전판근
+-- @refactoring 전판근
+-->
+
 <template>
   <section class="landingWrap">
     <div class="start-hosting">

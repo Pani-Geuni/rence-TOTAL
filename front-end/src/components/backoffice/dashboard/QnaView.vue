@@ -1,3 +1,9 @@
+<!--
+--  @author 전판근, 김예은
+-- @refactoring 전판근
+-->
+
+
 <!-- eslint-disable vuejs-accessibility/click-events-have-key-events -->
 <!-- eslint-disable max-len -->
 <template>
