@@ -37,9 +37,6 @@
 <img src="https://img.shields.io/badge/JQuery-0769AD?style=for-the-badge&logo=JQuery&logoColor=white">
 </span>
 <span>
-<img src="https://img.shields.io/badge/JSP-E4E4E4?style=for-the-badge&logo=JSP&logoColor=white">
-</span>
-<span>
 <img src="https://img.shields.io/badge/Vue-4FC08D?style=for-the-badge&logo=vue.js&logoColor=white">
 </span>
 
